@@ -21,7 +21,7 @@
   <style>
     /* ===== Modern Header ===== */
     .mtn-header {
-      background: linear-gradient(160deg, #006B3F 0%, #004d2c 40%, #003822 80%, #002a19 100%);
+      background: #006B3F;
       position: fixed;
       top: 0;
       left: 0;
@@ -31,103 +31,6 @@
       padding-left: env(safe-area-inset-left, 0px);
       padding-right: env(safe-area-inset-right, 0px);
       overflow: hidden;
-    }
-
-    .mtn-header::before {
-      content: '';
-      position: absolute;
-      top: -50%;
-      right: -20%;
-      width: 260px;
-      height: 260px;
-      background: radial-gradient(circle, rgba(255,255,255,0.08) 0%, transparent 70%);
-      border-radius: 50%;
-      animation: floatOrb1 8s ease-in-out infinite;
-    }
-
-    .mtn-header::after {
-      content: '';
-      position: absolute;
-      bottom: -40%;
-      left: -15%;
-      width: 200px;
-      height: 200px;
-      background: radial-gradient(circle, rgba(255,255,255,0.05) 0%, transparent 70%);
-      border-radius: 50%;
-      animation: floatOrb2 10s ease-in-out infinite;
-    }
-
-    /* Header shimmer sweep */
-    .mtn-header-shimmer {
-      position: absolute;
-      top: 0;
-      left: -100%;
-      width: 100%;
-      height: 100%;
-      background: linear-gradient(105deg, transparent 40%, rgba(255,255,255,0.04) 50%, transparent 60%);
-      z-index: 0;
-      animation: headerShimmer 6s ease-in-out infinite;
-      pointer-events: none;
-    }
-
-    /* Floating particles */
-    .header-particles {
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      overflow: hidden;
-      z-index: 0;
-      pointer-events: none;
-    }
-
-    .header-particle {
-      position: absolute;
-      width: 3px;
-      height: 3px;
-      border-radius: 50%;
-      background: rgba(255,255,255,0.15);
-      animation: particleFloat linear infinite;
-    }
-
-    .header-particle:nth-child(1) {
-      left: 10%;
-      bottom: -5px;
-      animation-duration: 12s;
-      animation-delay: 0s;
-      width: 2px;
-      height: 2px;
-    }
-    .header-particle:nth-child(2) {
-      left: 30%;
-      bottom: -5px;
-      animation-duration: 14s;
-      animation-delay: 2s;
-      width: 4px;
-      height: 4px;
-      background: rgba(52,211,153,0.12);
-    }
-    .header-particle:nth-child(3) {
-      left: 55%;
-      bottom: -5px;
-      animation-duration: 10s;
-      animation-delay: 4s;
-    }
-    .header-particle:nth-child(4) {
-      left: 75%;
-      bottom: -5px;
-      animation-duration: 16s;
-      animation-delay: 1s;
-      width: 2px;
-      height: 2px;
-      background: rgba(110,231,183,0.1);
-    }
-    .header-particle:nth-child(5) {
-      left: 90%;
-      bottom: -5px;
-      animation-duration: 11s;
-      animation-delay: 3s;
     }
 
     /* Top bar row: Logo + icons */
@@ -148,12 +51,11 @@
     }
 
     .mtn-logo-img {
-      height: 48px;
+      height: 44px;
       width: auto;
       object-fit: contain;
       display: block;
       filter: drop-shadow(0 2px 6px rgba(0,0,0,0.15));
-      transform: scale(2.2);
       transform-origin: left center;
     }
 
@@ -380,14 +282,21 @@
     [data-theme="dark"] .mtn-header-curve { background: var(--dark-bg); opacity: 0.25; }
 
     .mtn-header-spacer {
-      height: auto;
-      min-height: calc(310px + env(safe-area-inset-top, 0px));
-      display: contents;
+      /* Creates physical spacing below fixed header + safe area */
+      display: block;
+      height: calc(292px + env(safe-area-inset-top, 0px));
+      width: 100%;
     }
 
-    /* Override default body padding-top since we use spacer */
+    /* Body should not have extra padding since spacer handles it */
     body {
-      padding-top: env(safe-area-inset-top, 0px) !important;
+      padding-top: 0 !important;
+    }
+    
+    /* Ensure fixed header accounts for safe area */
+    .mtn-header {
+      height: auto;
+      min-height: calc(292px + env(safe-area-inset-top, 0px));
     }
 
     /* Balance Card - Glass Morphism */
@@ -455,30 +364,6 @@
     @keyframes pulse-dot {
       0%, 100% { opacity: 1; transform: scale(1); }
       50% { opacity: 0.6; transform: scale(0.85); }
-    }
-
-    /* Header animation keyframes */
-    @keyframes floatOrb1 {
-      0%, 100% { transform: translate(0, 0) scale(1); }
-      33% { transform: translate(15px, 20px) scale(1.05); }
-      66% { transform: translate(-10px, -15px) scale(0.95); }
-    }
-
-    @keyframes floatOrb2 {
-      0%, 100% { transform: translate(0, 0) scale(1); }
-      50% { transform: translate(20px, -25px) scale(1.1); }
-    }
-
-    @keyframes headerShimmer {
-      0% { left: -100%; }
-      40%, 100% { left: 200%; }
-    }
-
-    @keyframes particleFloat {
-      0% { transform: translateY(0) translateX(0) scale(1); opacity: 0; }
-      10% { opacity: 1; }
-      90% { opacity: 0.5; }
-      100% { transform: translateY(-350px) translateX(20px) scale(0); opacity: 0; }
     }
 
     @keyframes fadeInUp {
@@ -2110,25 +1995,92 @@
       from { opacity: 0; transform: translateX(-16px); }
       to { opacity: 1; transform: translateX(0); }
     }
+
+    /* Due Subscriptions & Bills Section */
+    .due-items-section { margin-bottom: 16px; }
+    .due-items-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 14px;
+    }
+    .due-items-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--text-primary);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      letter-spacing: -0.2px;
+    }
+    .due-items-title::before {
+      content: '';
+      width: 4px;
+      height: 18px;
+      border-radius: 2px;
+      background: linear-gradient(180deg, #8b5cf6, #d8b4fe);
+      flex-shrink: 0;
+    }
+    .due-items-list { display: flex; flex-direction: column; gap: 10px; }
+    .due-item-card {
+      background: var(--card-bg);
+      border-radius: 16px;
+      padding: 14px 16px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      border: 1px solid var(--border-color);
+      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+      animation: slideInLeft 0.3s ease-out both;
+      cursor: pointer;
+    }
+    .due-item-card:active { transform: scale(0.98); }
+    .due-item-card.subscription { border-left: 4px solid #8b5cf6; }
+    .due-item-card.bill { border-left: 4px solid #f59e0b; }
+    .due-item-card.overdue { border-left: 4px solid #ef4444; background: linear-gradient(135deg, var(--card-bg) 0%, rgba(239,68,68,0.03) 100%); }
+    .due-item-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      flex-shrink: 0;
+    }
+    .due-item-card.subscription .due-item-icon { background: rgba(139,92,246,0.15); color: #8b5cf6; }
+    .due-item-card.bill .due-item-icon { background: rgba(245,158,11,0.15); color: #f59e0b; }
+    .due-item-card.overdue .due-item-icon { background: rgba(239,68,68,0.15); color: #ef4444; }
+    .due-item-info { flex: 1; min-width: 0; }
+    .due-item-name { font-size: 14px; font-weight: 600; color: var(--text-primary); letter-spacing: -0.1px; }
+    .due-item-details { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+    .due-item-amount {
+      font-size: 15px;
+      font-weight: 700;
+      letter-spacing: -0.3px;
+      text-align: right;
+    }
+    .due-item-card.subscription .due-item-amount { color: #8b5cf6; }
+    .due-item-card.bill .due-item-amount { color: #f59e0b; }
+    .due-item-card.overdue .due-item-amount { color: #ef4444; }
+    .due-items-empty {
+      text-align: center;
+      padding: 24px 16px;
+      color: var(--text-muted);
+      background: var(--bg-secondary);
+      border-radius: 16px;
+      border: 1px dashed var(--border-color);
+      font-size: 13px;
+    }
   </style>
 </head>
 <body>
   <!-- MTN-Style Unified Header + Profile -->
   <header class="mtn-header">
-    <!-- Shimmer sweep -->
-    <div class="mtn-header-shimmer"></div>
-    <!-- Floating particles -->
-    <div class="header-particles">
-      <span class="header-particle"></span>
-      <span class="header-particle"></span>
-      <span class="header-particle"></span>
-      <span class="header-particle"></span>
-      <span class="header-particle"></span>
-    </div>
     <!-- Top Bar: Logo + Action Icons -->
     <div class="mtn-topbar">
       <a class="mtn-logo" href="dashboard.html">
-        <img src="../Logo.png" alt="KudiSave" class="mtn-logo-img">
+        <img src="../logowhite.png" alt="KudiSave" class="mtn-logo-img">
       </a>
       <div class="mtn-topbar-actions">
         <button class="hamburger" onclick="toggleMobileMenu()" title="Menu">
@@ -2180,7 +2132,7 @@
       <div class="menu-header-top">
         <span style="color: #fff; font-size: 15px; font-weight: 700; letter-spacing: 0.5px;">Menu</span>
         <button class="menu-close-btn" onclick="toggleMobileMenu()" title="Close">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          <i data-lucide="x"></i>
         </button>
       </div>
     </div>
@@ -2302,16 +2254,6 @@
       </button>
     </div>
 
-    <!-- Subscriptions Due Alert Banner -->
-    <a href="subscriptions.html" class="bills-alert-banner subs-alert-banner" id="subsAlertBanner" style="display:none;">
-      <div class="bills-alert-banner-icon subs-alert-banner-icon">🔔</div>
-      <div class="bills-alert-banner-text">
-        <div class="bills-alert-banner-title" id="subsAlertTitle">Subscriptions Due Soon</div>
-        <div class="bills-alert-banner-desc" id="subsAlertDesc">Tap to manage your subscriptions</div>
-      </div>
-      <span class="bills-alert-banner-arrow">›</span>
-    </a>
-
     <!-- Feature Widgets -->
     <div class="widgets-grid">
       <!-- Bills Widget -->
@@ -2372,6 +2314,14 @@
         <span id="budgetSpent">GHS 0 spent</span>
         <span id="budgetRemaining">GHS 0 left</span>
       </div>
+    </div>
+
+    <!-- Due Subscriptions & Bills -->
+    <div class="due-items-section" id="dueItemsSection" style="display: none;">
+      <div class="due-items-header">
+        <span class="due-items-title"><i data-lucide="alert-circle" class="icon-inline"></i> Due Soon</span>
+      </div>
+      <div class="due-items-list" id="dueItemsList"></div>
     </div>
 
     <!-- Recent Transactions -->
