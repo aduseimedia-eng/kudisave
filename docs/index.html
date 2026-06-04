@@ -61,8 +61,9 @@
     * { margin: 0; padding: 0; box-sizing: border-box; }
     
     html, body {
-      overflow-x: hidden;
+      overflow: hidden;
       width: 100%;
+      height: 100%;
       max-width: 100vw;
     }
 
@@ -72,7 +73,8 @@
       padding-top: env(safe-area-inset-top, 0px);
       padding-bottom: env(safe-area-inset-bottom, 0px);
       background: #f8faf9;
-      min-height: 100vh;
+      height: 100vh;
+      height: 100dvh;
       -webkit-font-smoothing: antialiased;
     }
 
@@ -94,21 +96,13 @@
       background: linear-gradient(180deg, rgba(255,255,255,0) 0%, #f8faf9 72%);
     }
 
-    .auth-bg::after {
-      content: '';
-      position: absolute;
-      left: 0;
-      right: 0;
-      top: 0;
-      height: 4px;
-      background: #006B3F;
-    }
-
     /* ===== Main Container ===== */
     .auth-container {
       position: relative;
       z-index: 1;
-      min-height: 100vh;
+      height: 100vh;
+      height: 100dvh;
+      overflow: hidden;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -152,24 +146,25 @@
       margin: 0 auto -22px;
       display: flex;
       justify-content: center;
-      width: 100%;
+      width: 80%;
     }
 
     .auth-logo-wrap img.auth-logo-img {
-      width: 70vw;
-      max-width: 280px;
+      width: 60vw;
+      max-width: 220px;
       height: auto;
+      margin-top: -70px;
       object-fit: contain;
       display: block;
     }
 
     .auth-title {
       font-family: 'Cal Sans', sans-serif;
-      font-size: 28px;
+      font-size: 25px;
       font-weight: 600;
       color: #111827;
       letter-spacing: -0.5px;
-      margin-top: 0;
+      margin-top: -45px;
       margin-bottom: 6px;
     }
 
@@ -758,7 +753,7 @@
 
     /* ===== Landscape safety ===== */
     @media (max-height: 600px) {
-      .auth-container { justify-content: flex-start; padding-top: 16px; }
+      .auth-container { justify-content: center; padding-top: env(safe-area-inset-top, 0px); }
       .auth-header { margin-bottom: 16px; }
       .auth-logo-wrap img.auth-logo-img { max-width: 160px; }
     }
@@ -789,6 +784,7 @@
           <img src="Secondary_Logo.png" alt="KudiSave" class="auth-logo-img">
         </div>
         <h1 class="auth-title">KudiSave</h1>
+        <br>
         <p class="greeting-line" id="greetingWord">Akwaaba!</p>
         <p class="auth-subtitle">Master your finances, one cedi at a time</p>
       </div>
@@ -814,7 +810,7 @@
 
       <script>
         (function() {
-          var greetings = ['Akwaaba!', 'Obaake!', 'Woezo!', "A'maraba!"];
+          var greetings = ['Akwaaba!', 'Obaake!', 'Woezor!', "A'maraba!"];
           var index = 0;
           var el = document.getElementById('greetingWord');
           if (!el) return;
@@ -848,23 +844,19 @@
         </button>
 
       </form>
-
-      <!-- ==================== REGISTER FORM ==================== -->
       <form id="registerForm" class="auth-form">
-        <!-- Google -->
+        
         <button type="button" class="google-btn" onclick="signInWithGoogle()">
           <i data-lucide="mail-plus"></i>
           <span class="google-btn-text">Register with Gmail</span>
           <span class="google-btn-badge">Recommended</span>
         </button>
       </form>
-
-      <!-- Footer -->
       <div class="auth-footer">
-        <p>&bull; Wo sika, wo daakye - Your money, your future &bull;</p>
+        <p> &bull; Wo sika, wo daakye - Your money, your future. </p>
         <div class="secure-badge">
           <i data-lucide="shield-check"></i>
-          256-bit encrypted &bull; Your data is safe
+          256-bit encrypted &bull; Your data is safe.
         </div>
       </div>
     </div>
@@ -1050,7 +1042,6 @@
   </script>
 </body>
 </html>
-
 
 
 
