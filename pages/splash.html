@@ -27,7 +27,7 @@
 
     html {
       min-height: 100%;
-      background: #006B3F;
+      background: #f8faf9;
     }
 
     body {
@@ -38,9 +38,11 @@
       align-items: center;
       justify-content: center;
       overflow: hidden;
-      background: #006B3F;
+      background:
+        linear-gradient(180deg, rgba(0, 107, 63, 0.08) 0%, rgba(0, 107, 63, 0) 34%),
+        #f8faf9;
       padding: max(28px, env(safe-area-inset-top)) 24px max(28px, env(safe-area-inset-bottom));
-      color: #ffffff;
+      color: #111827;
       -webkit-font-smoothing: antialiased;
     }
 
@@ -49,7 +51,7 @@
       position: fixed;
       inset: 0;
       pointer-events: none;
-      background: radial-gradient(circle at 50% 42%, rgba(255, 255, 255, 0.1), transparent 34%);
+      background: linear-gradient(180deg, rgba(255,255,255,0) 0%, #f8faf9 72%);
     }
 
     .splash-container {
@@ -69,89 +71,72 @@
     }
 
     .splash-logo {
-      width: 172px;
-      height: 172px;
-      display: grid;
-      place-items: center;
-      margin-bottom: 24px;
-      border-radius: 44px;
-      background:
-        linear-gradient(145deg, rgba(255, 255, 255, 0.16), rgba(255, 255, 255, 0.08));
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      box-shadow:
-        0 22px 48px rgba(0, 31, 20, 0.22),
-        inset 0 1px 0 rgba(255, 255, 255, 0.24);
+      width: min(72vw, 280px);
+      margin-bottom: -20px;
     }
 
     .splash-logo-img {
-      width: 136px;
+      width: 100%;
       height: auto;
-      filter: drop-shadow(0 10px 18px rgba(0,0,0,0.18));
+      filter: drop-shadow(0 14px 28px rgba(0, 107, 63, 0.14));
     }
 
     .splash-title {
       font-family: 'Cal Sans', sans-serif;
-      font-size: clamp(40px, 11vw, 56px);
+      font-size: clamp(34px, 9vw, 46px);
       font-weight: 600;
-      color: white;
-      margin-bottom: 10px;
+      color: #111827;
+      margin-bottom: 8px;
       letter-spacing: 0;
       line-height: 1;
-      text-shadow: 0 8px 28px rgba(0, 38, 24, 0.22);
     }
 
     .splash-subtitle {
-      font-size: 16px;
-      color: rgba(255,255,255,0.86);
-      margin-bottom: 34px;
+      font-size: 14px;
+      color: #6b7280;
+      margin-bottom: 24px;
       font-weight: 600;
       line-height: 1.5;
     }
 
-    .splash-version {
-      font-size: 11px;
-      color: rgba(255,255,255,0.6);
-      font-weight: 700;
-      letter-spacing: 0.08em;
-      margin-bottom: 18px;
-      text-transform: uppercase;
-    }
-
     .splash-loader {
-      width: min(220px, 72vw);
-      height: 4px;
-      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      height: 20px;
+    }
+
+    .splash-dot {
+      width: 7px;
+      height: 7px;
       border-radius: 999px;
-      background: rgba(255,255,255,0.18);
-      box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.12);
+      background: #006B3F;
+      opacity: 0.35;
+      animation: pulse 1.2s ease-in-out infinite;
     }
 
-    .splash-progress {
-      width: 42%;
-      height: 100%;
-      border-radius: inherit;
-      background: linear-gradient(90deg, #ffffff, #fcd116, #ffffff);
-      animation: load 1.15s ease-in-out infinite;
+    .splash-dot:nth-child(2) {
+      animation-delay: 0.16s;
     }
 
-    @keyframes load {
-      0% { transform: translateX(-110%); }
-      100% { transform: translateX(250%); }
+    .splash-dot:nth-child(3) {
+      animation-delay: 0.32s;
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(0.82); opacity: 0.35; }
+      50% { transform: scale(1); opacity: 1; }
     }
 
     @media (max-width: 380px) {
       .splash-logo {
-        width: 148px;
-        height: 148px;
-        border-radius: 36px;
-      }
-
-      .splash-logo-img {
-        width: 118px;
+        width: min(76vw, 230px);
+        margin-bottom: -16px;
       }
 
       .splash-subtitle {
-        font-size: 15px;
+        font-size: 13px;
       }
     }
 
@@ -170,12 +155,13 @@
 </head>
 <body>
   <div class="splash-container">
-    <div class="splash-logo"><img src="../logowhite.png" alt="KudiSave" class="splash-logo-img"></div>
+    <div class="splash-logo"><img src="../Secondary_Logo.png" alt="KudiSave" class="splash-logo-img"></div>
     <h1 class="splash-title">KudiSave</h1>
-    <p class="splash-subtitle">Your Personal Finance Companion</p>
-    <p class="splash-version">v1.0</p>
+    <p class="splash-subtitle">Getting things ready</p>
     <div class="splash-loader">
-      <div class="splash-progress"></div>
+      <div class="splash-dot"></div>
+      <div class="splash-dot"></div>
+      <div class="splash-dot"></div>
     </div>
   </div>
 
@@ -197,10 +183,10 @@
       }
     }
 
-    // Wait 2.5 seconds then redirect based on user state
+    // Wait briefly then redirect based on user state
     setTimeout(() => {
       window.location.href = getRedirectUrl();
-    }, 2500);
+    }, 1600);
     
     // Allow skip with tap/click
     document.addEventListener('click', skipSplash);
