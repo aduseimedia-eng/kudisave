@@ -1,0 +1,31 @@
+services:
+  - type: web
+    name: kudisave-api
+    runtime: node
+    region: oregon
+    plan: free
+    buildCommand: npm install
+    startCommand: npm start
+    healthCheckPath: /health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000
+      - key: JWT_SECRET
+        generateValue: true
+      - key: JWT_REFRESH_SECRET
+        generateValue: true
+      - key: BCRYPT_ROUNDS
+        value: 12
+      - key: DATABASE_URL
+        fromDatabase:
+          name: kudisave-db
+          property: connectionString
+
+databases:
+  - name: kudisave-db
+    plan: free
+    databaseName: kudisave
+    user: kudisave_user
+    region: oregon

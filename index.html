@@ -1,0 +1,1054 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="theme-color" content="#006B3F">
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+  <link rel="manifest" href="/manifest.json">
+  <title>KudiSave - Login</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/style.css">
+  <style>
+    @font-face {
+      font-family: 'Cal Sans';
+      src: url('https://cdn.jsdelivr.net/npm/cal-sans@1.0.1/fonts/CalSans-SemiBold.woff2') format('woff2');
+      font-weight: 600;
+      font-style: normal;
+      font-display: swap;
+    }
+  </style>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+  <!-- Lottie for animations -->
+  <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
+  <script>
+    (function() {
+      const hasCompletedOnboarding = localStorage.getItem('onboardingComplete');
+      const isLoggedIn = localStorage.getItem('token');
+      const hasSeenSplash = sessionStorage.getItem('splashShown');
+
+      if (isLoggedIn) {
+        if (!hasSeenSplash) {
+          sessionStorage.setItem('splashShown', 'true');
+          window.location.href = 'pages/splash.html';
+        } else {
+          window.location.href = 'pages/dashboard.html';
+        }
+        return;
+      }
+
+      // First-time visitors see onboarding before login.
+      if (!hasCompletedOnboarding) {
+        window.location.href = 'pages/onboarding.html';
+        return;
+      }
+
+      // Returning visitors see splash once per session.
+      if (!hasSeenSplash) {
+        sessionStorage.setItem('splashShown', 'true');
+        window.location.href = 'pages/splash.html';
+      }
+    })();
+  </script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    
+    html, body {
+      overflow-x: hidden;
+      width: 100%;
+      max-width: 100vw;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      padding: 0;
+      padding-top: env(safe-area-inset-top, 0px);
+      padding-bottom: env(safe-area-inset-bottom, 0px);
+      background: #f8faf9;
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ===== Animated Background ===== */
+    .auth-bg {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      background:
+        linear-gradient(180deg, rgba(0, 107, 63, 0.08) 0%, rgba(0, 107, 63, 0) 34%),
+        #f8faf9;
+      overflow: hidden;
+    }
+
+    .auth-bg::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, rgba(255,255,255,0) 0%, #f8faf9 72%);
+    }
+
+    .auth-bg::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 0;
+      height: 4px;
+      background: #006B3F;
+    }
+
+    /* ===== Main Container ===== */
+    .auth-container {
+      position: relative;
+      z-index: 1;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 0 0;
+      padding-top: env(safe-area-inset-top, 0px);
+      padding-bottom: calc(24px + env(safe-area-inset-bottom, 0px));
+    }
+
+    /* ===== Card ===== */
+    .auth-card {
+      background: transparent;
+      border: none;
+      border-radius: 0;
+      padding: 0 20px;
+      max-width: 440px;
+      width: 100%;
+      position: relative;
+      overflow: visible;
+      box-shadow: none;
+      backdrop-filter: none;
+      -webkit-backdrop-filter: none;
+      animation: cardEnter 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      opacity: 0;
+      transform: translateY(30px);
+    }
+
+    @keyframes cardEnter {
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ===== Header ===== */
+    .auth-header {
+      text-align: center;
+      margin-top: 0;
+      margin-bottom: 28px;
+      position: relative;
+    }
+
+    .auth-logo-wrap {
+      margin: 0 auto -22px;
+      display: flex;
+      justify-content: center;
+      width: 80%;
+    }
+
+    .auth-logo-wrap img.auth-logo-img {
+      width: 60vw;
+      max-width: 220px;
+      height: auto;
+      margin-top: -70px;
+      object-fit: contain;
+      display: block;
+    }
+
+    .auth-title {
+      font-family: 'Cal Sans', sans-serif;
+      font-size: 25px;
+      font-weight: 600;
+      color: #111827;
+      letter-spacing: -0.5px;
+      margin-top: -45px;
+      margin-bottom: 6px;
+    }
+
+    .auth-subtitle {
+      color: #6b7280;
+      font-size: 14px;
+      font-weight: 400;
+      line-height: 1.5;
+    }
+
+    /* ===== Pill Tab Switcher ===== */
+    .auth-tabs {
+      display: flex;
+      background: #f3f4f6;
+      border-radius: 14px;
+      padding: 4px;
+      margin-bottom: 28px;
+      position: relative;
+      border: 1px solid rgba(0, 0, 0, 0.04);
+    }
+
+    .tab-slider {
+      position: absolute;
+      top: 4px;
+      left: 4px;
+      width: calc(50% - 4px);
+      height: calc(100% - 8px);
+      background: linear-gradient(135deg, #00a05e, #006B3F);
+      border-radius: 11px;
+      transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: 0 4px 15px rgba(0, 160, 94, 0.3);
+      z-index: 0;
+    }
+
+    .tab-slider.register {
+      transform: translateX(100%);
+    }
+
+    .auth-tab {
+      flex: 1;
+      padding: 12px 16px;
+      background: none;
+      border: none;
+      border-radius: 11px;
+      color: #6b7280;
+      cursor: pointer;
+      transition: color 0.3s ease;
+      font-weight: 600;
+      font-size: 14px;
+      text-align: center;
+      position: relative;
+      z-index: 1;
+      touch-action: manipulation;
+      font-family: inherit;
+    }
+
+    .auth-tab.active {
+      color: #ffffff;
+    }
+
+    .auth-tab:active {
+      transform: scale(0.97);
+    }
+
+    /* ===== Forms ===== */
+    .auth-form {
+      display: none;
+    }
+
+    .auth-form.active {
+      display: block;
+      animation: formFadeIn 0.35s ease;
+    }
+
+    @keyframes formFadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ===== Google Button (Hero) ===== */
+    .google-btn {
+      width: 100%;
+      padding: 15px 20px;
+      background: #ffffff;
+      border: 2px solid #e5e7eb;
+      border-radius: 16px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      font-size: 15px;
+      font-weight: 600;
+      color: #1f2937;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      font-family: inherit;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    }
+
+    .google-btn::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(66,133,244,0.04), rgba(52,168,83,0.04), rgba(251,188,5,0.04), rgba(234,67,53,0.04));
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      border-radius: inherit;
+    }
+
+    .google-btn:hover {
+      border-color: #c5c9d0;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+      transform: translateY(-1px);
+    }
+
+    .google-btn:hover::after {
+      opacity: 1;
+    }
+
+    .google-btn:active {
+      transform: scale(0.98) translateY(0);
+      box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+    }
+
+    .google-btn i,
+    .google-btn svg {
+      width: 22px;
+      height: 22px;
+      flex-shrink: 0;
+      position: relative;
+      z-index: 1;
+    }
+
+    .google-btn span,
+    .google-btn .google-btn-text {
+      position: relative;
+      z-index: 1;
+    }
+
+    .google-btn-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 10px;
+      font-weight: 600;
+      color: #006B3F;
+      background: rgba(0, 107, 63, 0.08);
+      padding: 2px 8px;
+      border-radius: 20px;
+      margin-left: 6px;
+      letter-spacing: 0.3px;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* ===== Divider ===== */
+    .divider {
+      display: flex;
+      align-items: center;
+      margin: 20px 0;
+      gap: 14px;
+    }
+
+    .divider::before,
+    .divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: #e5e7eb;
+    }
+
+    .divider span {
+      color: #9ca3af;
+      font-size: 12px;
+      font-weight: 500;
+      white-space: nowrap;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    /* ===== Form Groups ===== */
+    .auth-form .form-group {
+      margin-bottom: 18px;
+      position: relative;
+    }
+
+    .auth-form .form-label {
+      display: block;
+      margin-bottom: 7px;
+      font-weight: 600;
+      color: #374151;
+      font-size: 12px;
+      letter-spacing: 0.3px;
+    }
+
+    .input-wrap {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+
+    .input-icon-left {
+      position: absolute;
+      left: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #9ca3af;
+      pointer-events: none;
+      transition: color 0.3s ease;
+      z-index: 2;
+    }
+
+    .input-icon-left i {
+      width: 18px;
+      height: 18px;
+      stroke-width: 2;
+    }
+
+    .auth-form .form-input {
+      width: 100%;
+      padding: 14px 14px 14px 44px;
+      background: #f9fafb;
+      border: 1.5px solid #e5e7eb;
+      border-radius: 14px;
+      color: #111827;
+      font-size: 14px;
+      font-family: inherit;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      -webkit-appearance: none;
+      appearance: none;
+    }
+
+    .auth-form .form-input::placeholder {
+      color: #9ca3af;
+    }
+
+    .auth-form .form-input:focus {
+      outline: none;
+      border-color: #00a05e;
+      background: #ffffff;
+      box-shadow: 0 0 0 3px rgba(0, 160, 94, 0.12), 0 4px 20px rgba(0, 160, 94, 0.06);
+    }
+
+    .auth-form .form-input.password-input {
+      padding-right: 48px;
+    }
+
+    .input-wrap:focus-within .input-icon-left {
+      color: #00a05e;
+    }
+
+    /* Password toggle */
+    .password-toggle {
+      position: absolute;
+      right: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      color: #9ca3af;
+      cursor: pointer;
+      padding: 4px;
+      display: flex;
+      z-index: 2;
+      transition: color 0.2s ease;
+    }
+
+    .password-toggle:hover {
+      color: #6b7280;
+    }
+
+    .password-toggle i {
+      width: 18px;
+      height: 18px;
+      stroke-width: 2;
+    }
+
+    .form-hint {
+      display: block;
+      margin-top: 6px;
+      font-size: 11px;
+      color: #9ca3af;
+      padding-left: 2px;
+    }
+
+    /* ===== Password Strength ===== */
+    .password-strength {
+      display: flex;
+      gap: 4px;
+      margin-top: 8px;
+    }
+
+    .strength-bar {
+      flex: 1;
+      height: 3px;
+      background: #e5e7eb;
+      border-radius: 2px;
+      transition: background 0.3s ease;
+    }
+
+    .strength-bar.weak { background: #ef4444; }
+    .strength-bar.medium { background: #f59e0b; }
+    .strength-bar.strong { background: #00a05e; }
+
+    .strength-text {
+      font-size: 10px;
+      margin-top: 4px;
+      font-weight: 500;
+      transition: color 0.3s ease;
+    }
+
+    .strength-text.weak { color: #ef4444; }
+    .strength-text.medium { color: #f59e0b; }
+    .strength-text.strong { color: #00a05e; }
+
+    /* ===== Forgot Password ===== */
+    .forgot-link {
+      display: block;
+      text-align: right;
+      font-size: 12px;
+      color: #006B3F;
+      text-decoration: none;
+      font-weight: 500;
+      margin-top: -8px;
+      margin-bottom: 20px;
+      transition: color 0.2s ease;
+    }
+
+    .forgot-link:hover {
+      color: #00a05e;
+    }
+
+    /* ===== Submit Buttons ===== */
+    .auth-submit {
+      width: 100%;
+      padding: 15px 24px;
+      background: linear-gradient(135deg, #00a05e 0%, #006B3F 100%);
+      color: white;
+      border: none;
+      border-radius: 14px;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      overflow: hidden;
+      font-family: inherit;
+      letter-spacing: -0.1px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      box-shadow: 0 4px 20px rgba(0, 160, 94, 0.25);
+    }
+
+    .auth-submit::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, transparent, rgba(255,255,255,0.15), transparent);
+      transform: translateX(-100%);
+      transition: transform 0.5s ease;
+    }
+
+    .auth-submit:hover::before {
+      transform: translateX(100%);
+    }
+
+    .auth-submit:active {
+      transform: scale(0.98);
+      box-shadow: 0 2px 10px rgba(0, 160, 94, 0.25);
+    }
+
+    .auth-submit.loading {
+      pointer-events: none;
+      opacity: 0.85;
+    }
+
+    .auth-submit .btn-text {
+      transition: opacity 0.2s ease;
+    }
+
+    .auth-submit.loading .btn-text {
+      opacity: 0;
+    }
+
+    .auth-submit .btn-spinner {
+      position: absolute;
+      width: 22px;
+      height: 22px;
+      border: 2.5px solid rgba(255,255,255,0.3);
+      border-top-color: white;
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+      display: none;
+    }
+
+    .auth-submit.loading .btn-spinner {
+      display: block;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+
+
+    /* ===== Footer ===== */
+    .auth-footer {
+      text-align: center;
+      margin-top: 28px;
+      padding-top: 20px;
+      border-top: 1px solid #f3f4f6;
+    }
+
+    .auth-footer p {
+      color: #9ca3af;
+      font-size: 12px;
+      font-weight: 400;
+      line-height: 1.5;
+    }
+
+    .auth-footer .secure-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      color: #006B3F;
+      font-size: 11px;
+      font-weight: 500;
+      margin-top: 8px;
+    }
+
+    .auth-footer .secure-badge i {
+      width: 13px;
+      height: 13px;
+      stroke-width: 2.5;
+    }
+
+    /* ===== Toast ===== */
+    .toast {
+      position: fixed;
+      bottom: 40px;
+      left: 50%;
+      transform: translateX(-50%) translateY(100px);
+      padding: 14px 24px;
+      border-radius: 16px;
+      z-index: 10000;
+      font-size: 13px;
+      font-weight: 600;
+      font-family: inherit;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.4s ease;
+      opacity: 0;
+      max-width: calc(100vw - 40px);
+    }
+
+    .toast.visible {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
+    }
+
+    .toast.success {
+      background: rgba(0, 107, 63, 0.9);
+      border: 1px solid rgba(0, 160, 94, 0.3);
+      color: white;
+    }
+
+    .toast.error {
+      background: rgba(220, 53, 69, 0.9);
+      border: 1px solid rgba(220, 53, 69, 0.3);
+      color: white;
+    }
+
+    .toast.warning {
+      background: rgba(245, 158, 11, 0.9);
+      border: 1px solid rgba(245, 158, 11, 0.3);
+      color: white;
+    }
+
+    .toast i {
+      width: 18px;
+      height: 18px;
+      stroke-width: 2.5;
+      flex-shrink: 0;
+    }
+
+    /* ===== Splash Overlay ===== */
+    .splash-overlay {
+      position: fixed;
+      inset: 0;
+      background: #006B3F;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+      transition: opacity 0.6s ease, visibility 0.6s ease;
+    }
+
+    .splash-overlay.hidden {
+      opacity: 0;
+      visibility: hidden;
+    }
+
+    .splash-overlay .splash-logo {
+      margin-bottom: 12px;
+      animation: bounceIn 0.6s ease;
+      color: #00e676;
+    }
+
+    .splash-overlay .splash-logo-img {
+      width: 100px;
+      height: auto;
+    }
+
+    .splash-overlay .splash-title {
+      font-size: 22px;
+      font-weight: 800;
+      color: white;
+      margin-bottom: 4px;
+    }
+
+    .splash-overlay .splash-subtitle {
+      font-size: 12px;
+      color: rgba(255,255,255,0.5);
+      margin-bottom: 24px;
+    }
+
+    .splash-overlay .splash-loader {
+      display: flex;
+      gap: 8px;
+    }
+
+    .splash-overlay .splash-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #00a05e;
+      animation: pulse 1.4s ease-in-out infinite;
+    }
+
+    .splash-overlay .splash-dot:nth-child(1) { animation-delay: 0s; }
+    .splash-overlay .splash-dot:nth-child(2) { animation-delay: 0.2s; }
+    .splash-overlay .splash-dot:nth-child(3) { animation-delay: 0.4s; }
+
+    @keyframes bounceIn {
+      0% { transform: scale(0.3); opacity: 0; }
+      50% { transform: scale(1.05); }
+      70% { transform: scale(0.9); }
+      100% { transform: scale(1); opacity: 1; }
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(0.8); opacity: 0.5; }
+      50% { transform: scale(1.2); opacity: 1; }
+    }
+
+
+
+    /* ===== Responsive ===== */
+    @media (max-width: 440px) {
+      .auth-card {
+        padding: 28px 18px 24px;
+        border-radius: 24px;
+        margin: 0 8px;
+      }
+      .auth-title {
+        font-size: 24px;
+      }
+      .auth-logo-wrap img.auth-logo-img {
+        max-width: 220px;
+      }
+    }
+
+    @media (max-width: 360px) {
+      .auth-logo-wrap img.auth-logo-img { max-width: 180px; }
+      .auth-card { padding: 24px 16px 20px; }
+    }
+
+    /* ===== Landscape safety ===== */
+    @media (max-height: 600px) {
+      .auth-container { justify-content: flex-start; padding-top: 16px; }
+      .auth-header { margin-bottom: 16px; }
+      .auth-logo-wrap img.auth-logo-img { max-width: 160px; }
+    }
+  </style>
+</head>
+<body>
+  <!-- Animated Background -->
+  <div class="auth-bg"></div>
+
+  <!-- Splash Overlay -->
+  <div class="splash-overlay hidden" id="splashOverlay">
+    <div class="splash-logo"><img src="Secondary_Logo.png" alt="KudiSave" class="splash-logo-img"></div>
+    <p class="splash-subtitle">Welcome back!</p>
+    <div class="splash-loader">
+      <div class="splash-dot"></div>
+      <div class="splash-dot"></div>
+      <div class="splash-dot"></div>
+    </div>
+  </div>
+
+  <!-- Main Auth Container -->
+  <div class="auth-container">
+    <div class="auth-card">
+
+      <!-- Header -->
+      <div class="auth-header">
+        <div class="auth-logo-wrap">
+          <img src="Secondary_Logo.png" alt="KudiSave" class="auth-logo-img">
+        </div>
+        <h1 class="auth-title">KudiSave</h1>
+        <br>
+        <p class="greeting-line" id="greetingWord">Akwaaba!</p>
+        <p class="auth-subtitle">Master your finances, one cedi at a time</p>
+      </div>
+
+      <style>
+        .greeting-line {
+          font-size: 22px;
+          font-weight: 700;
+          color: var(--primary);
+          margin: 0 0 4px 0;
+          min-height: 32px;
+          transition: opacity 0.4s ease, transform 0.4s ease;
+        }
+        .greeting-line.fade-out {
+          opacity: 0;
+          transform: translateY(-6px);
+        }
+        .greeting-line.fade-in {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      </style>
+
+      <script>
+        (function() {
+          var greetings = ['Akwaaba!', 'Obaake!', 'Woezor!', "A'maraba!"];
+          var index = 0;
+          var el = document.getElementById('greetingWord');
+          if (!el) return;
+          setInterval(function() {
+            el.classList.add('fade-out');
+            el.classList.remove('fade-in');
+            setTimeout(function() {
+              index = (index + 1) % greetings.length;
+              el.textContent = greetings[index];
+              el.classList.remove('fade-out');
+              el.classList.add('fade-in');
+            }, 400);
+          }, 2000);
+        })();
+      </script>
+
+      <!-- Tab Switcher -->
+      <div class="auth-tabs">
+        <div class="tab-slider" id="tabSlider"></div>
+        <button class="auth-tab active" onclick="switchTab('login')" id="tabLogin">Sign In</button>
+        <button class="auth-tab" onclick="switchTab('register')" id="tabRegister">Sign Up</button>
+      </div>
+
+      <!-- ==================== LOGIN FORM ==================== -->
+      <form id="loginForm" class="auth-form active">
+        <!-- Google -->
+        <button type="button" class="google-btn" onclick="signInWithGoogle()">
+          <i data-lucide="mail-check"></i>
+          <span class="google-btn-text">Continue with Gmail</span>
+          <span class="google-btn-badge">Quick</span>
+        </button>
+
+      </form>
+      <form id="registerForm" class="auth-form">
+        
+        <button type="button" class="google-btn" onclick="signInWithGoogle()">
+          <i data-lucide="mail-plus"></i>
+          <span class="google-btn-text">Register with Gmail</span>
+          <span class="google-btn-badge">Recommended</span>
+        </button>
+      </form>
+      <div class="auth-footer">
+        <p> &bull; Wo sika, wo daakye - Your money, your future. </p>
+        <div class="secure-badge">
+          <i data-lucide="shield-check"></i>
+          256-bit encrypted &bull; Your data is safe.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="assets/js/config.js"></script>
+  <script src="assets/js/api.js"></script>
+  <script src="assets/js/utils.js"></script>
+  <script>
+    console.log('Login page loaded successfully!');
+
+    // ===== Toast System =====
+    let activeToast = null;
+    function showToast(message, type = 'success') {
+      if (activeToast) activeToast.remove();
+
+      const iconMap = { success: 'check-circle', error: 'alert-circle', warning: 'alert-triangle' };
+      const toast = document.createElement('div');
+      toast.className = `toast ${type}`;
+      toast.innerHTML = `<i data-lucide="${iconMap[type] || 'info'}"></i><span>${message}</span>`;
+      document.body.appendChild(toast);
+      lucide.createIcons({ nodes: [toast] });
+      activeToast = toast;
+
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => toast.classList.add('visible'));
+      });
+
+      setTimeout(() => {
+        toast.classList.remove('visible');
+        setTimeout(() => { toast.remove(); if (activeToast === toast) activeToast = null; }, 400);
+      }, 3500);
+    }
+
+    // ===== Tab Switching =====
+    function switchTab(tab) {
+      const slider = document.getElementById('tabSlider');
+      const tabs = document.querySelectorAll('.auth-tab');
+      const forms = document.querySelectorAll('.auth-form');
+
+      tabs.forEach(t => t.classList.remove('active'));
+      forms.forEach(f => f.classList.remove('active'));
+
+      if (tab === 'login') {
+        slider.classList.remove('register');
+        document.getElementById('tabLogin').classList.add('active');
+        document.getElementById('loginForm').classList.add('active');
+      } else {
+        slider.classList.add('register');
+        document.getElementById('tabRegister').classList.add('active');
+        document.getElementById('registerForm').classList.add('active');
+      }
+    }
+    // ===== Button Loading State =====
+    function setLoading(btnId, loading) {
+      const btn = document.getElementById(btnId);
+      if (loading) {
+        btn.classList.add('loading');
+      } else {
+        btn.classList.remove('loading');
+      }
+    }
+    // ===== Google Sign-In =====
+    const GOOGLE_CLIENT_ID = window.KUDISAVE_GOOGLE_CLIENT_ID ||
+      '760162537864-49c7509k9sdk3hf57d2at16anhv74cul.apps.googleusercontent.com';
+
+    function initGoogleSignIn() {
+      if (typeof google !== 'undefined' && google.accounts) {
+        google.accounts.id.initialize({
+          client_id: GOOGLE_CLIENT_ID,
+          callback: handleGoogleCallback,
+          auto_select: false,
+          cancel_on_tap_outside: true
+        });
+      }
+    }
+
+    function signInWithGoogle() {
+      if (typeof google !== 'undefined' && google.accounts) {
+        // Show loading state on Google buttons
+        const googleBtns = document.querySelectorAll('.google-btn');
+        googleBtns.forEach(b => { 
+          b.disabled = true; 
+          b.style.opacity = '0.7';
+          const textEl = b.querySelector('.google-btn-text');
+          if (textEl) textEl.textContent = 'Connecting...';
+        });
+
+        const resetBtns = () => {
+          googleBtns.forEach(b => { 
+            b.disabled = false; 
+            b.style.opacity = '';
+            const textEl = b.querySelector('.google-btn-text');
+            if (textEl) {
+              const isLogin = document.getElementById('loginForm').classList.contains('active');
+              textEl.textContent = isLogin ? 'Continue with Gmail' : 'Register with Gmail';
+            }
+          });
+        };
+
+        google.accounts.id.prompt((notification) => {
+          if (notification.isNotDisplayed() || notification.isSkippedMoment()) {
+            // One Tap blocked - fall back to OAuth2 token flow
+            google.accounts.oauth2.initTokenClient({
+              client_id: GOOGLE_CLIENT_ID,
+              scope: 'email profile',
+              callback: async (response) => {
+                if (response.access_token) {
+                  await sendGoogleToken(null, response.access_token);
+                } else {
+                  resetBtns();
+                }
+              },
+              error_callback: () => { resetBtns(); }
+            }).requestAccessToken();
+          }
+        });
+
+        // Timeout reset in case prompt is dismissed
+        setTimeout(resetBtns, 30000);
+      } else {
+        showToast('Gmail sign-in is loading. Please try again in a moment.', 'warning');
+      }
+    }
+
+    async function handleGoogleCallback(response) {
+      if (response.credential) {
+        await sendGoogleToken(response.credential, null);
+      }
+    }
+
+    async function sendGoogleToken(credential, accessToken) {
+      const googleBtn = document.querySelectorAll('.google-btn');
+      googleBtn.forEach(b => { b.disabled = true; b.style.opacity = '0.7'; });
+      try {
+        const result = await api.googleAuth(credential, accessToken);
+        completeGoogleLogin(result.data);
+      } catch (error) {
+        console.error('Google sign-in error:', error);
+        showToast(error.message || 'Gmail sign-in failed. Please try again.', 'error');
+      } finally {
+        googleBtn.forEach(b => { b.disabled = false; b.style.opacity = ''; });
+      }
+    }
+
+    function completeGoogleLogin(data) {
+      localStorage.setItem('onboardingComplete', 'true');
+      const userName = data.user?.name || '';
+      const greeting = userName ? `Welcome, ${userName.split(' ')[0]}!` : 'Signed in with Gmail!';
+      showToast(greeting);
+
+      // Show splash overlay for smooth transition
+      const splash = document.getElementById('splashOverlay');
+      if (splash) {
+        splash.classList.remove('hidden');
+        const subtitleEl = splash.querySelector('.splash-subtitle');
+        if (subtitleEl) subtitleEl.textContent = greeting;
+      }
+
+      setTimeout(() => { window.location.href = 'pages/dashboard.html'; }, 800);
+    }
+    // ===== Init =====
+    document.addEventListener('DOMContentLoaded', () => {
+      console.log('DOM loaded');
+      lucide.createIcons();
+
+      // Already logged in? Go to dashboard
+      const token = localStorage.getItem('token');
+      if (token) {
+        window.location.href = 'pages/dashboard.html';
+        return;
+      }
+
+      // Init Google Sign-In
+      setTimeout(initGoogleSignIn, 500);
+
+      // Hide splash overlay
+      setTimeout(() => {
+        const splash = document.getElementById('splashOverlay');
+        if (splash) splash.classList.add('hidden');
+      }, 800);
+    });
+  </script>
+</body>
+</html>
+
+
+
+

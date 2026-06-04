@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="theme-color" content="#006B3F">
+  <link rel="icon" type="image/png" sizes="32x32" href="../favicon.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="../apple-touch-icon.png">
+  <link rel="manifest" href="../manifest.json">
+  <title>Privacy Policy - KudiSave</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/css/style.css">
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    .legal-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 16px;
+      background: linear-gradient(160deg, var(--primary-color) 0%, #004d2c 60%, #003822 100%);
+      color: white;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .legal-header .back-btn {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      background: rgba(255,255,255,0.15);
+      border: none;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .legal-header .back-btn:active { background: rgba(255,255,255,0.25); }
+    .legal-header h1 {
+      font-size: 18px;
+      font-weight: 700;
+      margin: 0;
+    }
+    .legal-content {
+      padding: 20px 16px 40px;
+      max-width: 640px;
+      margin: 0 auto;
+    }
+    .legal-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(0, 107, 63, 0.08);
+      color: var(--primary-color);
+      font-size: 11px;
+      font-weight: 600;
+      padding: 6px 12px;
+      border-radius: 20px;
+      margin-bottom: 20px;
+    }
+    .legal-section {
+      background: var(--card-bg);
+      border-radius: 16px;
+      padding: 20px;
+      margin-bottom: 12px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+    }
+    .legal-section h2 {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin: 0 0 10px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .legal-section h2 svg { color: var(--primary-color); }
+    .legal-section p,
+    .legal-section li {
+      font-size: 13px;
+      color: var(--text-secondary);
+      line-height: 1.7;
+      margin: 0 0 8px;
+    }
+    .legal-section ul {
+      padding-left: 20px;
+      margin: 8px 0;
+    }
+    .legal-section li { margin-bottom: 4px; }
+    .legal-footer {
+      text-align: center;
+      padding: 20px 16px 40px;
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+    .legal-footer a {
+      color: var(--primary-color);
+      text-decoration: none;
+      font-weight: 600;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <div class="legal-header">
+    <button class="back-btn" onclick="history.back()">
+      <i data-lucide="arrow-left" style="width:20px;height:20px;"></i>
+    </button>
+    <h1>Privacy Policy</h1>
+  </div>
+
+  <!-- Content -->
+  <div class="legal-content">
+    <div class="legal-badge">
+      <i data-lucide="calendar" style="width:12px;height:12px;"></i>
+      Last updated: February 19, 2026
+    </div>
+
+    <div class="legal-section">
+      <h2><i data-lucide="eye" style="width:18px;height:18px;"></i> Overview</h2>
+      <p>Your privacy matters to us. This Privacy Policy explains what data KudiSave ("the App") collects, how we use it, and how we protect it.</p>
+      <p>KudiSave is owned and operated by <strong>Adusei Media</strong>.</p>
+    </div>
+
+    <div class="legal-section">
+      <h2><i data-lucide="clipboard-list" style="width:18px;height:18px;"></i> Data We Collect</h2>
+      <p>When you use KudiSave, we may collect the following information:</p>
+      <ul>
+        <li><strong>Account info</strong> — Name, email address, phone number (for SMS OTP verification), and password (encrypted)</li>
+        <li><strong>Financial data</strong> — Expenses, income, budgets, goals, savings, bill reminders, and subscriptions you enter</li>
+        <li><strong>App usage</strong> — Streaks, achievements, challenges completed, and your preferences</li>
+        <li><strong>Device info</strong> — Browser type, screen size, and theme preference (for display purposes only)</li>
+        <li><strong>Gmail data</strong> — Only if you opt-in to Gmail OAuth. We request permission to read your Gmail inbox to detect bill-related emails. We do NOT access, store, or share your emails with third parties.</li>
+      </ul>
+      <p>We do <strong>not</strong> collect bank account numbers, mobile money PINs, payment card details, or device location.</p>
+    </div>
+
+    <div class="legal-section">
+      <h2><i data-lucide="settings" style="width:18px;height:18px;"></i> How We Use Your Data</h2>
+      <p>Your data is used solely to:</p>
+      <ul>
+        <li>Provide and improve the KudiSave service</li>
+        <li>Generate personalized spending insights and reports</li>
+        <li>Track your financial goals and daily streaks</li>
+        <li>Send email notifications (if you opt in):
+          <ul style="margin-top:4px;">
+            <li>Daily bill payment reminders</li>
+            <li>Weekly financial summaries</li>
+            <li>Monthly budget alerts</li>
+          </ul>
+        </li>
+        <li>Verify your account via SMS OTP and email</li>
+        <li>Allow you to export and backup your data</li>
+      </ul>
+      <p>We do <strong>not</strong> sell, rent, or share your personal data with third parties for marketing purposes.</p>
+    </div>
+
+    <div class="legal-section">
+      <h2><i data-lucide="lock" style="width:18px;height:18px;"></i> Data Security</h2>
+      <p>We take security seriously and implement the following measures:</p>
+      <ul>
+        <li>Passwords are hashed using bcrypt (industry-standard encryption)</li>
+        <li>Authentication uses JWT tokens stored locally in your browser</li>
+        <li>All API communication is encrypted over HTTPS</li>
+        <li>Database access is restricted and monitored</li>
+        <li>Rate limiting is applied to prevent abuse and brute-force attacks</li>
+        <li>All authentication endpoints have strict validation and limiting</li>
+      </ul>
+      <p>While we strive to protect your data, no system is 100% secure. You are responsible for keeping your login credentials safe and logging out on shared devices.</p>
+    </div>
+
+    <div class="legal-section">
+      <h2><i data-lucide="hard-drive" style="width:18px;height:18px;"></i> Data Storage</h2>
+      <p>Your data is stored on secure servers. Some preferences may also be stored locally on your device (localStorage) for a faster experience.</p>
+      <p>We retain your data for as long as your account is active. Upon account deletion, your data is permanently removed from our servers.</p>
+    </div>
+
+    <div class="legal-section">
+      <h2><i data-lucide="user-x" style="width:18px;height:18px;"></i> Your Rights</h2>
+      <p>You have the right to:</p>
+      <ul>
+        <li><strong>Access</strong> — View and export your financial data in CSV, Excel, or PDF formats</li>
+        <li><strong>Correct</strong> — Update any inaccurate information in your profile or financial records</li>
+        <li><strong>Delete</strong> — Permanently remove your account and all associated data</li>
+        <li><strong>Opt out</strong> — Disable email notifications (bill reminders, summaries, alerts) at any time</li>
+        <li><strong>Disconnect</strong> — Revoke Gmail OAuth access without deleting your account</li>
+      </ul>
+      <p>You can exercise these rights from the Settings page or by contacting us directly. Account deletion is permanent and cannot be undone.</p>
+    </div>
+
+    <div class="legal-section">
+      <h2><i data-lucide="cookie" style="width:18px;height:18px;"></i> Cookies & Local Storage</h2>
+      <p>KudiSave uses localStorage to save the following on your device:</p>
+      <ul>
+        <li><strong>JWT authentication token</strong> — Keeps you logged in between sessions</li>
+        <li><strong>Theme preference</strong> — Your light/dark mode choice</li>
+        <li><strong>User preferences</strong> — Language, currency, notification settings</li>
+      </ul>
+      <p>We do <strong>not</strong> use third-party tracking cookies, analytics, or external data collection services. We load Lucide icons from a CDN for performance, but this is a static icon library with no tracking.</p>
+      <p>You can clear localStorage at any time through your browser settings, which will log you out.</p>
+    </div>
+
+    <div class="legal-section">
+      <h2><i data-lucide="refresh-cw" style="width:18px;height:18px;"></i> Changes to This Policy</h2>
+      <p>We may update this Privacy Policy from time to time. Changes will be reflected on this page with an updated date. Continued use of the App after changes constitutes acceptance.</p>
+    </div>
+
+    <div class="legal-section">
+      <h2><i data-lucide="mail" style="width:18px;height:18px;"></i> Contact</h2>
+      <p>If you have questions about this Privacy Policy or your data, contact us at:</p>
+      <p><strong>Adusei Media</strong><br>Email: support@kudisave.com</p>
+    </div>
+  </div>
+
+  <div class="legal-footer">
+    &copy; 2026 Adusei Media. All rights reserved.<br>
+    <a href="terms.html">Terms of Service</a>
+  </div>
+
+  <script>
+    lucide.createIcons();
+  </script>
+</body>
+</html>
