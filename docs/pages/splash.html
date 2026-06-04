@@ -27,7 +27,7 @@
 
     html {
       min-height: 100%;
-      background: #f8faf9;
+      background: #006B3F;
     }
 
     body {
@@ -38,11 +38,9 @@
       align-items: center;
       justify-content: center;
       overflow: hidden;
-      background:
-        linear-gradient(180deg, rgba(0, 107, 63, 0.08) 0%, rgba(0, 107, 63, 0) 34%),
-        #f8faf9;
+      background: #006B3F;
       padding: max(28px, env(safe-area-inset-top)) 24px max(28px, env(safe-area-inset-bottom));
-      color: #111827;
+      color: #ffffff;
       -webkit-font-smoothing: antialiased;
     }
 
@@ -51,7 +49,7 @@
       position: fixed;
       inset: 0;
       pointer-events: none;
-      background: linear-gradient(180deg, rgba(255,255,255,0) 0%, #f8faf9 72%);
+      background: radial-gradient(circle at 50% 42%, rgba(255, 255, 255, 0.08), transparent 36%);
     }
 
     .splash-container {
@@ -78,14 +76,14 @@
     .splash-logo-img {
       width: 100%;
       height: auto;
-      filter: drop-shadow(0 14px 28px rgba(0, 107, 63, 0.14));
+      filter: drop-shadow(0 14px 28px rgba(0, 31, 20, 0.2));
     }
 
     .splash-title {
       font-family: 'Cal Sans', sans-serif;
       font-size: clamp(34px, 9vw, 46px);
       font-weight: 600;
-      color: #111827;
+      color: #ffffff;
       margin-bottom: 8px;
       letter-spacing: 0;
       line-height: 1;
@@ -93,7 +91,7 @@
 
     .splash-subtitle {
       font-size: 14px;
-      color: #6b7280;
+      color: rgba(255,255,255,0.82);
       margin-bottom: 24px;
       font-weight: 600;
       line-height: 1.5;
@@ -111,7 +109,7 @@
       width: 7px;
       height: 7px;
       border-radius: 999px;
-      background: #006B3F;
+      background: #ffffff;
       opacity: 0.35;
       animation: pulse 1.2s ease-in-out infinite;
     }
