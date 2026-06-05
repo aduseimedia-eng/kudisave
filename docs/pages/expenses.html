@@ -92,7 +92,8 @@
     /* Expense Cards */
     .expense-card { background: var(--card-bg, #fff); border-radius: 16px; padding: 14px 16px; margin-bottom: 10px; border: 1px solid var(--border-color, #e5e7eb); display: flex; align-items: center; gap: 12px; cursor: pointer; transition: all 0.2s ease; box-shadow: 0 2px 8px rgba(0,0,0,0.04); }
     .expense-card:active { transform: scale(0.98); }
-    .expense-icon { width: 42px; height: 42px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
+    .expense-icon { width: 42px; height: 42px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; color: #fff; }
+    .expense-icon i { width: 20px; height: 20px; stroke-width: 2.2; }
     .expense-icon.food { background: linear-gradient(135deg, #ff9800, #f57c00); }
     .expense-icon.transport { background: linear-gradient(135deg, #2196f3, #1565c0); }
     .expense-icon.data { background: linear-gradient(135deg, #9c27b0, #7b1fa2); }
@@ -282,7 +283,19 @@
     };
 
     function getIconInfo(category) {
-      return categoryIconMap[category] || categoryIconMap['Other'];
+      const icons = {
+        'Food / Chop Bar': { icon: 'utensils', cls: 'food' },
+        'Transport (Trotro / Bolt)': { icon: 'bus', cls: 'transport' },
+        'Data / Airtime': { icon: 'smartphone', cls: 'data' },
+        'Entertainment': { icon: 'film', cls: 'entertainment' },
+        'Shopping': { icon: 'shopping-bag', cls: 'shopping' },
+        'Bills & Utilities': { icon: 'receipt', cls: 'bills' },
+        'Bills': { icon: 'receipt', cls: 'bills' },
+        'Health': { icon: 'pill', cls: 'health' },
+        'Education': { icon: 'book-open', cls: 'education' },
+        'Other': { icon: 'wallet', cls: 'other' }
+      };
+      return icons[category] || icons.Other;
     }
 
     async function loadExpenses() {
@@ -392,7 +405,7 @@
           var icon = getIconInfo(e.category);
           var noteText = e.note ? e.note : '';
           html += '<div class="expense-card" onclick="showDetail(\'' + e.id + '\')">' +
-            '<div class="expense-icon ' + icon.cls + '">' + icon.emoji + '</div>' +
+            '<div class="expense-icon ' + icon.cls + '"><i data-lucide="' + icon.icon + '"></i></div>' +
             '<div class="expense-info"><div class="expense-name">' + escHtml(e.category || 'Other') + '</div>' +
             '<div class="expense-meta"><span>' + escHtml(e.payment_method || '') + '</span>' +
             (noteText && noteText !== e.payment_method ? '<span>&bull;</span><span>' + escHtml(noteText) + '</span>' : '') +
@@ -403,6 +416,7 @@
       });
 
       container.innerHTML = html;
+      lucide.createIcons({ node: container });
     }
 
     function setFilter(filter, btn) {
@@ -422,7 +436,7 @@
 
       document.getElementById('detailContent').innerHTML =
         '<div style="text-align:center;margin-bottom:20px;">' +
-        '<div class="expense-icon ' + icon.cls + '" style="width:60px;height:60px;font-size:28px;margin:0 auto 10px;border-radius:16px;">' + icon.emoji + '</div>' +
+        '<div class="expense-icon ' + icon.cls + '" style="width:60px;height:60px;font-size:28px;margin:0 auto 10px;border-radius:16px;"><i data-lucide="' + icon.icon + '" style="width:28px;height:28px;"></i></div>' +
         '<div style="font-size:24px;font-weight:800;color:#dc3545;">' + utils.formatCurrency(e.amount) + '</div>' +
         '<div style="font-size:13px;color:var(--text-secondary,#6b7280);margin-top:4px;">' + escHtml(e.category || 'Other') + '</div></div>' +
         '<div style="background:var(--bg-secondary,#f9fafb);border-radius:14px;padding:4px 16px;margin-bottom:16px;">' +
@@ -432,6 +446,8 @@
         '<div class="detail-row" style="border-bottom:none;"><span class="detail-label">Created</span><span class="detail-value">' + createdStr + '</span></div></div>' +
         '<div class="detail-actions"><button class="btn btn-delete" onclick="handleDelete(\'' + e.id + '\')">' +
         '<i data-lucide="trash-2" style="width:16px;height:16px;"></i> Delete</button></div>';
+
+      lucide.createIcons({ node: document.getElementById('detailContent') });
 
       document.getElementById('detailModal').classList.add('active');
       document.body.style.overflow = 'hidden';

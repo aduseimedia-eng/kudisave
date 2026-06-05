@@ -1,42 +1,27 @@
 // KudiSave - Utility Functions
 
-// Theme Management - Uses localStorage for persistence across all pages
+// Theme Management - KudiSave uses light mode as the main app theme
 function initTheme() {
-  // One-time reset: clear dark theme from old demo mode
-  if (!localStorage.getItem('kudisave_theme_v2_reset')) {
-    localStorage.setItem('kudisave_theme', 'light');
-    localStorage.setItem('kudisave_theme_v2_reset', 'true');
-  }
-  const theme = localStorage.getItem('kudisave_theme') || 'light';
-  document.documentElement.setAttribute('data-theme', theme);
-  updateThemeIcon(theme);
+  localStorage.setItem('kudisave_theme', 'light');
+  localStorage.setItem('kudisave_theme_v2_reset', 'true');
+  document.documentElement.setAttribute('data-theme', 'light');
+  updateThemeIcon('light');
 }
 
 // Called by api.js after preferences are loaded (syncs localStorage)
 function initThemeFromPreferences() {
-  // If user has a API preference but localStorage differs, sync it
-  const apiTheme = (typeof getUserPreference === 'function') ? getUserPreference('theme') : null;
-  const localTheme = localStorage.getItem('kudisave_theme');
-  
-  // API takes priority if user logged in, otherwise use localStorage
-  const theme = apiTheme || localTheme || 'light';
-  localStorage.setItem('kudisave_theme', theme);
-  document.documentElement.setAttribute('data-theme', theme);
-  updateThemeIcon(theme);
+  localStorage.setItem('kudisave_theme', 'light');
+  document.documentElement.setAttribute('data-theme', 'light');
+  updateThemeIcon('light');
 }
 
 async function toggleTheme() {
-  const currentTheme = document.documentElement.getAttribute('data-theme') || 'light';
-  const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+  localStorage.setItem('kudisave_theme', 'light');
+  document.documentElement.setAttribute('data-theme', 'light');
+  updateThemeIcon('light');
   
-  // Save to localStorage FIRST for instant persistence
-  localStorage.setItem('kudisave_theme', newTheme);
-  document.documentElement.setAttribute('data-theme', newTheme);
-  updateThemeIcon(newTheme);
-  
-  // Sync to API if available
   if (typeof setUserPreference === 'function') {
-    await setUserPreference('theme', newTheme);
+    await setUserPreference('theme', 'light');
   }
 }
 
@@ -44,7 +29,7 @@ function updateThemeIcon(theme) {
   const themeButtons = document.querySelectorAll('.theme-toggle');
   themeButtons.forEach(btn => {
     btn.innerHTML = theme === 'dark' ? '☀️' : '🌙';
-    btn.setAttribute('title', theme === 'dark' ? 'Switch to Light Mode' : 'Switch to Dark Mode');
+    btn.setAttribute('title', 'Light Mode');
   });
 }
 
@@ -313,6 +298,27 @@ function getCategoryIcon(category) {
     'Miscellaneous': '📦'
   };
   return icons[category] || '💰';
+}
+
+function getCategoryIconName(category) {
+  const icons = {
+    'Food / Chop Bar': 'utensils',
+    'Transport (Trotro / Bolt)': 'bus',
+    'Data / Airtime': 'smartphone',
+    'Rent / Hostel': 'home',
+    'Utilities': 'lightbulb',
+    'Church / Donations': 'heart-handshake',
+    'Betting / Gaming': 'dice-5',
+    'Entertainment': 'film',
+    'Shopping': 'shopping-bag',
+    'Bills & Utilities': 'receipt',
+    'Bills': 'receipt',
+    'Health': 'pill',
+    'Education': 'book-open',
+    'Miscellaneous': 'package',
+    'Other': 'wallet'
+  };
+  return icons[category] || 'wallet';
 }
 
 // Get motivational message based on budget usage
@@ -684,6 +690,7 @@ window.utils = {
   PAYMENT_METHODS,
   INCOME_SOURCES,
   getCategoryIcon,
+  getCategoryIconName,
   getMotivationalMessage,
   calculateProgress,
   getBadgeEmoji,

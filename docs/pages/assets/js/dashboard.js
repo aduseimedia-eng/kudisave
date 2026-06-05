@@ -172,14 +172,17 @@ async function loadRecentExpenses() {
 
     listContainer.innerHTML = expenses.slice(0, 5).map(expense => `
       <div class="transaction-item" id="expense-${expense.id}">
-        <div class="transaction-icon">${utils.getCategoryIcon(expense.category)}</div>
+        <div class="transaction-icon"><i data-lucide="${utils.getCategoryIconName(expense.category)}"></i></div>
         <div class="transaction-info">
           <div class="transaction-category">${expense.category}</div>
-          <div class="transaction-date">${utils.formatDate(expense.expense_date || expense.date)}</div>
+          <div class="transaction-date">KudiSave transaction</div>
         </div>
-        <div style="display: flex; align-items: center; gap: 8px;">
-          <div class="transaction-amount">-${utils.formatCurrencyAmount(expense.amount)}</div>
-          <button class="transaction-delete-btn" onclick="deleteTransaction('${expense.id}')" title="Delete transaction" style="background: none; border: none; color: var(--text-muted); cursor: pointer; padding: 4px; font-size: 16px;">
+        <div class="transaction-actions">
+          <div class="transaction-meta">
+            <div class="transaction-amount">-${utils.formatCurrencyAmount(expense.amount)}</div>
+            <div class="transaction-date">${utils.formatDate(expense.expense_date || expense.date)}</div>
+          </div>
+          <button class="transaction-delete-btn" onclick="deleteTransaction('${expense.id}')" title="Delete transaction" style="border: none; color: var(--text-muted); cursor: pointer; padding: 4px; font-size: 16px;">
             <i data-lucide="trash-2"></i>
           </button>
         </div>
