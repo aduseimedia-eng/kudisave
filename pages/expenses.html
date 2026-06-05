@@ -125,14 +125,25 @@
     @keyframes slideUp { from { transform: translateY(100%); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
     .modal-handle { width: 36px; height: 4px; border-radius: 2px; background: var(--border-color, #e5e7eb); margin: -10px auto 20px; }
     .modal-title { font-size: 20px; font-weight: 800; color: var(--text-primary, #1f2937); margin-bottom: 20px; }
-    .form-group { margin-bottom: 16px; }
-    .form-label { display: block; font-size: 13px; font-weight: 600; color: var(--text-secondary, #6b7280); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.4px; }
-    .form-input, .form-select, .form-textarea { width: 100%; padding: 12px 14px; border-radius: 12px; border: 1.5px solid var(--border-color, #e5e7eb); background: var(--bg-secondary, #f9fafb); color: var(--text-primary, #1f2937); font-size: 15px; font-family: inherit; outline: none; transition: border-color 0.2s; box-sizing: border-box; }
-    .form-input:focus, .form-select:focus, .form-textarea:focus { border-color: var(--primary-color, #006B3F); }
+    .expense-modal-sheet { border-radius: 30px 30px 0 0; padding: 22px 20px 20px; background: #ffffff; box-shadow: 0 -18px 60px rgba(17,24,39,0.14); }
+    .expense-modal-head { display: flex; align-items: center; gap: 12px; margin: 0 0 20px; }
+    .expense-modal-icon { width: 46px; height: 46px; border-radius: 16px; background: linear-gradient(135deg, #033036, #075a62); color: #ffffff; display: flex; align-items: center; justify-content: center; box-shadow: 0 14px 28px rgba(3,48,54,0.24); flex-shrink: 0; }
+    .expense-modal-icon i { width: 22px; height: 22px; }
+    .expense-modal-title { font-size: 20px; line-height: 1.15; font-weight: 850; color: #111827; margin: 0; }
+    .expense-modal-subtitle { font-size: 12px; color: #6b7280; margin-top: 3px; font-weight: 500; }
+    .form-group { margin-bottom: 15px; }
+    .form-label { display: block; font-size: 11px; font-weight: 800; color: #4b5563; margin-bottom: 7px; text-transform: uppercase; letter-spacing: 0.4px; }
+    .form-input, .form-select, .form-textarea { width: 100%; padding: 14px 15px; border-radius: 16px; border: 1.5px solid #e5e7eb; background: #f8fafc; color: #111827; font-size: 15px; font-family: inherit; outline: none; transition: border-color 0.2s, box-shadow 0.2s, background 0.2s; box-sizing: border-box; }
+    .form-input:focus, .form-select:focus, .form-textarea:focus { border-color: #033036; background: #ffffff; box-shadow: 0 0 0 4px rgba(3,48,54,0.09); }
     .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
     .currency-input-wrapper { position: relative; }
-    .currency-prefix { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); font-size: 15px; font-weight: 700; color: var(--text-secondary, #6b7280); pointer-events: none; }
-    .currency-input-wrapper .form-input { padding-left: 28px; }
+    .currency-prefix { position: absolute; left: 15px; top: 50%; transform: translateY(-50%); font-size: 15px; font-weight: 800; color: #033036; pointer-events: none; }
+    .currency-input-wrapper .form-input { padding-left: 34px; }
+    .expense-form-actions { display: grid; grid-template-columns: 1fr 1.45fr; gap: 10px; margin-top: 6px; }
+    .expense-form-btn { border: none; padding: 14px 16px; border-radius: 17px; font-weight: 800; cursor: pointer; font-size: 14px; font-family: inherit; display: flex; align-items: center; justify-content: center; gap: 8px; }
+    .expense-form-cancel { background: #f3f4f6; color: #4b5563; }
+    .expense-form-save { background: linear-gradient(135deg, #033036 0%, #075a62 55%, #0b737d 100%); color: white; box-shadow: 0 14px 28px rgba(3,48,54,0.24); }
+    @media (max-width: 390px) { .form-row { grid-template-columns: 1fr; gap: 0; } .expense-form-actions { grid-template-columns: 1fr; } }
 
     /* Detail Modal */
     .detail-row { display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid var(--border-color, #e5e7eb); }
@@ -141,6 +152,21 @@
     .detail-actions { display: flex; gap: 10px; margin-top: 20px; }
     .detail-actions .btn { flex: 1; padding: 12px; border-radius: 12px; border: none; font-size: 14px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; }
     .btn-delete { background: rgba(220,53,69,0.1); color: #dc3545; }
+
+    /* Delete confirmation */
+    .confirm-modal { z-index: 1001; background: rgba(17,24,39,0.46); padding: 20px; }
+    .confirm-modal.active { align-items: center; }
+    .confirm-card { width: 100%; max-width: 340px; background: #ffffff; border-radius: 28px; padding: 24px; text-align: center; box-shadow: 0 28px 80px rgba(17,24,39,0.24); animation: confirmPop 0.24s cubic-bezier(0.16,1,0.3,1); }
+    @keyframes confirmPop { from { transform: scale(0.94) translateY(10px); opacity: 0; } to { transform: scale(1) translateY(0); opacity: 1; } }
+    .confirm-icon { width: 64px; height: 64px; border-radius: 22px; background: #fff1f2; color: #e11d48; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px; box-shadow: inset 0 0 0 10px rgba(255,255,255,0.45); }
+    .confirm-icon i { width: 30px; height: 30px; stroke-width: 2.4; }
+    .confirm-title { font-size: 20px; line-height: 1.2; font-weight: 800; color: #111827; margin-bottom: 8px; }
+    .confirm-text { font-size: 14px; line-height: 1.55; color: #6b7280; margin: 0 0 22px; }
+    .confirm-actions { display: grid; grid-template-columns: 1fr 1.15fr; gap: 10px; }
+    .confirm-btn { border: none; border-radius: 16px; padding: 13px 14px; font-size: 14px; font-weight: 800; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 7px; }
+    .confirm-cancel { background: #f3f4f6; color: #374151; }
+    .confirm-delete { background: #e11d48; color: #ffffff; box-shadow: 0 12px 24px rgba(225,29,72,0.22); }
+    .confirm-delete:disabled { opacity: 0.7; cursor: wait; }
   </style>
 </head>
 <body>
@@ -212,9 +238,15 @@
 
   <!-- Add Expense Modal -->
   <div id="expenseModal" class="modal">
-    <div class="modal-sheet">
+    <div class="modal-sheet expense-modal-sheet">
       <div class="modal-handle"></div>
-      <div class="modal-title" id="expenseModalTitle">Add Expense</div>
+      <div class="expense-modal-head">
+        <div class="expense-modal-icon"><i data-lucide="receipt-text"></i></div>
+        <div>
+          <div class="expense-modal-title" id="expenseModalTitle">Add Expense</div>
+          <div class="expense-modal-subtitle">Record a transaction</div>
+        </div>
+      </div>
       <form id="expenseForm" onsubmit="handleSaveExpense(event)">
         <input type="hidden" id="editExpenseId">
         <div class="form-group">
@@ -242,9 +274,9 @@
           <label class="form-label">Note (Optional)</label>
           <textarea class="form-textarea" id="expenseNote" rows="2" placeholder="Add a note..."></textarea>
         </div>
-        <div style="display:flex; gap:10px; margin-top:4px;">
-          <button type="button" style="flex:1; background:var(--bg-secondary,#f3f4f6); color:var(--text-secondary,#6b7280); border:none; padding:12px; border-radius:12px; font-weight:600; cursor:pointer; font-size:14px;" onclick="closeModal('expenseModal')">Cancel</button>
-          <button type="submit" style="flex:2; background:linear-gradient(135deg,var(--primary-color,#006B3F),#00a855); color:white; border:none; padding:12px; border-radius:12px; font-weight:700; cursor:pointer; font-size:14px;" id="expenseSubmitBtn">Save Expense</button>
+        <div class="expense-form-actions">
+          <button type="button" class="expense-form-btn expense-form-cancel" onclick="closeModal('expenseModal')">Cancel</button>
+          <button type="submit" class="expense-form-btn expense-form-save" id="expenseSubmitBtn"><i data-lucide="check" style="width:16px;height:16px;"></i> Save Expense</button>
         </div>
       </form>
     </div>
@@ -258,6 +290,21 @@
     </div>
   </div>
 
+  <!-- Delete Confirmation Modal -->
+  <div id="deleteConfirmModal" class="modal confirm-modal">
+    <div class="confirm-card">
+      <div class="confirm-icon"><i data-lucide="trash-2"></i></div>
+      <div class="confirm-title">Delete this expense?</div>
+      <p class="confirm-text">This transaction will be removed from your records. You cannot undo this action.</p>
+      <div class="confirm-actions">
+        <button type="button" class="confirm-btn confirm-cancel" onclick="closeDeleteConfirm()">Cancel</button>
+        <button type="button" class="confirm-btn confirm-delete" id="confirmDeleteBtn" onclick="confirmDeleteExpense()">
+          <i data-lucide="trash-2" style="width:16px;height:16px;"></i> Delete
+        </button>
+      </div>
+    </div>
+  </div>
+
   <script src="../assets/js/config.js"></script>
   <script src="../assets/js/api.js"></script>
   <script src="../assets/js/utils.js"></script>
@@ -266,6 +313,7 @@
 
     let allExpenses = [];
     let currentFilter = 'all';
+    let pendingDeleteId = null;
 
     const categoryIconMap = {
       'Food / Chop Bar': { emoji: '🍛', cls: 'food' },
@@ -412,8 +460,13 @@
       if (!e) return;
 
       var icon = getIconInfo(e.category);
-      var dateStr = new Date(e.expense_date || e.date).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
-      var createdStr = new Date(e.created_at || e.expense_date || e.date).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
+      var rawDate = e.expense_date || e.date || e.created_at;
+      var rawTime = rawDate && !/^\d{4}-\d{2}-\d{2}$/.test(String(rawDate)) ? rawDate : (e.created_at || rawDate);
+      var dateStr = new Date(rawDate).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
+      var timeStr = new Date(rawTime).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
+      var createdDate = new Date(e.created_at || rawDate);
+      var createdStr = createdDate.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }) + ' at ' +
+        createdDate.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
 
       document.getElementById('detailContent').innerHTML =
         '<div style="text-align:center;margin-bottom:20px;">' +
@@ -422,10 +475,11 @@
         '<div style="font-size:13px;color:var(--text-secondary,#6b7280);margin-top:4px;">' + escHtml(e.category || 'Other') + '</div></div>' +
         '<div style="background:var(--bg-secondary,#f9fafb);border-radius:14px;padding:4px 16px;margin-bottom:16px;">' +
         '<div class="detail-row"><span class="detail-label">Date</span><span class="detail-value">' + dateStr + '</span></div>' +
+        '<div class="detail-row"><span class="detail-label">Time</span><span class="detail-value">' + timeStr + '</span></div>' +
         '<div class="detail-row"><span class="detail-label">Payment Method</span><span class="detail-value">' + escHtml(e.payment_method || '-') + '</span></div>' +
         (e.note ? '<div class="detail-row"><span class="detail-label">Note</span><span class="detail-value">' + escHtml(e.note) + '</span></div>' : '') +
         '<div class="detail-row" style="border-bottom:none;"><span class="detail-label">Created</span><span class="detail-value">' + createdStr + '</span></div></div>' +
-        '<div class="detail-actions"><button class="btn btn-delete" onclick="handleDelete(\'' + e.id + '\')">' +
+        '<div class="detail-actions"><button class="btn btn-delete" onclick="openDeleteConfirm(\'' + e.id + '\')">' +
         '<i data-lucide="trash-2" style="width:16px;height:16px;"></i> Delete</button></div>';
 
       lucide.createIcons({ node: document.getElementById('detailContent') });
@@ -435,17 +489,40 @@
       lucide.createIcons({ node: document.getElementById('detailContent') });
     }
 
-    async function handleDelete(id) {
-      if (!confirm('Delete this expense? This cannot be undone.')) return;
+    function openDeleteConfirm(id) {
+      pendingDeleteId = id;
+      document.getElementById('deleteConfirmModal').classList.add('active');
+      document.body.style.overflow = 'hidden';
+      lucide.createIcons({ node: document.getElementById('deleteConfirmModal') });
+    }
+
+    function closeDeleteConfirm() {
+      pendingDeleteId = null;
+      document.getElementById('deleteConfirmModal').classList.remove('active');
+      document.body.style.overflow = document.querySelector('.modal.active') ? 'hidden' : '';
+    }
+
+    async function confirmDeleteExpense() {
+      if (!pendingDeleteId) return;
+      var id = pendingDeleteId;
+      var btn = document.getElementById('confirmDeleteBtn');
       try {
+        btn.disabled = true;
+        btn.innerHTML = '<span class="spinner" style="width:16px;height:16px;border-width:2px;margin:0;"></span> Deleting';
         utils.showLoading();
         await api.deleteExpense(id);
         utils.hideLoading();
+        btn.disabled = false;
+        btn.innerHTML = '<i data-lucide="trash-2" style="width:16px;height:16px;"></i> Delete';
+        closeDeleteConfirm();
         utils.showAlert('Expense deleted', 'success');
         closeModal('detailModal');
         await loadExpenses();
       } catch (err) {
         utils.hideLoading();
+        btn.disabled = false;
+        btn.innerHTML = '<i data-lucide="trash-2" style="width:16px;height:16px;"></i> Delete';
+        lucide.createIcons({ node: btn });
         utils.showAlert(err.message || 'Failed to delete', 'error');
       }
     }
@@ -453,7 +530,7 @@
     function openAddModal() {
       document.getElementById('editExpenseId').value = '';
       document.getElementById('expenseModalTitle').textContent = 'Add Expense';
-      document.getElementById('expenseSubmitBtn').textContent = 'Save Expense';
+      document.getElementById('expenseSubmitBtn').innerHTML = '<i data-lucide="check" style="width:16px;height:16px;"></i> Save Expense';
       document.getElementById('expenseForm').reset();
 
       var categories = (utils.EXPENSE_CATEGORIES || ['Food / Chop Bar','Transport (Trotro / Bolt)','Data / Airtime','Entertainment','Shopping','Bills & Utilities','Health','Education','Other']);
@@ -471,15 +548,17 @@
       document.getElementById('expenseDate').value = utils.getTodayDate();
       document.getElementById('expenseModal').classList.add('active');
       document.body.style.overflow = 'hidden';
+      lucide.createIcons({ node: document.getElementById('expenseModal') });
     }
 
     function closeModal(id) {
       document.getElementById(id).classList.remove('active');
-      document.body.style.overflow = '';
+      document.body.style.overflow = document.querySelector('.modal.active') ? 'hidden' : '';
     }
 
     document.getElementById('expenseModal').addEventListener('click', function(ev) { if (ev.target === this) closeModal('expenseModal'); });
     document.getElementById('detailModal').addEventListener('click', function(ev) { if (ev.target === this) closeModal('detailModal'); });
+    document.getElementById('deleteConfirmModal').addEventListener('click', function(ev) { if (ev.target === this) closeDeleteConfirm(); });
 
     async function handleSaveExpense(ev) {
       ev.preventDefault();
