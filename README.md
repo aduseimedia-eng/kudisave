@@ -38,9 +38,9 @@ frontend/
 ## 🎨 Green & White Theme
 
 The app uses a clean green and white color scheme:
-- **Primary Green** (#006B3F) - Main brand color
-- **Light Green** (#00a05e) - Accent highlights
-- **Dark Green** (#004d2c) - Emphasis color
+- **Primary Green** (#033036) - Main brand color
+- **Light Green** (#0b737d) - Accent highlights
+- **Dark Green** (#064a52) - Emphasis color
 - **White** (#ffffff) - Secondary color
 
 ## 🛠️ Setup
@@ -224,9 +224,9 @@ Edit `assets/css/style.css`:
 
 ```css
 :root {
-  --primary-color: #006B3F;
-  --primary-light: #00a05e;
-  --primary-dark: #004d2c;
+  --primary-color: #033036;
+  --primary-light: #0b737d;
+  --primary-dark: #064a52;
   --secondary-color: #ffffff;
 }
 ```

@@ -176,7 +176,7 @@ const emailTemplates = {
       <head>
         <style>
           body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; padding: 0; background-color: #f5f5f5; }
-          .container { max-width: 600px; margin: 0 auto; background: linear-gradient(135deg, #006B3F, #009B5A); }
+          .container { max-width: 600px; margin: 0 auto; background: linear-gradient(135deg, #033036, #0b737d); }
           .header { padding: 30px; text-align: center; color: white; }
           .success-icon { font-size: 60px; margin-bottom: 15px; }
           h1 { margin: 0; font-size: 24px; }
@@ -187,7 +187,7 @@ const emailTemplates = {
           .flag-stripe { display: inline-block; width: 40px; height: 20px; }
           .red { background: #CE1126; }
           .gold { background: #FCD116; }
-          .green { background: #006B3F; }
+          .green { background: #033036; }
         </style>
       </head>
       <body>
@@ -294,7 +294,7 @@ const emailTemplates = {
           .trophy-icon { font-size: 50px; margin-bottom: 10px; }
           h1 { margin: 0; font-size: 22px; }
           .content { background: white; padding: 30px; border-radius: 0 0 10px 10px; }
-          .goal-card { background: linear-gradient(135deg, #006B3F, #009B5A); border-radius: 10px; padding: 25px; text-align: center; margin: 20px 0; color: white; }
+          .goal-card { background: linear-gradient(135deg, #033036, #0b737d); border-radius: 10px; padding: 25px; text-align: center; margin: 20px 0; color: white; }
           .goal-name { font-size: 20px; margin-bottom: 15px; }
           .progress-bar { background: rgba(255,255,255,0.3); border-radius: 20px; height: 20px; overflow: hidden; }
           .progress-fill { background: #FCD116; height: 100%; border-radius: 20px; }
@@ -341,13 +341,13 @@ const emailTemplates = {
       <head>
         <style>
           body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; padding: 0; background-color: #f5f5f5; }
-          .container { max-width: 600px; margin: 0 auto; background: linear-gradient(135deg, #006B3F, #009B5A); }
+          .container { max-width: 600px; margin: 0 auto; background: linear-gradient(135deg, #033036, #0b737d); }
           .header { padding: 30px; text-align: center; color: white; }
           h1 { margin: 0; font-size: 24px; }
           .content { background: white; padding: 30px; border-radius: 0 0 10px 10px; }
           .stat-card { background: #f9f9f9; border-radius: 10px; padding: 15px; margin: 10px 0; display: flex; justify-content: space-between; align-items: center; }
           .stat-label { color: #666; font-size: 14px; }
-          .stat-value { color: #006B3F; font-size: 20px; font-weight: bold; }
+          .stat-value { color: #033036; font-size: 20px; font-weight: bold; }
           .footer { text-align: center; padding: 20px; color: #888; font-size: 12px; }
         </style>
       </head>

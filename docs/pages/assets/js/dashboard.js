@@ -1050,7 +1050,7 @@ function animateCounter(element, target, duration = 1000, prefix = '', suffix = 
 
 // Confetti celebration effect
 function showConfetti() {
-  const colors = ['#006B3F', '#00a05e', '#ffffff', '#34d399'];
+  const colors = ['#033036', '#0b737d', '#ffffff', '#34d399'];
   const confettiCount = 50;
   
   for (let i = 0; i < confettiCount; i++) {
@@ -1099,7 +1099,7 @@ function showFunToast(message, emoji = '🎉', type = 'success') {
     bottom: 120px;
     left: 50%;
     transform: translateX(-50%) translateY(100px);
-    background: ${type === 'success' ? 'linear-gradient(135deg, #006B3F, #00a05e)' : 'var(--card-bg)'};
+    background: ${type === 'success' ? 'linear-gradient(135deg, #033036, #0b737d)' : 'var(--card-bg)'};
     color: white;
     padding: 12px 20px;
     border-radius: 50px;
@@ -1211,7 +1211,7 @@ function celebrateLevelUp(newLevel) {
     left: 0;
     right: 0;
     bottom: 0;
-    background: rgba(0, 107, 63, 0.95);
+    background: rgba(3, 48, 54, 0.95);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -1443,7 +1443,7 @@ function showAchievementUnlockNotification(achievement) {
   
   overlay.innerHTML = `
     <div style="
-      background: linear-gradient(135deg, #006B3F 0%, #004d2c 100%);
+      background: linear-gradient(135deg, #033036 0%, #064a52 100%);
       border-radius: 24px;
       padding: 2.5rem;
       text-align: center;
@@ -1468,7 +1468,7 @@ function showAchievementUnlockNotification(achievement) {
       </p>
       <div style="
         background: linear-gradient(135deg, #FFD700, #FFA500);
-        color: #004d2c;
+        color: #064a52;
         padding: 10px 20px;
         border-radius: 20px;
         display: inline-flex;

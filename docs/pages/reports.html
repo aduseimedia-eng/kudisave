@@ -6,7 +6,7 @@
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="theme-color" content="#006B3F">
+  <meta name="theme-color" content="#033036">
   <link rel="icon" type="image/png" sizes="32x32" href="../favicon.png">
   <link rel="apple-touch-icon" sizes="180x180" href="../apple-touch-icon.png">
   <link rel="manifest" href="../manifest.json">
@@ -47,7 +47,7 @@
     .period-tab.active {
       background: var(--primary-color);
       color: white;
-      box-shadow: 0 2px 8px rgba(0, 107, 63, 0.3);
+      box-shadow: 0 2px 8px rgba(3, 48, 54, 0.3);
     }
 
     .period-tab:active {
@@ -86,9 +86,9 @@
       opacity: 0.1;
     }
 
-    .overview-card.income::before { background: #00a05e; }
+    .overview-card.income::before { background: #0b737d; }
     .overview-card.expense::before { background: #dc3545; }
-    .overview-card.savings::before { background: #004d2c; }
+    .overview-card.savings::before { background: #064a52; }
     .overview-card.rate::before { background: #FCD116; }
 
     .overview-icon {
@@ -101,9 +101,9 @@
       margin-bottom: 10px;
     }
 
-    .overview-card.income .overview-icon { background: rgba(0, 160, 94, 0.15); color: #00a05e; }
+    .overview-card.income .overview-icon { background: rgba(11, 115, 125, 0.15); color: #0b737d; }
     .overview-card.expense .overview-icon { background: rgba(220, 53, 69, 0.15); color: #dc3545; }
-    .overview-card.savings .overview-icon { background: rgba(0, 77, 44, 0.15); color: #004d2c; }
+    .overview-card.savings .overview-icon { background: rgba(6, 74, 82, 0.15); color: #064a52; }
     .overview-card.rate .overview-icon { background: rgba(252, 209, 22, 0.15); color: #B8960E; }
 
     .overview-label {
@@ -131,7 +131,7 @@
       font-weight: 500;
     }
 
-    .overview-change.positive { color: #00a05e; }
+    .overview-change.positive { color: #0b737d; }
     .overview-change.negative { color: #dc3545; }
 
     .section-header {
@@ -164,7 +164,7 @@
       height: 130px;
       margin: 0 auto 16px;
       position: relative;
-      filter: drop-shadow(0 4px 15px rgba(0, 160, 94, 0.3));
+      filter: drop-shadow(0 4px 15px rgba(11, 115, 125, 0.3));
     }
 
     .health-score-ring svg {
@@ -185,7 +185,7 @@
       stroke: url(#healthGradient);
       stroke-linecap: round;
       transition: stroke-dashoffset 1.2s cubic-bezier(0.4, 0, 0.2, 1);
-      filter: drop-shadow(0 0 8px rgba(0, 160, 94, 0.5));
+      filter: drop-shadow(0 0 8px rgba(11, 115, 125, 0.5));
     }
 
     .health-score-value {
@@ -211,11 +211,11 @@
       align-items: center;
       gap: 6px;
       padding: 8px 16px;
-      background: linear-gradient(135deg, rgba(0, 160, 94, 0.2), rgba(0, 200, 83, 0.15));
-      color: #00c853;
+      background: linear-gradient(135deg, rgba(11, 115, 125, 0.2), rgba(11, 115, 125, 0.15));
+      color: #0b737d;
       border-radius: 25px;
       font-weight: 600;
-      box-shadow: 0 2px 8px rgba(0, 160, 94, 0.2);
+      box-shadow: 0 2px 8px rgba(11, 115, 125, 0.2);
       font-size: 12px;
       font-weight: 600;
     }
@@ -392,7 +392,7 @@
 
     .expense-rank.gold { background: rgba(252, 209, 22, 0.2); color: #B8960E; }
     .expense-rank.silver { background: #f5f5f5; color: #666; }
-    .expense-rank.bronze { background: rgba(0, 160, 94, 0.15); color: #006B3F; }
+    .expense-rank.bronze { background: rgba(11, 115, 125, 0.15); color: #033036; }
 
     .expense-details {
       flex: 1;
@@ -466,7 +466,7 @@
     }
 
     .comparison-badge.up { background: rgba(220, 53, 69, 0.15); color: #dc3545; }
-    .comparison-badge.down { background: rgba(0, 160, 94, 0.15); color: #00a05e; }
+    .comparison-badge.down { background: rgba(11, 115, 125, 0.15); color: #0b737d; }
     .comparison-badge.same { background: rgba(108, 117, 125, 0.15); color: #6c757d; }
 
     .empty-state {
@@ -615,7 +615,7 @@
     }
 
     .compare-column:first-child .dot { background: var(--primary-color); }
-    .compare-column:last-child .dot { background: #00A05E; }
+    .compare-column:last-child .dot { background: #0b737d; }
 
     .compare-stat {
       margin-bottom: 12px;
@@ -637,9 +637,9 @@
       color: var(--text-primary);
     }
 
-    .compare-stat-value.income { color: #00a05e; }
+    .compare-stat-value.income { color: #0b737d; }
     .compare-stat-value.expense { color: #dc3545; }
-    .compare-stat-value.savings { color: #004d2c; }
+    .compare-stat-value.savings { color: #064a52; }
 
     .compare-chart-container {
       background: var(--card-bg);
@@ -671,7 +671,7 @@
     }
 
     .legend-dot.period1 { background: var(--primary-color); }
-    .legend-dot.period2 { background: #00A05E; }
+    .legend-dot.period2 { background: #0b737d; }
 
     .compare-bars {
       display: flex;
@@ -705,7 +705,7 @@
     }
 
     .compare-bar.period1 { background: var(--primary-color); }
-    .compare-bar.period2 { background: #00A05E; }
+    .compare-bar.period2 { background: #0b737d; }
 
     .compare-bar-label {
       font-size: 10px;
@@ -781,13 +781,13 @@
       white-space: nowrap;
     }
 
-    .summary-diff.better { background: rgba(0, 160, 94, 0.15); color: #00a05e; }
+    .summary-diff.better { background: rgba(11, 115, 125, 0.15); color: #0b737d; }
     .summary-diff.worse { background: rgba(220, 53, 69, 0.15); color: #dc3545; }
     .summary-diff.neutral { background: rgba(108, 117, 125, 0.15); color: #6c757d; }
 
     /* ===== Modern Header for Reports ===== */
     body { padding-top: 0 !important; }
-    .mtn-header { background: linear-gradient(160deg, var(--primary-color) 0%, #004d2c 40%, #003822 80%, #002a19 100%); position: fixed; top: 0; left: 0; right: 0; z-index: 100; padding-top: env(safe-area-inset-top, 0px); padding-left: env(safe-area-inset-left, 0px); padding-right: env(safe-area-inset-right, 0px); overflow: hidden; }
+    .mtn-header { background: linear-gradient(160deg, var(--primary-color) 0%, #064a52 40%, #033036 80%, #021f23 100%); position: fixed; top: 0; left: 0; right: 0; z-index: 100; padding-top: env(safe-area-inset-top, 0px); padding-left: env(safe-area-inset-left, 0px); padding-right: env(safe-area-inset-right, 0px); overflow: hidden; }
     .mtn-header::before { content: ''; position: absolute; top: -50%; right: -20%; width: 260px; height: 260px; background: radial-gradient(circle, rgba(255,255,255,0.08) 0%, transparent 70%); border-radius: 50%; animation: floatOrb1 8s ease-in-out infinite; }
     .mtn-header::after { content: ''; position: absolute; bottom: -40%; left: -15%; width: 200px; height: 200px; background: radial-gradient(circle, rgba(255,255,255,0.05) 0%, transparent 70%); border-radius: 50%; animation: floatOrb2 10s ease-in-out infinite; }
     .mtn-topbar { display: flex; justify-content: space-between; align-items: center; padding: 12px 16px 0 16px; position: relative; z-index: 1; }
@@ -839,8 +839,8 @@
       border-left: 3px solid transparent;
     }
     .ri-card.positive {
-      background: rgba(0, 200, 83, 0.08);
-      border-left-color: #00C853;
+      background: rgba(11, 115, 125, 0.08);
+      border-left-color: #0b737d;
     }
     .ri-card.warning {
       background: rgba(255, 171, 0, 0.08);
@@ -860,10 +860,10 @@
     .ri-msg { font-size: 11px; color: var(--text-secondary); line-height: 1.4; }
     .ri-tip {
       font-size: 10px;
-      color: var(--primary-light, #00C853);
+      color: var(--primary-light, #0b737d);
       margin-top: 4px;
       padding: 4px 8px;
-      background: rgba(0, 160, 94, 0.06);
+      background: rgba(11, 115, 125, 0.06);
       border-radius: 6px;
     }
     .ri-tip::before { content: 'Tip: '; font-weight: 600; }
@@ -1006,8 +1006,8 @@
         <svg width="130" height="130">
           <defs>
             <linearGradient id="healthGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-              <stop offset="0%" style="stop-color:#00A05E;stop-opacity:1" />
-              <stop offset="50%" style="stop-color:#00C853;stop-opacity:1" />
+              <stop offset="0%" style="stop-color:#0b737d;stop-opacity:1" />
+              <stop offset="50%" style="stop-color:#0b737d;stop-opacity:1" />
               <stop offset="100%" style="stop-color:#FFD700;stop-opacity:1" />
             </linearGradient>
           </defs>

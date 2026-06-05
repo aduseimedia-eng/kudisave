@@ -176,7 +176,7 @@ const verifyEmailToken = async (req, res) => {
             * { margin: 0; padding: 0; box-sizing: border-box; }
             body { 
               font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-              background: linear-gradient(135deg, #006B3F 0%, #00a05e 100%);
+              background: linear-gradient(135deg, #033036 0%, #0b737d 100%);
               min-height: 100vh;
               display: flex;
               align-items: center;
@@ -196,7 +196,7 @@ const verifyEmailToken = async (req, res) => {
               width: 80px;
               height: 80px;
               margin: 0 auto 20px;
-              background: #006B3F;
+              background: #033036;
               border-radius: 50%;
               display: flex;
               align-items: center;
@@ -218,7 +218,7 @@ const verifyEmailToken = async (req, res) => {
             .button {
               display: inline-block;
               padding: 14px 40px;
-              background: #006B3F;
+              background: #033036;
               color: white;
               text-decoration: none;
               border-radius: 8px;
@@ -226,7 +226,7 @@ const verifyEmailToken = async (req, res) => {
               transition: all 0.2s;
             }
             .button:hover {
-              background: #00a05e;
+              background: #0b737d;
               transform: translateY(-2px);
             }
           </style>

@@ -6,7 +6,7 @@
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="theme-color" content="#006B3F">
+  <meta name="theme-color" content="#033036">
   <link rel="icon" type="image/png" sizes="32x32" href="../favicon.png">
   <link rel="apple-touch-icon" sizes="180x180" href="../apple-touch-icon.png">
   <link rel="manifest" href="../manifest.json">
@@ -142,6 +142,22 @@
     .picker-field-icon { width: 30px; height: 30px; border-radius: 11px; background: rgba(3,48,54,0.09); color: #033036; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
     .picker-field-icon i, .picker-field-chevron { width: 16px; height: 16px; }
     .picker-field-chevron { color: #9ca3af; flex-shrink: 0; }
+    .picker-field-icon.food { background: #fff7ed; color: #f97316; }
+    .picker-field-icon.transport { background: #eff6ff; color: #2563eb; }
+    .picker-field-icon.data { background: #f5f3ff; color: #7c3aed; }
+    .picker-field-icon.entertainment { background: #fdf2f8; color: #db2777; }
+    .picker-field-icon.shopping { background: #ecfeff; color: #0891b2; }
+    .picker-field-icon.bills { background: #fefce8; color: #ca8a04; }
+    .picker-field-icon.health { background: #ecfdf5; color: #059669; }
+    .picker-field-icon.education { background: #eef2ff; color: #4f46e5; }
+    .picker-field-icon.other { background: #f8fafc; color: #475569; }
+    .payment-logo { width: 38px; height: 26px; border-radius: 9px; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 10px; font-weight: 900; letter-spacing: 0; box-shadow: 0 8px 16px rgba(17,24,39,0.08); overflow: hidden; }
+    .payment-logo.visa { background: #ffffff; color: #1434cb; border: 1px solid #e5e7eb; font-style: italic; font-size: 12px; }
+    .payment-logo.mtn { background: #ffcb05; color: #111827; border-radius: 50%; width: 40px; height: 26px; border: 1px solid rgba(17,24,39,0.1); }
+    .payment-logo.telecel { background: #e30613; color: #ffffff; font-size: 15px; }
+    .payment-logo.airtel { background: linear-gradient(135deg, #e4002b 0 50%, #005baa 50% 100%); color: #ffffff; font-size: 11px; }
+    .payment-logo.bank { background: #e0f2fe; color: #0369a1; }
+    .payment-logo.cash { background: #dcfce7; color: #15803d; }
     .currency-input-wrapper { position: relative; }
     .currency-prefix { position: absolute; left: 15px; top: 50%; transform: translateY(-50%); font-size: 15px; font-weight: 800; color: #033036; pointer-events: none; }
     .currency-input-wrapper .form-input { padding-left: 34px; }
@@ -162,6 +178,20 @@
     .picker-options { display: grid; gap: 10px; }
     .picker-option { border: 1.5px solid #eef2f7; background: #f8fafc; border-radius: 18px; padding: 13px 14px; display: flex; align-items: center; justify-content: space-between; gap: 12px; cursor: pointer; font-family: inherit; text-align: left; color: #111827; }
     .picker-option-main { display: flex; align-items: center; gap: 11px; font-size: 14px; font-weight: 800; }
+    .category-options { grid-template-columns: repeat(2, minmax(0, 1fr)); max-height: 58vh; overflow-y: auto; padding-right: 2px; }
+    .category-option { align-items: flex-start; min-height: 88px; padding: 14px; }
+    .category-option .picker-option-main { flex-direction: column; align-items: flex-start; gap: 10px; }
+    .category-option .picker-field-icon { width: 42px; height: 42px; border-radius: 15px; }
+    .category-option .picker-field-icon i { width: 20px; height: 20px; }
+    .category-option.food .picker-field-icon { background: #fff7ed; color: #f97316; }
+    .category-option.transport .picker-field-icon { background: #eff6ff; color: #2563eb; }
+    .category-option.data .picker-field-icon { background: #f5f3ff; color: #7c3aed; }
+    .category-option.entertainment .picker-field-icon { background: #fdf2f8; color: #db2777; }
+    .category-option.shopping .picker-field-icon { background: #ecfeff; color: #0891b2; }
+    .category-option.bills .picker-field-icon { background: #fefce8; color: #ca8a04; }
+    .category-option.health .picker-field-icon { background: #ecfdf5; color: #059669; }
+    .category-option.education .picker-field-icon { background: #eef2ff; color: #4f46e5; }
+    .category-option.other .picker-field-icon { background: #f8fafc; color: #475569; }
     .picker-option-mark { width: 20px; height: 20px; border-radius: 50%; border: 2px solid #d1d5db; flex-shrink: 0; }
     .picker-option.active { border-color: rgba(3,48,54,0.28); background: rgba(3,48,54,0.06); }
     .picker-option.active .picker-option-mark { border-color: #033036; background: radial-gradient(circle at center, #033036 0 42%, transparent 45%); }
@@ -285,14 +315,21 @@
         <div class="form-row">
           <div class="form-group">
             <label class="form-label">Category</label>
-            <select class="form-select" id="expenseCategory" required></select>
+            <input type="hidden" id="expenseCategory" required>
+            <button type="button" class="picker-field" onclick="openCategoryModal()">
+              <span class="picker-field-main">
+                <span class="picker-field-icon" id="categoryIconWrap"><i data-lucide="utensils"></i></span>
+                <span id="categoryText">Select category</span>
+              </span>
+              <i class="picker-field-chevron" data-lucide="chevron-down"></i>
+            </button>
           </div>
           <div class="form-group">
             <label class="form-label">Payment Method</label>
             <input type="hidden" id="expensePaymentMethod" required>
             <button type="button" class="picker-field" onclick="openPaymentMethodModal()">
               <span class="picker-field-main">
-                <span class="picker-field-icon" id="paymentMethodIconWrap"><i id="paymentMethodIcon" data-lucide="wallet"></i></span>
+                <span id="paymentMethodIconWrap"><span class="payment-logo cash">Cash</span></span>
                 <span id="paymentMethodText">Select method</span>
               </span>
               <i class="picker-field-chevron" data-lucide="chevron-down"></i>
@@ -357,6 +394,21 @@
         </div>
       </div>
       <div class="picker-options" id="paymentMethodOptions"></div>
+    </div>
+  </div>
+
+  <!-- Category Picker -->
+  <div id="categoryModal" class="modal picker-modal">
+    <div class="picker-sheet">
+      <div class="modal-handle"></div>
+      <div class="picker-title-row">
+        <div class="picker-title-icon"><i data-lucide="shapes"></i></div>
+        <div>
+          <div class="picker-title">Expense Category</div>
+          <div class="picker-subtitle">Pick the category that best fits</div>
+        </div>
+      </div>
+      <div class="picker-options category-options" id="categoryOptions"></div>
     </div>
   </div>
 
@@ -616,10 +668,19 @@
       return 'wallet';
     }
 
+    function getPaymentLogoHtml(method) {
+      if (/visa|card/i.test(method)) return '<span class="payment-logo visa">VISA</span>';
+      if (/mtn|momo/i.test(method)) return '<span class="payment-logo mtn">MTN</span>';
+      if (/telecel/i.test(method)) return '<span class="payment-logo telecel">T</span>';
+      if (/airteltigo/i.test(method)) return '<span class="payment-logo airtel">AT</span>';
+      if (/bank/i.test(method)) return '<span class="payment-logo bank">BANK</span>';
+      return '<span class="payment-logo cash">Cash</span>';
+    }
+
     function setPaymentMethod(method) {
       document.getElementById('expensePaymentMethod').value = method;
       document.getElementById('paymentMethodText').textContent = method;
-      document.getElementById('paymentMethodIconWrap').innerHTML = '<i id="paymentMethodIcon" data-lucide="' + getPaymentMethodIcon(method) + '"></i>';
+      document.getElementById('paymentMethodIconWrap').innerHTML = getPaymentLogoHtml(method);
       closePickerModal('paymentMethodModal');
       lucide.createIcons({ node: document.getElementById('expenseModal') });
     }
@@ -631,7 +692,7 @@
       container.innerHTML = options.map(function(method) {
         var active = method === selected ? ' active' : '';
         return '<button type="button" class="picker-option' + active + '" data-method="' + escHtml(method) + '">' +
-          '<span class="picker-option-main"><span class="picker-field-icon"><i data-lucide="' + getPaymentMethodIcon(method) + '"></i></span>' +
+          '<span class="picker-option-main">' + getPaymentLogoHtml(method) +
           '<span>' + escHtml(method) + '</span></span><span class="picker-option-mark"></span></button>';
       }).join('');
       container.querySelectorAll('.picker-option').forEach(function(btn) {
@@ -640,6 +701,38 @@
       document.getElementById('paymentMethodModal').classList.add('active');
       document.body.style.overflow = 'hidden';
       lucide.createIcons({ node: document.getElementById('paymentMethodModal') });
+    }
+
+    function getCategories() {
+      return (utils.EXPENSE_CATEGORIES || ['Food / Chop Bar','Transport (Trotro / Bolt)','Data / Airtime','Entertainment','Shopping','Bills & Utilities','Health','Education','Other']).slice();
+    }
+
+    function setCategory(category) {
+      var icon = getIconInfo(category);
+      document.getElementById('expenseCategory').value = category;
+      document.getElementById('categoryText').textContent = category;
+      document.getElementById('categoryIconWrap').className = 'picker-field-icon ' + icon.cls;
+      document.getElementById('categoryIconWrap').innerHTML = '<i data-lucide="' + icon.icon + '"></i>';
+      closePickerModal('categoryModal');
+      lucide.createIcons({ node: document.getElementById('expenseModal') });
+    }
+
+    function openCategoryModal() {
+      var selected = document.getElementById('expenseCategory').value;
+      var container = document.getElementById('categoryOptions');
+      container.innerHTML = getCategories().map(function(category) {
+        var icon = getIconInfo(category);
+        var active = category === selected ? ' active' : '';
+        return '<button type="button" class="picker-option category-option ' + icon.cls + active + '" data-category="' + escHtml(category) + '">' +
+          '<span class="picker-option-main"><span class="picker-field-icon"><i data-lucide="' + icon.icon + '"></i></span>' +
+          '<span>' + escHtml(category) + '</span></span><span class="picker-option-mark"></span></button>';
+      }).join('');
+      container.querySelectorAll('.category-option').forEach(function(btn) {
+        btn.addEventListener('click', function() { setCategory(this.dataset.category); });
+      });
+      document.getElementById('categoryModal').classList.add('active');
+      document.body.style.overflow = 'hidden';
+      lucide.createIcons({ node: document.getElementById('categoryModal') });
     }
 
     function formatInputDate(date) {
@@ -690,12 +783,7 @@
       document.getElementById('expenseSubmitBtn').innerHTML = '<i data-lucide="check" style="width:16px;height:16px;"></i> Save Expense';
       document.getElementById('expenseForm').reset();
 
-      var categories = (utils.EXPENSE_CATEGORIES || ['Food / Chop Bar','Transport (Trotro / Bolt)','Data / Airtime','Entertainment','Shopping','Bills & Utilities','Health','Education','Other']);
-      var catSel = document.getElementById('expenseCategory');
-      catSel.innerHTML = categories.map(function(cat) {
-        return '<option value="' + cat + '">' + (getIconInfo(cat).emoji || '') + ' ' + cat + '</option>';
-      }).join('');
-
+      setCategory(getCategories()[0]);
       setPaymentMethod(getPaymentMethods()[0]);
       setExpenseDate(utils.getTodayDate());
       document.getElementById('expenseModal').classList.add('active');
@@ -711,6 +799,7 @@
     document.getElementById('expenseModal').addEventListener('click', function(ev) { if (ev.target === this) closeModal('expenseModal'); });
     document.getElementById('detailModal').addEventListener('click', function(ev) { if (ev.target === this) closeModal('detailModal'); });
     document.getElementById('deleteConfirmModal').addEventListener('click', function(ev) { if (ev.target === this) closeDeleteConfirm(); });
+    document.getElementById('categoryModal').addEventListener('click', function(ev) { if (ev.target === this) closePickerModal('categoryModal'); });
     document.getElementById('paymentMethodModal').addEventListener('click', function(ev) { if (ev.target === this) closePickerModal('paymentMethodModal'); });
     document.getElementById('datePickerModal').addEventListener('click', function(ev) { if (ev.target === this) closePickerModal('datePickerModal'); });
 

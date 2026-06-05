@@ -176,7 +176,7 @@ const sendTestEmail = async (email) => {
         <head>
           <style>
             body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; padding: 0; background-color: #f5f5f5; }
-            .container { max-width: 600px; margin: 0 auto; background: linear-gradient(135deg, #006B3F, #009B5A); }
+            .container { max-width: 600px; margin: 0 auto; background: linear-gradient(135deg, #033036, #0b737d); }
             .header { padding: 30px; text-align: center; color: white; }
             .content { background: white; padding: 30px; border-radius: 0 0 10px 10px; }
             .success-icon { font-size: 60px; margin-bottom: 15px; }
@@ -187,7 +187,7 @@ const sendTestEmail = async (email) => {
             .flag-stripe { display: inline-block; width: 40px; height: 20px; }
             .red { background: #CE1126; }
             .gold { background: #FCD116; }
-            .green { background: #006B3F; }
+            .green { background: #033036; }
           </style>
         </head>
         <body>
@@ -315,7 +315,7 @@ const sendGoalMilestoneEmail = async (email, goalName, progress, milestone) => {
             .trophy-icon { font-size: 50px; margin-bottom: 10px; }
             h1 { margin: 0; font-size: 22px; }
             .content { background: white; padding: 30px; border-radius: 0 0 10px 10px; }
-            .goal-card { background: linear-gradient(135deg, #006B3F, #009B5A); border-radius: 10px; padding: 25px; text-align: center; margin: 20px 0; color: white; }
+            .goal-card { background: linear-gradient(135deg, #033036, #0b737d); border-radius: 10px; padding: 25px; text-align: center; margin: 20px 0; color: white; }
             .goal-name { font-size: 20px; margin-bottom: 15px; }
             .progress-bar { background: rgba(255,255,255,0.3); border-radius: 20px; height: 20px; overflow: hidden; }
             .progress-fill { background: #FCD116; height: 100%; border-radius: 20px; }
@@ -385,9 +385,9 @@ const sendBudgetAlertEmail = async (email, userName, spent, budget, percentage, 
             .alert-box { background: #fff3cd; border-left: 4px solid #ffc107; padding: 15px; margin: 15px 0; border-radius: 5px; }
             .stats { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 20px 0; }
             .stat { background: white; padding: 15px; border-radius: 5px; text-align: center; }
-            .stat-value { font-size: 24px; font-weight: bold; color: #006B3F; }
+            .stat-value { font-size: 24px; font-weight: bold; color: #033036; }
             .stat-label { font-size: 12px; color: #666; text-transform: uppercase; }
-            .button { display: inline-block; padding: 12px 30px; background: #006B3F; color: white; text-decoration: none; border-radius: 5px; margin: 20px 0; }
+            .button { display: inline-block; padding: 12px 30px; background: #033036; color: white; text-decoration: none; border-radius: 5px; margin: 20px 0; }
             .footer { text-align: center; margin-top: 30px; font-size: 12px; color: #666; }
           </style>
         </head>
@@ -453,17 +453,17 @@ const sendWeeklySummaryEmail = async (email, userName, expenses, income, savings
           <style>
             body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
             .container { max-width: 600px; margin: 0 auto; padding: 20px; }
-            .header { background: linear-gradient(135deg, #006B3F 0%, #00a05e 100%); color: white; padding: 30px; text-align: center; border-radius: 10px 10px 0 0; }
+            .header { background: linear-gradient(135deg, #033036 0%, #0b737d 100%); color: white; padding: 30px; text-align: center; border-radius: 10px 10px 0 0; }
             .content { background: #f9f9f9; padding: 30px; border-radius: 0 0 10px 10px; }
             .section { margin: 25px 0; }
             .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin: 15px 0; }
-            .stat-card { background: white; padding: 20px; border-radius: 8px; border-left: 4px solid #006B3F; }
+            .stat-card { background: white; padding: 20px; border-radius: 8px; border-left: 4px solid #033036; }
             .stat-card.income { border-left-color: #10b981; }
             .stat-card.saving { border-left-color: #f59e0b; }
-            .stat-value { font-size: 28px; font-weight: bold; color: #006B3F; }
+            .stat-value { font-size: 28px; font-weight: bold; color: #033036; }
             .stat-label { font-size: 12px; color: #999; text-transform: uppercase; }
-            .goal-item { background: white; padding: 12px; border-radius: 5px; margin: 8px 0; border-left: 3px solid #00a05e; }
-            .button { display: inline-block; padding: 12px 30px; background: #006B3F; color: white; text-decoration: none; border-radius: 5px; margin: 20px 0; }
+            .goal-item { background: white; padding: 12px; border-radius: 5px; margin: 8px 0; border-left: 3px solid #0b737d; }
+            .button { display: inline-block; padding: 12px 30px; background: #033036; color: white; text-decoration: none; border-radius: 5px; margin: 20px 0; }
             .footer { text-align: center; margin-top: 30px; font-size: 12px; color: #666; }
           </style>
         </head>
@@ -507,7 +507,7 @@ const sendWeeklySummaryEmail = async (email, userName, expenses, income, savings
                       <strong>${goal.title}</strong>
                       <div style="font-size: 12px; color: #666;">GHS ${parseFloat(goal.current).toFixed(2)} / GHS ${parseFloat(goal.target).toFixed(2)}</div>
                       <div style="background: #e0e0e0; height: 6px; border-radius: 3px; margin-top: 5px; overflow: hidden;">
-                        <div style="background: #00a05e; height: 100%; width: ${goal.target > 0 ? Math.min(100, (goal.current / goal.target * 100)) : 0}%; transition: width 0.3s;"></div>
+                        <div style="background: #0b737d; height: 100%; width: ${goal.target > 0 ? Math.min(100, (goal.current / goal.target * 100)) : 0}%; transition: width 0.3s;"></div>
                       </div>
                     </div>
                   `).join('')}
@@ -553,10 +553,10 @@ const sendVerificationEmail = async (email, verificationToken) => {
         <style>
           body { font-family: 'Inter', Arial, sans-serif; line-height: 1.6; color: #333; background: #f5f5f5; }
           .container { max-width: 600px; margin: 0 auto; padding: 20px; }
-          .header { background: linear-gradient(135deg, #006B3F 0%, #00a05e 100%); color: white; padding: 30px; text-align: center; border-radius: 10px 10px 0 0; }
+          .header { background: linear-gradient(135deg, #033036 0%, #0b737d 100%); color: white; padding: 30px; text-align: center; border-radius: 10px 10px 0 0; }
           .content { background: white; padding: 40px 30px; border-radius: 0 0 10px 10px; }
-          .button { display: inline-block; padding: 14px 40px; background: #006B3F; color: white; text-decoration: none; border-radius: 8px; font-weight: 600; margin: 30px auto; text-align: center; }
-          .link-text { color: #006B3F; word-break: break-all; font-size: 12px; }
+          .button { display: inline-block; padding: 14px 40px; background: #033036; color: white; text-decoration: none; border-radius: 8px; font-weight: 600; margin: 30px auto; text-align: center; }
+          .link-text { color: #033036; word-break: break-all; font-size: 12px; }
           .warning { background: #fff3cd; border-left: 4px solid #ffc107; padding: 15px; margin: 20px 0; border-radius: 5px; color: #856404; }
           .footer { text-align: center; margin-top: 30px; font-size: 12px; color: #666; border-top: 1px solid #eee; padding-top: 20px; }
           h1 { margin: 0; font-size: 24px; }
@@ -624,9 +624,9 @@ const sendVerificationOTP = async (email, otp) => {
         <style>
           body { font-family: 'Inter', Arial, sans-serif; line-height: 1.6; color: #333; background: #f5f5f5; }
           .container { max-width: 600px; margin: 0 auto; padding: 20px; }
-          .header { background: linear-gradient(135deg, #006B3F 0%, #00a05e 100%); color: white; padding: 30px; text-align: center; border-radius: 10px 10px 0 0; }
+          .header { background: linear-gradient(135deg, #033036 0%, #0b737d 100%); color: white; padding: 30px; text-align: center; border-radius: 10px 10px 0 0; }
           .content { background: white; padding: 40px 30px; border-radius: 0 0 10px 10px; }
-          .otp-code { font-size: 36px; letter-spacing: 8px; font-weight: 700; color: #006B3F; background: #f0faf5; padding: 20px 30px; border-radius: 12px; display: inline-block; margin: 20px 0; border: 2px dashed #006B3F; }
+          .otp-code { font-size: 36px; letter-spacing: 8px; font-weight: 700; color: #033036; background: #f0faf5; padding: 20px 30px; border-radius: 12px; display: inline-block; margin: 20px 0; border: 2px dashed #033036; }
           .warning { background: #fff3cd; border-left: 4px solid #ffc107; padding: 15px; margin: 20px 0; border-radius: 5px; color: #856404; }
           .footer { text-align: center; margin-top: 30px; font-size: 12px; color: #666; border-top: 1px solid #eee; padding-top: 20px; }
           h1 { margin: 0; font-size: 24px; }

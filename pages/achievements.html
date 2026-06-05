@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <meta name="theme-color" content="#006B3F">
+  <meta name="theme-color" content="#033036">
   <link rel="icon" type="image/png" sizes="32x32" href="../favicon.png">
   <link rel="apple-touch-icon" sizes="180x180" href="../apple-touch-icon.png">
   <link rel="manifest" href="../manifest.json">
@@ -19,7 +19,7 @@
   <style>
     /* ===== Modern Header for Achievements ===== */
     .mtn-header {
-      background: linear-gradient(160deg, var(--primary-color) 0%, #004d2c 40%, #003822 80%, #002a19 100%);
+      background: linear-gradient(160deg, var(--primary-color) 0%, #064a52 40%, #033036 80%, #021f23 100%);
       position: fixed;
       top: 0;
       left: 0;
@@ -254,15 +254,15 @@
     }
 
     .category-tab:hover {
-      background: rgba(0, 107, 63, 0.1);
+      background: rgba(3, 48, 54, 0.1);
       transform: translateY(-1px);
     }
 
     .category-tab.active {
-      background: linear-gradient(135deg, var(--primary-color), #00a05e);
+      background: linear-gradient(135deg, var(--primary-color), #0b737d);
       color: white;
       border-color: var(--primary-color);
-      box-shadow: 0 2px 8px rgba(0, 107, 63, 0.3);
+      box-shadow: 0 2px 8px rgba(3, 48, 54, 0.3);
     }
 
     .achievement-grid {
@@ -293,7 +293,7 @@
       left: 0;
       height: 3px;
       width: var(--progress, 0%);
-      background: linear-gradient(90deg, var(--primary-color), #00a05e);
+      background: linear-gradient(90deg, var(--primary-color), #0b737d);
       transition: width 0.8s ease;
     }
 
@@ -308,8 +308,8 @@
 
     .achievement-card.earned {
       border-color: var(--primary-color);
-      background: linear-gradient(135deg, rgba(0, 107, 63, 0.08), rgba(0, 107, 63, 0.03));
-      box-shadow: 0 2px 8px rgba(0, 107, 63, 0.15);
+      background: linear-gradient(135deg, rgba(3, 48, 54, 0.08), rgba(3, 48, 54, 0.03));
+      box-shadow: 0 2px 8px rgba(3, 48, 54, 0.15);
     }
 
     .achievement-card.earned::before {
@@ -332,14 +332,14 @@
     }
 
     .achievement-card.earned .achievement-icon {
-      background: linear-gradient(135deg, var(--primary-color), #00a05e);
+      background: linear-gradient(135deg, var(--primary-color), #0b737d);
       animation: iconShine 2s infinite;
-      box-shadow: 0 4px 12px rgba(0, 107, 63, 0.4);
+      box-shadow: 0 4px 12px rgba(3, 48, 54, 0.4);
     }
 
     @keyframes iconShine {
-      0%, 100% { box-shadow: 0 4px 12px rgba(0, 107, 63, 0.4); }
-      50% { box-shadow: 0 4px 20px rgba(0, 107, 63, 0.6), 0 0 30px rgba(0, 107, 63, 0.3); }
+      0%, 100% { box-shadow: 0 4px 12px rgba(3, 48, 54, 0.4); }
+      50% { box-shadow: 0 4px 20px rgba(3, 48, 54, 0.6), 0 0 30px rgba(3, 48, 54, 0.3); }
     }
 
     .achievement-card.locked .achievement-icon {
@@ -366,7 +366,7 @@
 
     .achievement-xp {
       display: inline-block;
-      background: rgba(0, 107, 63, 0.15);
+      background: rgba(3, 48, 54, 0.15);
       color: var(--primary-color);
       padding: 6px 12px;
       border-radius: 8px;

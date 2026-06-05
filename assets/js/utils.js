@@ -398,9 +398,9 @@ function debounce(func, wait) {
 // Generate chart colors (Green & White theme)
 function getChartColors(count) {
   const colors = [
-    '#006B3F', // Primary Green
-    '#00a05e', // Light Green
-    '#004d2c', // Dark Green
+    '#033036', // Primary Green
+    '#0b737d', // Light Green
+    '#064a52', // Dark Green
     '#10b981', // Success green
     '#059669', // Emerald
     '#047857', // Deep emerald
@@ -455,7 +455,7 @@ function getDateRange(period) {
 
 // Confetti celebration
 function showConfetti(particleCount = 50) {
-  const colors = ['#006B3F', '#00a05e', '#ffffff', '#34d399', '#fbbf24'];
+  const colors = ['#033036', '#0b737d', '#ffffff', '#34d399', '#fbbf24'];
   
   // Add keyframes if not exist
   if (!document.getElementById('confetti-keyframes')) {
@@ -523,7 +523,7 @@ function showFunToast(message, emoji = '🎉', duration = 3000) {
     bottom: 120px;
     left: 50%;
     transform: translateX(-50%);
-    background: linear-gradient(135deg, #006B3F, #00a05e);
+    background: linear-gradient(135deg, #033036, #0b737d);
     color: white;
     padding: 14px 24px;
     border-radius: 50px;
@@ -532,7 +532,7 @@ function showFunToast(message, emoji = '🎉', duration = 3000) {
     display: flex;
     align-items: center;
     gap: 12px;
-    box-shadow: 0 10px 40px rgba(0, 107, 63, 0.4);
+    box-shadow: 0 10px 40px rgba(3, 48, 54, 0.4);
     z-index: 9999;
     animation: toast-bounce-in 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
     backdrop-filter: blur(10px);
@@ -644,9 +644,9 @@ function pulseSuccess(element) {
     style.id = 'pulse-success-keyframes';
     style.textContent = `
       @keyframes pulse-success {
-        0% { box-shadow: 0 0 0 0 rgba(0, 160, 94, 0.7); }
-        70% { box-shadow: 0 0 0 15px rgba(0, 160, 94, 0); }
-        100% { box-shadow: 0 0 0 0 rgba(0, 160, 94, 0); }
+        0% { box-shadow: 0 0 0 0 rgba(11, 115, 125, 0.7); }
+        70% { box-shadow: 0 0 0 15px rgba(11, 115, 125, 0); }
+        100% { box-shadow: 0 0 0 0 rgba(11, 115, 125, 0); }
       }
     `;
     document.head.appendChild(style);

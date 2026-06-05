@@ -8,11 +8,12 @@
 
 /* Light Theme (Default) */
 :root {
-  --primary-color: #006B3F;
-  --primary-light: #00a05e;
-  --primary-dark: #004d2c;
+  --primary-color: #033036;
+  --primary-light: #0b737d;
+  --primary-dark: #064a52;
+  --primary-gradient: linear-gradient(135deg, #033036 0%, #064a52 46%, #0b737d 100%);
   --secondary-color: #ffffff;
-  --accent-color: #00a05e;
+  --accent-color: #0b737d;
   --bg-primary: #f5f6fa;
   --bg-secondary: #ffffff;
   --bg-card: #ffffff;
@@ -354,7 +355,7 @@ body {
 
 /* Mobile Header - iPhone X to 17 Pro Max Safe Area Support */
 .header {
-  background: linear-gradient(135deg, var(--primary-color) 0%, #004d2c 100%);
+  background: linear-gradient(135deg, var(--primary-color) 0%, #064a52 100%);
   padding: 0;
   box-shadow: var(--shadow-lg);
   position: fixed;
@@ -384,7 +385,7 @@ body {
   right: 0;
   height: var(--safe-area-top);
   background: inherit;
-  background: linear-gradient(135deg, var(--primary-color) 0%, #004d2c 100%);
+  background: linear-gradient(135deg, var(--primary-color) 0%, #064a52 100%);
 }
 
 .header-content {
@@ -549,7 +550,7 @@ body {
   max-width: 85vw;
   height: 100vh;
   height: 100dvh;
-  background: linear-gradient(175deg, #007A45 0%, #006B3F 25%, #005a35 50%, #004d2c 75%, #003d23 100%);
+  background: linear-gradient(175deg, #075a62 0%, #033036 25%, #064a52 50%, #064a52 75%, #033036 100%);
   z-index: 102;
   padding-top: env(safe-area-inset-top, 0px);
   padding-right: var(--safe-area-right);
@@ -1101,7 +1102,7 @@ body {
 [data-theme="dark"] .bottom-nav {
   background: rgba(22, 33, 62, 0.85);
   box-shadow: 
-    0 8px 32px rgba(0, 107, 63, 0.15),
+    0 8px 32px rgba(3, 48, 54, 0.15),
     0 4px 16px rgba(0, 0, 0, 0.1),
     inset 0 1px 1px rgba(255, 255, 255, 0.2),
     inset 0 -1px 1px rgba(0, 0, 0, 0.1);
@@ -1145,7 +1146,7 @@ body {
   height: 20px;
   background: radial-gradient(
     ellipse at center,
-    rgba(0, 160, 94, 0.12) 0%,
+    rgba(11, 115, 125, 0.12) 0%,
     transparent 70%
   );
   filter: blur(10px);
@@ -1154,7 +1155,7 @@ body {
 }
 
 [data-theme="dark"] .bottom-nav::after {
-  background: radial-gradient(ellipse, rgba(0, 160, 94, 0.3), transparent 70%);
+  background: radial-gradient(ellipse, rgba(11, 115, 125, 0.3), transparent 70%);
 }
 
 .bottom-nav-item {
@@ -1164,7 +1165,7 @@ body {
   justify-content: center;
   gap: 4px;
   text-decoration: none;
-  color: rgba(0, 107, 63, 0.7);
+  color: rgba(3, 48, 54, 0.7);
   font-size: 13px;
   font-weight: 600;
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
@@ -1197,7 +1198,7 @@ body {
   letter-spacing: 0.3px;
   font-weight: 600;
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  color: rgba(0, 107, 63, 0.8);
+  color: rgba(3, 48, 54, 0.8);
 }
 
 [data-theme="dark"] .bottom-nav-item span:last-child {
@@ -1208,29 +1209,29 @@ body {
   color: white;
   background: linear-gradient(
     135deg,
-    rgba(0, 160, 94, 0.9) 0%,
-    rgba(0, 107, 63, 0.85) 100%
+    rgba(11, 115, 125, 0.9) 0%,
+    rgba(3, 48, 54, 0.85) 100%
   );
   box-shadow: 
-    0 4px 20px rgba(0, 107, 63, 0.35),
+    0 4px 20px rgba(3, 48, 54, 0.35),
     inset 0 1px 1px rgba(255, 255, 255, 0.4);
 }
 
 [data-theme="dark"] .bottom-nav-item.active {
   background: linear-gradient(
     135deg,
-    rgba(0, 160, 94, 0.6) 0%,
-    rgba(0, 107, 63, 0.5) 100%
+    rgba(11, 115, 125, 0.6) 0%,
+    rgba(3, 48, 54, 0.5) 100%
   );
   box-shadow: 
-    0 4px 16px rgba(0, 160, 94, 0.4),
+    0 4px 16px rgba(11, 115, 125, 0.4),
     inset 0 1px 1px rgba(255, 255, 255, 0.3);
   border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 .bottom-nav-item.active .nav-icon {
   transform: translateY(-2px) scale(1.1);
-  filter: drop-shadow(0 2px 8px rgba(0, 160, 94, 0.5));
+  filter: drop-shadow(0 2px 8px rgba(11, 115, 125, 0.5));
 }
 
 .bottom-nav-item.active span:last-child {
@@ -1252,7 +1253,7 @@ body {
   border-radius: 50%;
   box-shadow: 
     0 0 8px rgba(255, 255, 255, 0.9),
-    0 0 16px rgba(0, 160, 94, 0.8);
+    0 0 16px rgba(11, 115, 125, 0.8);
   animation: glow-pulse 2s ease-in-out infinite;
 }
 
@@ -1273,12 +1274,12 @@ body {
   width: 46px;
   height: 46px;
   border-radius: 50%;
-  background: linear-gradient(135deg, var(--primary-color) 0%, #004d2c 100%);
+  background: linear-gradient(135deg, var(--primary-color) 0%, #064a52 100%);
   color: var(--text-light);
   border: none;
   font-size: 20px;
   cursor: pointer;
-  box-shadow: 0 4px 16px rgba(0, 107, 63, 0.4);
+  box-shadow: 0 4px 16px rgba(3, 48, 54, 0.4);
   z-index: 80;
   display: flex;
   align-items: center;
@@ -1288,7 +1289,7 @@ body {
 
 .fab:active {
   transform: scale(0.95);
-  box-shadow: 0 4px 15px rgba(0, 107, 63, 0.3);
+  box-shadow: 0 4px 15px rgba(3, 48, 54, 0.3);
 }
 
 /* Cards */
@@ -1365,7 +1366,7 @@ body {
   background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
   color: white !important;
   text-shadow: none;
-  box-shadow: 0 4px 14px rgba(0, 107, 63, 0.25);
+  box-shadow: 0 4px 14px rgba(3, 48, 54, 0.25);
 }
 
 .btn-primary:visited,
@@ -1382,7 +1383,7 @@ body {
 }
 
 .btn-secondary:active {
-  background: rgba(0, 107, 63, 0.1);
+  background: rgba(3, 48, 54, 0.1);
 }
 
 .btn-danger {
@@ -1438,7 +1439,7 @@ body {
 }
 
 .btn-gold {
-  background: linear-gradient(135deg, #00a05e 0%, #006B3F 100%);
+  background: linear-gradient(135deg, #0b737d 0%, #033036 100%);
   color: white !important;
   text-shadow: none;
 }
@@ -1452,16 +1453,17 @@ body {
 
 /* Ensure all buttons with primary backgrounds have white text */
 button[style*="background: var(--primary-color)"],
-button[style*="background:#006B3F"],
+button[style*="background:#033036"],
 button[style*="background: linear-gradient(135deg, var(--primary-color)"],
 a[style*="background: var(--primary-color)"],
 div[style*="background: var(--primary-color)"] {
+  background: var(--primary-gradient) !important;
   color: white !important;
 }
 
 /* Generic fallback for any green button */
-[class*="btn"][style*="#006B3F"],
-[class*="btn"][style*="#00a05e"],
+[class*="btn"][style*="#033036"],
+[class*="btn"][style*="#0b737d"],
 [class*="btn"][style*="primary"],
 [class*="btn"][style*="success"] {
   color: white !important;
@@ -1499,7 +1501,7 @@ div[style*="background: var(--primary-color)"] {
 .form-textarea:focus {
   outline: none;
   border-color: var(--primary-color);
-  box-shadow: 0 0 0 3px rgba(0, 107, 63, 0.12);
+  box-shadow: 0 0 0 3px rgba(3, 48, 54, 0.12);
 }
 
 /* Input with icon */
@@ -1595,7 +1597,7 @@ div[style*="background: var(--primary-color)"] {
 .form-input.success,
 .form-select.success {
   border-color: var(--success-color);
-  background: rgba(0, 160, 94, 0.05);
+  background: rgba(11, 115, 125, 0.05);
 }
 
 .form-error-text {
@@ -2773,9 +2775,9 @@ div[style*="background: var(--primary-color)"] {
 
 /* Rainbow Glow */
 @keyframes rainbowGlow {
-  0%, 100% { box-shadow: 0 0 20px rgba(0, 160, 94, 0.5); }
-  33% { box-shadow: 0 0 20px rgba(0, 160, 94, 0.8); }
-  66% { box-shadow: 0 0 20px rgba(0, 107, 63, 0.6); }
+  0%, 100% { box-shadow: 0 0 20px rgba(11, 115, 125, 0.5); }
+  33% { box-shadow: 0 0 20px rgba(11, 115, 125, 0.8); }
+  66% { box-shadow: 0 0 20px rgba(3, 48, 54, 0.6); }
 }
 
 /* Jello Wobble */
@@ -2858,7 +2860,7 @@ div[style*="background: var(--primary-color)"] {
 
 .card-lively:active {
   transform: scale(0.98) translateY(-2px);
-  box-shadow: 0 8px 25px rgba(0, 107, 63, 0.25);
+  box-shadow: 0 8px 25px rgba(3, 48, 54, 0.25);
 }
 
 /* ================================
@@ -2921,7 +2923,7 @@ div[style*="background: var(--primary-color)"] {
 
 .btn-primary:active {
   transform: scale(0.95);
-  box-shadow: 0 4px 20px rgba(0, 107, 63, 0.5);
+  box-shadow: 0 4px 20px rgba(3, 48, 54, 0.5);
 }
 
 /* Fun FAB Animation */
@@ -3018,7 +3020,7 @@ div[style*="background: var(--primary-color)"] {
 
 .budget-fill.safe {
   background: linear-gradient(90deg, var(--success) 0%, #2ecc71 100%);
-  box-shadow: 0 2px 8px rgba(0, 200, 83, 0.4);
+  box-shadow: 0 2px 8px rgba(11, 115, 125, 0.4);
 }
 
 .budget-fill.warning {
@@ -3069,7 +3071,7 @@ div[style*="background: var(--primary-color)"] {
 /* Achievement Unlock Effect */
 .achievement-unlocked {
   animation: tada 1s ease;
-  box-shadow: 0 0 30px rgba(0, 160, 94, 0.6);
+  box-shadow: 0 0 30px rgba(11, 115, 125, 0.6);
 }
 
 /* Streak Fire Effect */
@@ -3166,12 +3168,12 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   cursor: pointer;
   border-radius: 4px;
   padding: 6px;
-  background-color: rgba(0, 160, 94, 0.1);
+  background-color: rgba(11, 115, 125, 0.1);
   transition: background-color 0.2s ease;
 }
 
 input[type="date"]::-webkit-calendar-picker-indicator:hover {
-  background-color: rgba(0, 160, 94, 0.2);
+  background-color: rgba(11, 115, 125, 0.2);
 }
 
 /* ================================
@@ -3411,7 +3413,7 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
 
 .challenge-card:active {
   transform: translateY(-5px) scale(1.02);
-  box-shadow: 0 15px 30px rgba(0, 107, 63, 0.3);
+  box-shadow: 0 15px 30px rgba(3, 48, 54, 0.3);
 }
 
 .challenge-progress {
@@ -3447,7 +3449,7 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
 
 .glass-highlight:active {
   background: rgba(255, 255, 255, 0.15);
-  box-shadow: 0 8px 32px rgba(0, 107, 63, 0.2);
+  box-shadow: 0 8px 32px rgba(3, 48, 54, 0.2);
 }
 
 /* ================================
@@ -3480,7 +3482,7 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
   position: absolute;
   width: 100px;
   height: 100px;
-  background: rgba(0, 160, 94, 0.3);
+  background: rgba(11, 115, 125, 0.3);
   border-radius: 50%;
   transform: scale(0);
   opacity: 0;
@@ -3827,7 +3829,7 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
   display: inline-flex;
   align-items: center;
   gap: 4px;
-  background: rgba(0, 107, 63, 0.1);
+  background: rgba(3, 48, 54, 0.1);
   color: var(--primary-color);
   padding: 4px 8px;
   border-radius: 12px;
