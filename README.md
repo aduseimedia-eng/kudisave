@@ -207,6 +207,7 @@ git push origin main
 - Cash
 - MTN MoMo
 - Telecel Cash
+- Visa Card
 - Bank Transfer
 - AirtelTigo Money
 

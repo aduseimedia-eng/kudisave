@@ -17,6 +17,7 @@ const PAYMENT_METHODS = [
   'Cash',
   'MTN MoMo',
   'Telecel Cash',
+  'Visa Card',
   'Bank Transfer',
   'AirtelTigo Money'
 ];

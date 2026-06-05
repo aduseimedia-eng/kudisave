@@ -115,7 +115,7 @@
     .empty-state p { font-size: 13px; line-height: 1.5; margin-bottom: 16px; }
 
     /* FAB */
-    .fab { position: fixed; bottom: calc(80px + env(safe-area-inset-bottom, 0px)); right: 20px; width: 56px; height: 56px; border-radius: 18px; background: linear-gradient(135deg, var(--primary-color, #006B3F), #00a855); color: white; border: none; box-shadow: 0 8px 24px rgba(0,107,63,0.35); display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 50; }
+    .fab { position: fixed; bottom: calc(80px + env(safe-area-inset-bottom, 0px)); right: 20px; width: 56px; height: 56px; border-radius: 18px; background: linear-gradient(135deg, #033036 0%, #075a62 55%, #0b737d 100%); color: white; border: none; box-shadow: 0 12px 28px rgba(3,48,54,0.32); display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 50; }
     .fab i { width: 24px; height: 24px; }
 
     /* Modals */
@@ -136,6 +136,12 @@
     .form-input, .form-select, .form-textarea { width: 100%; padding: 14px 15px; border-radius: 16px; border: 1.5px solid #e5e7eb; background: #f8fafc; color: #111827; font-size: 15px; font-family: inherit; outline: none; transition: border-color 0.2s, box-shadow 0.2s, background 0.2s; box-sizing: border-box; }
     .form-input:focus, .form-select:focus, .form-textarea:focus { border-color: #033036; background: #ffffff; box-shadow: 0 0 0 4px rgba(3,48,54,0.09); }
     .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .picker-field { width: 100%; min-height: 49px; padding: 13px 14px; border-radius: 16px; border: 1.5px solid #e5e7eb; background: #f8fafc; color: #111827; font-size: 15px; font-family: inherit; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: space-between; gap: 10px; text-align: left; }
+    .picker-field-main { display: flex; align-items: center; gap: 9px; min-width: 0; }
+    .picker-field-main span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .picker-field-icon { width: 30px; height: 30px; border-radius: 11px; background: rgba(3,48,54,0.09); color: #033036; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .picker-field-icon i, .picker-field-chevron { width: 16px; height: 16px; }
+    .picker-field-chevron { color: #9ca3af; flex-shrink: 0; }
     .currency-input-wrapper { position: relative; }
     .currency-prefix { position: absolute; left: 15px; top: 50%; transform: translateY(-50%); font-size: 15px; font-weight: 800; color: #033036; pointer-events: none; }
     .currency-input-wrapper .form-input { padding-left: 34px; }
@@ -144,6 +150,26 @@
     .expense-form-cancel { background: #f3f4f6; color: #4b5563; }
     .expense-form-save { background: linear-gradient(135deg, #033036 0%, #075a62 55%, #0b737d 100%); color: white; box-shadow: 0 14px 28px rgba(3,48,54,0.24); }
     @media (max-width: 390px) { .form-row { grid-template-columns: 1fr; gap: 0; } .expense-form-actions { grid-template-columns: 1fr; } }
+
+    /* Picker modals */
+    .picker-modal { z-index: 1002; background: rgba(17,24,39,0.42); }
+    .picker-sheet { background: #ffffff; border-radius: 30px 30px 0 0; padding: 22px 20px 20px; width: 100%; max-width: 480px; box-shadow: 0 -22px 70px rgba(17,24,39,0.18); animation: slideUp 0.26s cubic-bezier(0.4,0,0.2,1); }
+    .picker-title-row { display: flex; align-items: center; gap: 12px; margin-bottom: 18px; }
+    .picker-title-icon { width: 44px; height: 44px; border-radius: 16px; background: linear-gradient(135deg, #033036, #075a62); color: #ffffff; display: flex; align-items: center; justify-content: center; box-shadow: 0 12px 24px rgba(3,48,54,0.22); }
+    .picker-title-icon i { width: 21px; height: 21px; }
+    .picker-title { font-size: 19px; font-weight: 850; color: #111827; line-height: 1.15; }
+    .picker-subtitle { font-size: 12px; color: #6b7280; margin-top: 3px; }
+    .picker-options { display: grid; gap: 10px; }
+    .picker-option { border: 1.5px solid #eef2f7; background: #f8fafc; border-radius: 18px; padding: 13px 14px; display: flex; align-items: center; justify-content: space-between; gap: 12px; cursor: pointer; font-family: inherit; text-align: left; color: #111827; }
+    .picker-option-main { display: flex; align-items: center; gap: 11px; font-size: 14px; font-weight: 800; }
+    .picker-option-mark { width: 20px; height: 20px; border-radius: 50%; border: 2px solid #d1d5db; flex-shrink: 0; }
+    .picker-option.active { border-color: rgba(3,48,54,0.28); background: rgba(3,48,54,0.06); }
+    .picker-option.active .picker-option-mark { border-color: #033036; background: radial-gradient(circle at center, #033036 0 42%, transparent 45%); }
+    .date-picker-control { width: 100%; padding: 14px 15px; border-radius: 17px; border: 1.5px solid #e5e7eb; background: #f8fafc; color: #111827; font-size: 15px; font-family: inherit; font-weight: 700; box-sizing: border-box; outline: none; }
+    .date-picker-control:focus { border-color: #033036; box-shadow: 0 0 0 4px rgba(3,48,54,0.09); background: #ffffff; }
+    .date-shortcuts { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin: 12px 0 16px; }
+    .date-shortcut { border: none; border-radius: 14px; padding: 11px 8px; background: #f3f4f6; color: #374151; font-size: 12px; font-weight: 800; cursor: pointer; }
+    .date-confirm { width: 100%; border: none; border-radius: 17px; padding: 14px; background: linear-gradient(135deg, #033036 0%, #075a62 55%, #0b737d 100%); color: #ffffff; font-size: 14px; font-weight: 850; cursor: pointer; box-shadow: 0 14px 28px rgba(3,48,54,0.22); }
 
     /* Detail Modal */
     .detail-row { display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid var(--border-color, #e5e7eb); }
@@ -263,12 +289,26 @@
           </div>
           <div class="form-group">
             <label class="form-label">Payment Method</label>
-            <select class="form-select" id="expensePaymentMethod" required></select>
+            <input type="hidden" id="expensePaymentMethod" required>
+            <button type="button" class="picker-field" onclick="openPaymentMethodModal()">
+              <span class="picker-field-main">
+                <span class="picker-field-icon" id="paymentMethodIconWrap"><i id="paymentMethodIcon" data-lucide="wallet"></i></span>
+                <span id="paymentMethodText">Select method</span>
+              </span>
+              <i class="picker-field-chevron" data-lucide="chevron-down"></i>
+            </button>
           </div>
         </div>
         <div class="form-group">
           <label class="form-label">Date</label>
-          <input type="date" class="form-input" id="expenseDate" required>
+          <input type="hidden" id="expenseDate" required>
+          <button type="button" class="picker-field" onclick="openDatePickerModal()">
+            <span class="picker-field-main">
+              <span class="picker-field-icon"><i data-lucide="calendar-days"></i></span>
+              <span id="expenseDateText">Select date</span>
+            </span>
+            <i class="picker-field-chevron" data-lucide="chevron-down"></i>
+          </button>
         </div>
         <div class="form-group">
           <label class="form-label">Note (Optional)</label>
@@ -302,6 +342,42 @@
           <i data-lucide="trash-2" style="width:16px;height:16px;"></i> Delete
         </button>
       </div>
+    </div>
+  </div>
+
+  <!-- Payment Method Picker -->
+  <div id="paymentMethodModal" class="modal picker-modal">
+    <div class="picker-sheet">
+      <div class="modal-handle"></div>
+      <div class="picker-title-row">
+        <div class="picker-title-icon"><i data-lucide="credit-card"></i></div>
+        <div>
+          <div class="picker-title">Payment Method</div>
+          <div class="picker-subtitle">Choose how this expense was paid</div>
+        </div>
+      </div>
+      <div class="picker-options" id="paymentMethodOptions"></div>
+    </div>
+  </div>
+
+  <!-- Date Picker -->
+  <div id="datePickerModal" class="modal picker-modal">
+    <div class="picker-sheet">
+      <div class="modal-handle"></div>
+      <div class="picker-title-row">
+        <div class="picker-title-icon"><i data-lucide="calendar-days"></i></div>
+        <div>
+          <div class="picker-title">Expense Date</div>
+          <div class="picker-subtitle">Select when this transaction happened</div>
+        </div>
+      </div>
+      <input type="date" class="date-picker-control" id="expenseDatePicker">
+      <div class="date-shortcuts">
+        <button type="button" class="date-shortcut" onclick="selectDateShortcut(0)">Today</button>
+        <button type="button" class="date-shortcut" onclick="selectDateShortcut(1)">Yesterday</button>
+        <button type="button" class="date-shortcut" onclick="selectDateShortcut(7)">7 days ago</button>
+      </div>
+      <button type="button" class="date-confirm" onclick="confirmExpenseDate()">Use This Date</button>
     </div>
   </div>
 
@@ -527,6 +603,87 @@
       }
     }
 
+    function getPaymentMethods() {
+      var methods = (utils.PAYMENT_METHODS || ['Cash', 'MTN MoMo', 'Telecel Cash', 'Visa Card', 'Bank Transfer', 'AirtelTigo Money']).slice();
+      if (!methods.includes('Visa Card')) methods.splice(Math.min(3, methods.length), 0, 'Visa Card');
+      return methods;
+    }
+
+    function getPaymentMethodIcon(method) {
+      if (/visa|card/i.test(method)) return 'credit-card';
+      if (/momo|cash|money|telecel|airteltigo/i.test(method)) return 'smartphone';
+      if (/bank/i.test(method)) return 'landmark';
+      return 'wallet';
+    }
+
+    function setPaymentMethod(method) {
+      document.getElementById('expensePaymentMethod').value = method;
+      document.getElementById('paymentMethodText').textContent = method;
+      document.getElementById('paymentMethodIconWrap').innerHTML = '<i id="paymentMethodIcon" data-lucide="' + getPaymentMethodIcon(method) + '"></i>';
+      closePickerModal('paymentMethodModal');
+      lucide.createIcons({ node: document.getElementById('expenseModal') });
+    }
+
+    function openPaymentMethodModal() {
+      var selected = document.getElementById('expensePaymentMethod').value;
+      var options = getPaymentMethods();
+      var container = document.getElementById('paymentMethodOptions');
+      container.innerHTML = options.map(function(method) {
+        var active = method === selected ? ' active' : '';
+        return '<button type="button" class="picker-option' + active + '" data-method="' + escHtml(method) + '">' +
+          '<span class="picker-option-main"><span class="picker-field-icon"><i data-lucide="' + getPaymentMethodIcon(method) + '"></i></span>' +
+          '<span>' + escHtml(method) + '</span></span><span class="picker-option-mark"></span></button>';
+      }).join('');
+      container.querySelectorAll('.picker-option').forEach(function(btn) {
+        btn.addEventListener('click', function() { setPaymentMethod(this.dataset.method); });
+      });
+      document.getElementById('paymentMethodModal').classList.add('active');
+      document.body.style.overflow = 'hidden';
+      lucide.createIcons({ node: document.getElementById('paymentMethodModal') });
+    }
+
+    function formatInputDate(date) {
+      var y = date.getFullYear();
+      var m = String(date.getMonth() + 1).padStart(2, '0');
+      var d = String(date.getDate()).padStart(2, '0');
+      return y + '-' + m + '-' + d;
+    }
+
+    function formatDisplayDate(value) {
+      if (!value) return 'Select date';
+      return new Date(value + 'T00:00:00').toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
+    }
+
+    function setExpenseDate(value) {
+      document.getElementById('expenseDate').value = value;
+      document.getElementById('expenseDateText').textContent = formatDisplayDate(value);
+    }
+
+    function openDatePickerModal() {
+      document.getElementById('expenseDatePicker').value = document.getElementById('expenseDate').value || utils.getTodayDate();
+      document.getElementById('datePickerModal').classList.add('active');
+      document.body.style.overflow = 'hidden';
+      lucide.createIcons({ node: document.getElementById('datePickerModal') });
+    }
+
+    function selectDateShortcut(daysAgo) {
+      var date = new Date();
+      date.setDate(date.getDate() - daysAgo);
+      document.getElementById('expenseDatePicker').value = formatInputDate(date);
+    }
+
+    function confirmExpenseDate() {
+      var value = document.getElementById('expenseDatePicker').value;
+      if (!value) return;
+      setExpenseDate(value);
+      closePickerModal('datePickerModal');
+    }
+
+    function closePickerModal(id) {
+      document.getElementById(id).classList.remove('active');
+      document.body.style.overflow = document.querySelector('.modal.active') ? 'hidden' : '';
+    }
+
     function openAddModal() {
       document.getElementById('editExpenseId').value = '';
       document.getElementById('expenseModalTitle').textContent = 'Add Expense';
@@ -539,13 +696,8 @@
         return '<option value="' + cat + '">' + (getIconInfo(cat).emoji || '') + ' ' + cat + '</option>';
       }).join('');
 
-      var methods = (utils.PAYMENT_METHODS || ['Cash','Mobile Money','Bank Transfer','Card','other']);
-      var methodSel = document.getElementById('expensePaymentMethod');
-      methodSel.innerHTML = methods.map(function(m) {
-        return '<option value="' + m + '">' + m + '</option>';
-      }).join('');
-
-      document.getElementById('expenseDate').value = utils.getTodayDate();
+      setPaymentMethod(getPaymentMethods()[0]);
+      setExpenseDate(utils.getTodayDate());
       document.getElementById('expenseModal').classList.add('active');
       document.body.style.overflow = 'hidden';
       lucide.createIcons({ node: document.getElementById('expenseModal') });
@@ -559,11 +711,15 @@
     document.getElementById('expenseModal').addEventListener('click', function(ev) { if (ev.target === this) closeModal('expenseModal'); });
     document.getElementById('detailModal').addEventListener('click', function(ev) { if (ev.target === this) closeModal('detailModal'); });
     document.getElementById('deleteConfirmModal').addEventListener('click', function(ev) { if (ev.target === this) closeDeleteConfirm(); });
+    document.getElementById('paymentMethodModal').addEventListener('click', function(ev) { if (ev.target === this) closePickerModal('paymentMethodModal'); });
+    document.getElementById('datePickerModal').addEventListener('click', function(ev) { if (ev.target === this) closePickerModal('datePickerModal'); });
 
     async function handleSaveExpense(ev) {
       ev.preventDefault();
       var amount = parseFloat(document.getElementById('expenseAmount').value);
       if (!amount || amount <= 0) { utils.showAlert('Enter a valid amount', 'error'); return; }
+      if (!document.getElementById('expensePaymentMethod').value) { utils.showAlert('Choose a payment method', 'error'); return; }
+      if (!document.getElementById('expenseDate').value) { utils.showAlert('Choose a date', 'error'); return; }
 
       var payload = {
         amount: amount,

@@ -306,6 +306,7 @@ INSERT INTO payment_methods (name) VALUES
     ('Cash'),
     ('MTN MoMo'),
     ('Telecel Cash'),
+    ('Visa Card'),
     ('Bank Transfer'),
     ('AirtelTigo Money');
 

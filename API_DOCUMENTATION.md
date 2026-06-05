@@ -516,6 +516,7 @@ All errors follow this format:
 - Cash
 - MTN MoMo
 - Telecel Cash
+- Visa Card
 - Bank Transfer
 - AirtelTigo Money
 
