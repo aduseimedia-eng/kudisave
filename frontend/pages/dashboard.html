@@ -1804,47 +1804,66 @@
     .balance-card {
       text-align: left;
       margin: 0 0 18px;
-      padding: 22px 20px 18px;
-      border-radius: 26px;
-      min-height: 164px;
-      background: linear-gradient(135deg, #033036 0%, #064a52 46%, #0b737d 100%);
+      padding: 18px;
+      border-radius: 28px;
+      min-height: 198px;
+      background:
+        linear-gradient(145deg, rgba(255,255,255,0.11) 0 1px, transparent 1px 100%),
+        radial-gradient(circle at 14% 8%, rgba(255,255,255,0.18), transparent 31%),
+        linear-gradient(135deg, #033036 0%, #064a52 48%, #0b737d 100%);
       color: #ffffff;
-      box-shadow: 0 22px 44px rgba(3,48,54,0.28);
+      box-shadow: 0 24px 46px rgba(3,48,54,0.3);
       overflow: hidden;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
       border: none;
+      isolation: isolate;
     }
     .balance-card::before {
       content: '';
       position: absolute;
-      top: 18px;
-      left: 20px;
-      width: 44px;
-      height: 32px;
-      border-radius: 9px;
-      background: linear-gradient(135deg, #f8dfa1, #c89b3c);
-      box-shadow: inset 0 0 0 1px rgba(255,255,255,0.35);
+      inset: 0;
+      background: linear-gradient(110deg, transparent 20%, rgba(255,255,255,0.08) 48%, transparent 72%);
+      transform: translateX(-36%);
+      pointer-events: none;
       animation: none;
     }
-    .balance-card::after {
-      content: 'VISA';
-      position: absolute;
-      right: 22px;
-      bottom: 18px;
-      font-size: 20px;
+    .balance-card::after { display: none; }
+    .card-topline, .card-bottomline {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      position: relative;
+      z-index: 1;
+    }
+    .card-chip {
+      width: 48px;
+      height: 36px;
+      border-radius: 11px;
+      background:
+        linear-gradient(90deg, transparent 47%, rgba(126,87,20,0.24) 48% 52%, transparent 53%),
+        linear-gradient(0deg, transparent 47%, rgba(126,87,20,0.22) 48% 52%, transparent 53%),
+        linear-gradient(135deg, #f9e7ad, #c79433);
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,0.42), 0 8px 18px rgba(0,0,0,0.12);
+      flex-shrink: 0;
+    }
+    .card-network {
+      font-size: 22px;
       font-weight: 900;
       font-style: italic;
+      color: rgba(255,255,255,0.94);
       letter-spacing: 0;
-      color: rgba(255,255,255,0.92);
     }
     .balance-label {
-      justify-content: flex-end;
-      color: rgba(255,255,255,0.72);
+      justify-content: flex-start;
+      color: rgba(255,255,255,0.66);
       font-size: 11px;
       letter-spacing: 1.1px;
-      margin: 0 0 26px;
+      margin: 22px 0 4px;
+      position: relative;
+      z-index: 1;
     }
     .balance-label::before { display: none; }
     .balance-amount {
@@ -1853,17 +1872,29 @@
       margin: 0;
       text-shadow: none;
       letter-spacing: -0.9px;
+      position: relative;
+      z-index: 1;
     }
-    .balance-details {
+    .card-number {
+      color: rgba(255,255,255,0.72);
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 2.6px;
+      margin-top: 12px;
+      position: relative;
+      z-index: 1;
+    }
+    .balance-row {
       justify-content: flex-start;
       gap: 10px;
-      margin-top: 18px;
-      padding-right: 66px;
+      margin-top: 0;
+      padding-right: 0;
+      flex: 1;
     }
     .balance-item {
       flex: 0 1 auto;
-      min-width: 92px;
-      padding: 8px 10px;
+      min-width: 86px;
+      padding: 7px 9px;
       border-radius: 14px;
       background: rgba(255,255,255,0.1);
       border: 1px solid rgba(255,255,255,0.12);
@@ -1882,6 +1913,13 @@
     .widget-card::after {
       content: none !important;
       display: none !important;
+    }
+    @media (max-width: 380px) {
+      .balance-card { min-height: 188px; padding: 16px; }
+      .balance-amount { font-size: 27px; }
+      .card-network { font-size: 19px; }
+      .balance-item { min-width: 78px; }
+      .balance-item-value { font-size: 12px; }
     }
   </style>
 </head>
@@ -2006,16 +2044,29 @@
   <div class="container">
     <!-- Balance Card -->
     <div class="balance-card">
-      <div class="balance-label">Available Balance</div>
-      <div class="balance-amount" id="balanceAmount">GHS 0.00</div>
-      <div class="balance-row">
-        <div class="balance-item">
-          <div class="balance-item-label">Income</div>
-          <div class="balance-item-value income" id="totalIncome">+GHS 0</div>
+      <div class="card-topline">
+        <div class="card-chip" aria-hidden="true"></div>
+        <div class="card-network">VISA</div>
+      </div>
+      <div>
+        <div class="balance-label">Available Balance</div>
+        <div class="balance-amount" id="balanceAmount">GHS 0.00</div>
+        <div class="card-number">5421&nbsp;&nbsp;****&nbsp;&nbsp;****&nbsp;&nbsp;2408</div>
+      </div>
+      <div class="card-bottomline">
+        <div class="balance-row">
+          <div class="balance-item">
+            <div class="balance-item-label">Income</div>
+            <div class="balance-item-value income" id="totalIncome">+GHS 0</div>
+          </div>
+          <div class="balance-item">
+            <div class="balance-item-label">Expenses</div>
+            <div class="balance-item-value expense" id="totalExpenses">-GHS 0</div>
+          </div>
         </div>
-        <div class="balance-item">
-          <div class="balance-item-label">Expenses</div>
-          <div class="balance-item-value expense" id="totalExpenses">-GHS 0</div>
+        <div>
+          <div class="balance-item-label">VALID</div>
+          <div class="balance-item-value">06/29</div>
         </div>
       </div>
     </div>
