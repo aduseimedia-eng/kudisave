@@ -255,8 +255,8 @@ body {
 }
 
 .mtn-header-spacer {
-  /* Use viewport-relative sizing but cap to a sensible px value */
-  height: min(25vh, 250px) !important;
+  /* Default spacer; page-level MTN headers can override this with their exact height. */
+  height: var(--mtn-header-spacer-height, min(25vh, 250px));
   /* 5px spacing after header curve before content starts */
   margin-bottom: 5px;
 }
@@ -280,8 +280,7 @@ body {
 /* ===== Responsive tweaks for mobile friendliness ===== */
 /* Ensure header spacer and header content scale on small screens */
 .mtn-header-spacer {
-  /* Use viewport-relative sizing but cap to a sensible px value */
-  height: min(25vh, 250px) !important;
+  height: var(--mtn-header-spacer-height, min(25vh, 250px));
 }
 
 @media (max-width: 480px) {
@@ -318,7 +317,7 @@ body {
 }
 
 @media (min-width: 481px) and (max-width: 900px) {
-  .mtn-header-spacer { height: min(30vh, 250px) !important; }}
+  .mtn-header-spacer { height: var(--mtn-header-spacer-height, min(30vh, 250px)); }
   .mtn-info-section { padding: 10px 14px 8px 14px !important; }
   .header-balance-amount { font-size: 24px !important; }
   .compare-summary-inner { min-width: 380px !important; }
