@@ -2145,7 +2145,8 @@
     body { background: #f5f6fa !important; }
     .mtn-header {
       background: #f5f6fa !important;
-      min-height: calc(292px + env(safe-area-inset-top, 0px));
+      position: relative !important;
+      min-height: 0;
       box-shadow: 0 10px 24px rgba(17,24,39,0.03);
     }
     .mtn-header::before,
@@ -2196,10 +2197,10 @@
       font-size: 11px;
       font-style: normal;
     }
-    .mtn-header-spacer { height: calc(292px + env(safe-area-inset-top, 0px)); }
+    .mtn-header-spacer { display: none !important; height: 0 !important; }
     .header-balance {
       text-align: left;
-      margin: 0 20px 18px;
+      margin: 0 20px 12px;
       padding: 18px;
       border-radius: 28px;
       min-height: 176px;
@@ -2309,8 +2310,8 @@
       display: none !important;
     }
     @media (max-width: 380px) {
-      .mtn-header { min-height: calc(282px + env(safe-area-inset-top, 0px)); }
-      .mtn-header-spacer { height: calc(282px + env(safe-area-inset-top, 0px)); }
+      .mtn-header { min-height: 0; }
+      .mtn-header-spacer { display: none !important; height: 0 !important; }
       .header-balance { min-height: 168px; padding: 16px; }
       .header-balance-amount { font-size: 27px; }
       .card-network { font-size: 19px; }
@@ -2462,10 +2463,7 @@
 
 
 
-  <!-- Header Spacer -->
-  <div class="mtn-header-spacer"></div>
-
-  <div class="container" style="padding-bottom: 20px;">
+  <div class="container" style="padding-bottom: 20px; padding-top: 4px;">
     <!-- Quick Actions -->
     <div class="quick-actions-modern">
       <button class="quick-btn" onclick="openExpenseModal()">

@@ -199,13 +199,13 @@
 
     /* Minimal transaction-style layout */
     body { background: #f5f6fa !important; }
-    .mtn-header { background: #f5f6fa; }
+    .mtn-header { background: var(--primary-gradient, linear-gradient(135deg, #033036 0%, #064a52 46%, #0b737d 100%)); box-shadow: 0 12px 28px rgba(3,48,54,0.18); }
     .mtn-header::before, .mtn-header::after, .mtn-header-shimmer, .header-particles, .mtn-info-section, .header-balance, .mtn-header-curve { display: none !important; }
     .mtn-topbar { padding: 14px 20px 8px; }
-    .mtn-back-btn { width: 46px; height: 46px; border-radius: 50%; background: #ffffff; border: 1px solid rgba(17,24,39,0.04); color: var(--primary-color); box-shadow: 0 8px 24px rgba(17,24,39,0.06); }
-    .mtn-back-btn:active { background: #ffffff; transform: scale(0.94); }
+    .mtn-back-btn { width: 46px; height: 46px; border-radius: 50%; background: rgba(255,255,255,0.14); border: 1px solid rgba(255,255,255,0.16); color: #ffffff; box-shadow: 0 8px 24px rgba(0,0,0,0.12); backdrop-filter: blur(10px); }
+    .mtn-back-btn:active { background: rgba(255,255,255,0.22); transform: scale(0.94); }
     .mtn-back-btn i { width: 20px; height: 20px; }
-    .mtn-page-title { font-size: 18px; font-weight: 800; color: #111827; }
+    .mtn-page-title { font-size: 18px; font-weight: 800; color: #ffffff; }
     .mtn-topbar-spacer { width: 46px; }
     .mtn-header-spacer { height: calc(78px + env(safe-area-inset-top, 0px)); }
     .filter-tabs { gap: 10px; padding: 4px 0 14px; margin-bottom: 4px; }

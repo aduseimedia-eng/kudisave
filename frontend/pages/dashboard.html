@@ -1749,7 +1749,8 @@
     body { background: #f5f6fa !important; }
     .mtn-header {
       background: #f5f6fa !important;
-      min-height: calc(122px + env(safe-area-inset-top, 0px));
+      position: relative !important;
+      min-height: 0;
       box-shadow: 0 10px 24px rgba(17,24,39,0.03);
     }
     .mtn-header::before,
@@ -1800,10 +1801,10 @@
       font-size: 11px;
       font-style: normal;
     }
-    .mtn-header-spacer { height: calc(122px + env(safe-area-inset-top, 0px)); }
+    .mtn-header-spacer { display: none !important; height: 0 !important; }
     .balance-card {
       text-align: left;
-      margin: 0 0 18px;
+      margin: 0 0 12px;
       padding: 18px;
       border-radius: 28px;
       min-height: 176px;
@@ -2038,10 +2039,7 @@
 
 
 
-  <!-- Header Spacer -->
-  <div class="mtn-header-spacer"></div>
-
-  <div class="container">
+  <div class="container" style="padding-top: 4px;">
     <!-- Balance Card -->
     <div class="balance-card">
       <div class="card-topline">
