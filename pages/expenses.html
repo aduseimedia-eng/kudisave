@@ -10,23 +10,22 @@
   <link rel="icon" type="image/png" sizes="32x32" href="../favicon.png">
   <link rel="apple-touch-icon" sizes="180x180" href="../apple-touch-icon.png">
   <link rel="manifest" href="../manifest.json">
-  <title>Expenses - KudiSave</title>
+  <title>Transactions - KudiSave</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../assets/css/style.css">
   <script src="https://unpkg.com/lucide@latest"></script>
   <style>
-    body { padding-top: 0 !important; }
-    .mtn-header { background: linear-gradient(160deg, var(--primary-color) 0%, #004d2c 40%, #003822 80%, #002a19 100%); position: fixed; top: 0; left: 0; right: 0; z-index: 100; padding-top: env(safe-area-inset-top, 0px); padding-left: env(safe-area-inset-left, 0px); padding-right: env(safe-area-inset-right, 0px); overflow: hidden; }
-    .mtn-header::before { content: ''; position: absolute; top: -50%; right: -20%; width: 260px; height: 260px; background: radial-gradient(circle, rgba(255,255,255,0.08) 0%, transparent 70%); border-radius: 50%; pointer-events: none; animation: floatOrb1 8s ease-in-out infinite; }
-    .mtn-header::after { content: ''; position: absolute; bottom: -40%; left: -15%; width: 200px; height: 200px; background: radial-gradient(circle, rgba(255,255,255,0.05) 0%, transparent 70%); border-radius: 50%; pointer-events: none; animation: floatOrb2 10s ease-in-out infinite; }
-    .mtn-topbar { display: flex; justify-content: space-between; align-items: center; padding: 12px 16px 0 16px; position: relative; z-index: 1; }
-    .mtn-back-btn { width: 38px; height: 38px; border-radius: 12px; background: rgba(255,255,255,0.1); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1); color: white; display: flex; align-items: center; justify-content: center; cursor: pointer; text-decoration: none; }
-    .mtn-back-btn:active { transform: scale(0.92); background: rgba(255,255,255,0.18); }
-    .mtn-back-btn i { width: 18px; height: 18px; }
-    .mtn-page-title { font-size: 17px; font-weight: 700; color: white; letter-spacing: -0.3px; }
-    .mtn-topbar-spacer { width: 38px; }
+    body { padding-top: 0 !important; background: #f5f6fa !important; }
+    .mtn-header { background: #f5f6fa; position: fixed; top: 0; left: 0; right: 0; z-index: 100; padding-top: env(safe-area-inset-top, 0px); padding-left: env(safe-area-inset-left, 0px); padding-right: env(safe-area-inset-right, 0px); overflow: hidden; }
+    .mtn-header::before, .mtn-header::after, .mtn-header-shimmer, .header-particles, .mtn-info-section, .header-balance, .mtn-header-curve { display: none !important; }
+    .mtn-topbar { display: flex; justify-content: space-between; align-items: center; padding: 14px 20px 8px 20px; position: relative; z-index: 1; }
+    .mtn-back-btn { width: 46px; height: 46px; border-radius: 50%; background: #ffffff; border: 1px solid rgba(17,24,39,0.04); color: var(--primary-color); display: flex; align-items: center; justify-content: center; cursor: pointer; text-decoration: none; box-shadow: 0 8px 24px rgba(17,24,39,0.06); }
+    .mtn-back-btn:active { transform: scale(0.94); background: #ffffff; }
+    .mtn-back-btn i { width: 20px; height: 20px; }
+    .mtn-page-title { font-size: 18px; font-weight: 800; color: #111827; letter-spacing: -0.3px; }
+    .mtn-topbar-spacer { width: 46px; }
     .mtn-info-section { display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 10px 16px 8px 16px; position: relative; z-index: 1; text-align: center; animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.15s both; }
     .mtn-info-icon { width: 46px; height: 46px; border-radius: 15px; background: rgba(255,255,255,0.12); backdrop-filter: blur(10px); display: flex; align-items: center; justify-content: center; border: 1px solid rgba(255,255,255,0.18); color: white; box-shadow: 0 4px 16px rgba(0,0,0,0.12); animation: scaleIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) 0.25s both; }
     .mtn-info-icon i { width: 22px; height: 22px; }
@@ -35,12 +34,12 @@
 
     .mtn-header-curve { position: absolute; bottom: 0; left: 0; right: 0; height: 10px; background: var(--bg-primary, #f5f6fa); border-radius: 16px 16px 0 0; opacity: 0.35; }
     [data-theme="dark"] .mtn-header-curve { background: var(--bg-primary, #0f172a); opacity: 0.25; }
-    .mtn-header-spacer { display: block; height: calc(310px + env(safe-area-inset-top, 0px)); width: 100%; }
+    .mtn-header-spacer { display: block; height: calc(78px + env(safe-area-inset-top, 0px)); width: 100%; }
 
     /* ===== Header Balance Section ===== */
     .header-balance { text-align: center; padding: 4px 20px 10px; position: relative; z-index: 1; animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.3s both; }
     .header-balance-label { font-size: 10px; color: rgba(255,255,255,0.5); text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 2px; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 4px; }
-    .header-balance-label::before { content: ''; width: 7px; height: 7px; border-radius: 50%; background: linear-gradient(135deg, #fca5a5, #ef4444); box-shadow: 0 0 8px rgba(239,68,68,0.5); animation: pulse-dot 2s ease-in-out infinite; }
+   /* .header-balance-label::before { content: ''; width: 7px; height: 7px; border-radius: 50%; background: linear-gradient(135deg, #fca5a5, #ef4444); box-shadow: 0 0 8px rgba(239,68,68,0.5); animation: pulse-dot 2s ease-in-out infinite; }*/
     .header-balance-amount { font-size: 26px; font-weight: 800; color: #ffffff; letter-spacing: -1px; line-height: 1.1; margin-bottom: 2px; text-shadow: 0 2px 8px rgba(0,0,0,0.15); animation: balanceGlow 3s ease-in-out infinite; }
     .header-balance-sub { font-size: 11px; color: rgba(255,255,255,0.45); font-weight: 500; margin-bottom: 6px; }
     .header-balance-row { display: flex; justify-content: center; gap: 8px; }
@@ -82,33 +81,33 @@
     .stat-label { font-size: 10px; color: var(--text-secondary, #6b7280); margin-top: 2px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.3px; }
 
     /* Filter Tabs */
-    .filter-tabs { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 4px; margin-bottom: 14px; scrollbar-width: none; -ms-overflow-style: none; }
+    .filter-tabs { display: flex; gap: 10px; overflow-x: auto; padding: 4px 0 14px; margin-bottom: 4px; scrollbar-width: none; -ms-overflow-style: none; }
     .filter-tabs::-webkit-scrollbar { display: none; }
-    .filter-tab { padding: 8px 14px; border-radius: 20px; border: 1.5px solid var(--border-color, #e5e7eb); background: var(--card-bg, #fff); font-size: 12px; font-weight: 600; color: var(--text-secondary, #6b7280); cursor: pointer; white-space: nowrap; display: flex; align-items: center; gap: 5px; transition: all 0.2s ease; }
-    .filter-tab.active { background: var(--primary-color, #006B3F); color: white; border-color: var(--primary-color, #006B3F); }
+    .filter-tab { padding: 11px 17px; border-radius: 999px; border: none; background: #ffffff; font-size: 13px; font-weight: 600; color: #4b5563; cursor: pointer; white-space: nowrap; display: flex; align-items: center; gap: 6px; transition: all 0.2s ease; box-shadow: 0 8px 22px rgba(17,24,39,0.04); }
+    .filter-tab.active { background: #004f4f; color: white; border-color: #004f4f; }
     .filter-tab .count { background: rgba(0,0,0,0.1); padding: 1px 6px; border-radius: 10px; font-size: 10px; }
     .filter-tab.active .count { background: rgba(255,255,255,0.25); }
 
     /* Expense Cards */
-    .expense-card { background: var(--card-bg, #fff); border-radius: 16px; padding: 14px 16px; margin-bottom: 10px; border: 1px solid var(--border-color, #e5e7eb); display: flex; align-items: center; gap: 12px; cursor: pointer; transition: all 0.2s ease; box-shadow: 0 2px 8px rgba(0,0,0,0.04); }
+    .expense-card { background: #ffffff; border-radius: 24px; padding: 14px 16px 14px 12px; margin-bottom: 11px; border: 1px solid rgba(17,24,39,0.04); display: flex; align-items: center; gap: 12px; cursor: pointer; transition: all 0.2s ease; box-shadow: 0 8px 24px rgba(17,24,39,0.045); }
     .expense-card:active { transform: scale(0.98); }
-    .expense-icon { width: 42px; height: 42px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; color: #fff; }
+    .expense-icon { width: 48px; height: 48px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; color: var(--primary-color); background: #f8fafc; box-shadow: inset 0 0 0 10px rgba(248,250,252,0.7); }
     .expense-icon i { width: 20px; height: 20px; stroke-width: 2.2; }
-    .expense-icon.food { background: linear-gradient(135deg, #ff9800, #f57c00); }
-    .expense-icon.transport { background: linear-gradient(135deg, #2196f3, #1565c0); }
-    .expense-icon.data { background: linear-gradient(135deg, #9c27b0, #7b1fa2); }
-    .expense-icon.entertainment { background: linear-gradient(135deg, #e91e63, #c2185b); }
-    .expense-icon.shopping { background: linear-gradient(135deg, #00bcd4, #00838f); }
-    .expense-icon.bills { background: linear-gradient(135deg, #FCD116, #B8960E); }
-    .expense-icon.health { background: linear-gradient(135deg, #4caf50, #2e7d32); }
-    .expense-icon.education { background: linear-gradient(135deg, #3f51b5, #283593); }
-    .expense-icon.other { background: linear-gradient(135deg, #607d8b, #455a64); }
+    .expense-icon.food { background: #fff7ed; color: #f97316; }
+    .expense-icon.transport { background: #eff6ff; color: #2563eb; }
+    .expense-icon.data { background: #f5f3ff; color: #7c3aed; }
+    .expense-icon.entertainment { background: #fdf2f8; color: #db2777; }
+    .expense-icon.shopping { background: #ecfeff; color: #0891b2; }
+    .expense-icon.bills { background: #fefce8; color: #ca8a04; }
+    .expense-icon.health { background: #ecfdf5; color: #059669; }
+    .expense-icon.education { background: #eef2ff; color: #4f46e5; }
+    .expense-icon.other { background: #f8fafc; color: #475569; }
     .expense-info { flex: 1; min-width: 0; }
-    .expense-name { font-size: 14px; font-weight: 600; color: var(--text-primary, #1f2937); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .expense-meta { font-size: 11px; color: var(--text-secondary, #6b7280); margin-top: 2px; display: flex; align-items: center; gap: 4px; }
+    .expense-name { font-size: 14px; font-weight: 650; color: #374151; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; line-height: 1.25; }
+    .expense-meta { font-size: 12px; color: #9ca3af; margin-top: 3px; display: flex; align-items: center; gap: 4px; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     .expense-right { text-align: right; flex-shrink: 0; }
-    .expense-amount-val { font-size: 15px; font-weight: 700; color: #dc3545; }
-    .expense-date-val { font-size: 10px; color: var(--text-secondary, #6b7280); margin-top: 2px; }
+    .expense-amount-val { font-size: 15px; font-weight: 800; color: #111827; white-space: nowrap; letter-spacing: -0.2px; }
+    .expense-date-val { font-size: 11px; color: #9ca3af; margin-top: 2px; }
 
     /* Empty State */
     .empty-state { text-align: center; padding: 48px 24px; color: var(--text-secondary, #6b7280); }
@@ -159,12 +158,11 @@
     </div>
     <div class="mtn-topbar">
       <a href="dashboard.html" class="mtn-back-btn"><i data-lucide="arrow-left"></i></a>
-      <span class="mtn-page-title">Expenses</span>
+      <span class="mtn-page-title">My Transactions</span>
       <div class="mtn-topbar-spacer"></div>
     </div>
     <div class="mtn-info-section">
       <div class="mtn-info-icon"><i data-lucide="receipt"></i></div>
-      <div class="mtn-info-title">Expense Tracker</div>
       <div class="mtn-info-subtitle">Track & manage your daily spending</div>
     </div>
 
@@ -384,35 +382,18 @@
         return;
       }
 
-      // Group by date
-      var groups = {};
-      filtered.forEach(function(e) {
-        var dateKey = new Date(e.expense_date || e.date).toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' });
-        if (!groups[dateKey]) groups[dateKey] = [];
-        groups[dateKey].push(e);
-      });
-
       var html = '';
-      Object.entries(groups).forEach(function(entry) {
-        var date = entry[0];
-        var expenses = entry[1];
-        var dayTotal = expenses.reduce(function(s, e) { return s + parseFloat(e.amount || 0); }, 0);
-        html += '<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 4px 6px;margin-top:8px;">' +
-          '<span style="font-size:12px;font-weight:600;color:var(--text-secondary,#6b7280);text-transform:uppercase;letter-spacing:0.3px;">' + date + '</span>' +
-          '<span style="font-size:12px;font-weight:700;color:#dc3545;">' + utils.formatCurrency(dayTotal) + '</span></div>';
-
-        expenses.forEach(function(e) {
-          var icon = getIconInfo(e.category);
-          var noteText = e.note ? e.note : '';
-          html += '<div class="expense-card" onclick="showDetail(\'' + e.id + '\')">' +
-            '<div class="expense-icon ' + icon.cls + '"><i data-lucide="' + icon.icon + '"></i></div>' +
-            '<div class="expense-info"><div class="expense-name">' + escHtml(e.category || 'Other') + '</div>' +
-            '<div class="expense-meta"><span>' + escHtml(e.payment_method || '') + '</span>' +
-            (noteText && noteText !== e.payment_method ? '<span>&bull;</span><span>' + escHtml(noteText) + '</span>' : '') +
-            '</div></div>' +
-            '<div class="expense-right"><div class="expense-amount-val">' + utils.formatCurrency(e.amount) + '</div>' +
-            '<div class="expense-date-val">' + utils.formatDate(e.expense_date || e.date) + '</div></div></div>';
-        });
+      filtered.forEach(function(e) {
+        var icon = getIconInfo(e.category);
+        var paymentText = e.payment_method || 'KudiSave';
+        var noteText = e.note && e.note !== e.payment_method ? ' - ' + e.note : '';
+        var dateText = new Date(e.expense_date || e.date).toLocaleDateString('en-GB').replace(/\//g, '.');
+        html += '<div class="expense-card" onclick="showDetail(\'' + e.id + '\')">' +
+          '<div class="expense-icon ' + icon.cls + '"><i data-lucide="' + icon.icon + '"></i></div>' +
+          '<div class="expense-info"><div class="expense-name">' + escHtml(e.category || 'Other') + '</div>' +
+          '<div class="expense-meta"><i data-lucide="credit-card" style="width:13px;height:13px;flex-shrink:0;"></i><span>' + escHtml(paymentText + noteText) + '</span></div></div>' +
+          '<div class="expense-right"><div class="expense-amount-val">- ' + utils.formatCurrency(e.amount) + '</div>' +
+          '<div class="expense-date-val">' + dateText + '</div></div></div>';
       });
 
       container.innerHTML = html;
