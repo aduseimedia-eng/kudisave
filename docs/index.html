@@ -292,12 +292,14 @@
     }
 
     .google-btn i,
-    .google-btn svg {
+    .google-btn svg,
+    .google-btn img {
       width: 22px;
       height: 22px;
       flex-shrink: 0;
       position: relative;
       z-index: 1;
+      object-fit: contain;
     }
 
     .google-btn span,
@@ -855,7 +857,7 @@
       <form id="loginForm" class="auth-form active">
         <!-- Google -->
         <button type="button" class="google-btn" onclick="signInWithGoogle()">
-          <i data-lucide="mail-check"></i>
+          <img src="https://ssl.gstatic.com/ui/v1/icons/mail/rfr/gmail.ico" alt="Gmail logo">
           <span class="google-btn-text">Continue with Gmail</span>
           <span class="google-btn-badge">Quick</span>
         </button>
@@ -864,7 +866,7 @@
       <form id="registerForm" class="auth-form">
         
         <button type="button" class="google-btn" onclick="signInWithGoogle()">
-          <i data-lucide="mail-plus"></i>
+          <img src="https://ssl.gstatic.com/ui/v1/icons/mail/rfr/gmail.ico" alt="Gmail logo">
           <span class="google-btn-text">Register with Gmail</span>
           <span class="google-btn-badge">Recommended</span>
         </button>
@@ -1062,5 +1064,4 @@
   </script>
 </body>
 </html>
-
 
