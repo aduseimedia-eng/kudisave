@@ -1670,6 +1670,17 @@
     .widget-counter.challenges-active { background: rgba(99,102,241,0.13); color: #6366f1; }
     .widget-counter.badges-active { background: rgba(234,179,8,0.13); color: #ca8a04; }
     .widget-label { font-size: 10px; color: var(--text-muted); font-weight: 500; }
+    /* Remove decorative circular accents from dashboard sections. */
+    .balance-card::after,
+    .balance-label::before,
+    .modern-stat::after,
+    .budget-progress-card::before,
+    .gamification-card::after,
+    .insight-card::after,
+    .widget-card::after {
+      content: none !important;
+      display: none !important;
+    }
   </style>
 </head>
 <body>

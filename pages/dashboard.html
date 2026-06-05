@@ -2072,6 +2072,18 @@
       border: 1px dashed var(--border-color);
       font-size: 13px;
     }
+
+    /* Remove decorative circular accents from dashboard sections. */
+    .balance-card::after,
+    .balance-label::before,
+    .modern-stat::after,
+    .budget-progress-card::before,
+    .gamification-card::after,
+    .insight-card::after,
+    .widget-card::after {
+      content: none !important;
+      display: none !important;
+    }
   </style>
 </head>
 <body>
