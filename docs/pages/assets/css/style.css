@@ -1016,7 +1016,7 @@ textarea {
   right: max(14px, var(--safe-area-right));
   bottom: max(18px, calc(var(--safe-area-bottom) + 18px));
   height: 66px;
-  display: flex !important;
+  display: none !important;
   align-items: center;
   justify-content: space-between;
   gap: 4px;
@@ -1030,10 +1030,6 @@ textarea {
   z-index: 900;
   padding-bottom: 8px;
   transform: translateZ(0);
-}
-
-body:has(.bottom-nav) {
-  padding-bottom: calc(132px + var(--safe-area-bottom)) !important;
 }
 
 [data-theme="dark"] .bottom-nav {

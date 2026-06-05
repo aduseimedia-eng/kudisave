@@ -1750,6 +1750,7 @@
     .mtn-header {
       background: #f5f6fa !important;
       position: fixed !important;
+      height: calc(112px + env(safe-area-inset-top, 0px));
       min-height: 0;
       box-shadow: 0 10px 24px rgba(17,24,39,0.03);
     }
@@ -1801,7 +1802,7 @@
       font-size: 11px;
       font-style: normal;
     }
-    .mtn-header-spacer { display: block !important; height: calc(112px + env(safe-area-inset-top, 0px)) !important; }
+    .mtn-header-spacer { display: block !important; height: calc(132px + env(safe-area-inset-top, 0px)) !important; }
     .balance-card {
       text-align: left;
       margin: 0 0 12px;
@@ -1921,53 +1922,6 @@
       .card-network { font-size: 19px; }
       .balance-item { min-width: 78px; }
       .balance-item-value { font-size: 12px; }
-    }
-    .bottom-nav {
-      position: fixed;
-      left: max(14px, env(safe-area-inset-left, 0px));
-      right: max(14px, env(safe-area-inset-right, 0px));
-      bottom: max(18px, calc(env(safe-area-inset-bottom, 0px) + 18px));
-      height: 66px;
-      display: flex !important;
-      align-items: center;
-      justify-content: space-between;
-      gap: 4px;
-      padding: 8px;
-      border-radius: 26px;
-      background: rgba(255,255,255,0.94);
-      border: 1px solid rgba(3,48,54,0.08);
-      box-shadow: 0 18px 48px rgba(17,24,39,0.16), 0 8px 24px rgba(3,48,54,0.08);
-      backdrop-filter: blur(18px);
-      -webkit-backdrop-filter: blur(18px);
-      z-index: 900;
-      transform: translateZ(0);
-    }
-    .bottom-nav-item {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 4px;
-      min-width: 0;
-      flex: 1;
-      max-width: 76px;
-      padding: 7px 5px;
-      border-radius: 16px;
-      text-decoration: none;
-      color: rgba(3,48,54,0.72);
-      font-size: 10px;
-      font-weight: 700;
-    }
-    .bottom-nav-item.active {
-      color: #ffffff;
-      background: linear-gradient(135deg, #033036, #0b737d);
-      box-shadow: 0 8px 20px rgba(3,48,54,0.24);
-    }
-    .bottom-nav-item .nav-icon svg,
-    .bottom-nav-item .nav-icon i {
-      width: 20px;
-      height: 20px;
-      display: block;
     }
   </style>
 </head>
@@ -2845,13 +2799,5 @@
       updateHomepageLevel();
     });
   </script>
-  <nav class="bottom-nav" aria-label="Easy navigation">
-    <a href="dashboard.html" class="bottom-nav-item active"><span class="nav-icon"><i data-lucide="layout-dashboard"></i></span><span>Home</span></a>
-    <a href="expenses.html" class="bottom-nav-item"><span class="nav-icon"><i data-lucide="receipt"></i></span><span>Trans.</span></a>
-    <a href="goals.html" class="bottom-nav-item"><span class="nav-icon"><i data-lucide="target"></i></span><span>Goals</span></a>
-    <a href="subscriptions.html" class="bottom-nav-item"><span class="nav-icon"><i data-lucide="repeat"></i></span><span>Subs</span></a>
-    <a href="reports.html" class="bottom-nav-item"><span class="nav-icon"><i data-lucide="bar-chart-3"></i></span><span>Reports</span></a>
-  </nav>
-  <script>if (window.lucide) lucide.createIcons({ node: document.querySelector('.bottom-nav') });</script>
 </body>
 </html>
