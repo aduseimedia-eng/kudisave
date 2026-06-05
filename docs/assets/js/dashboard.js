@@ -361,18 +361,29 @@ async function loadGamificationData() {
     const badges = badgesResponse.data || [];
     
     const badgesContainer = document.getElementById('badgesContainer');
-    const badgeEmojis = ['💰', '🎯', '📊', '⭐', '🔥', '💎'];
+    const badgeSlots = [
+      { icon: 'coins', title: 'Saver', names: ['Saver', 'Chop Saver'] },
+      { icon: 'target', title: 'Goal Achiever', names: ['Goal Achiever', 'Goal Getter'] },
+      { icon: 'bar-chart-2', title: 'Analyst', names: ['Analyst', 'Data King/Queen'] },
+      { icon: 'star', title: 'Top Performer', names: ['Top Performer', 'Budget Boss'] },
+      { icon: 'flame', title: 'Streak Master', names: ['Streak Master', 'Consistency Champ'] },
+      { icon: 'gem', title: 'Platinum Member', names: ['Platinum Member', 'Transport Wise'] }
+    ];
+    const earnedBadgeNames = new Set(badges.map(b => b.badge_name || b.name).filter(Boolean));
     
     if (badges.length === 0) {
-      badgesContainer.innerHTML = badgeEmojis.map(emoji => 
-        `<span class="badge-item">${emoji}</span>`
+      badgesContainer.innerHTML = badgeSlots.map(slot =>
+        `<span class="badge-item" title="${slot.title} locked"><i data-lucide="${slot.icon}"></i></span>`
       ).join('');
     } else {
-      badgesContainer.innerHTML = badgeEmojis.map((emoji, idx) => {
-        const isBadgeEarned = badges.length > idx;
-        return `<span class="badge-item ${isBadgeEarned ? 'earned' : ''}" title="${isBadgeEarned ? 'Earned' : 'Locked'}">${emoji}</span>`;
+      badgesContainer.innerHTML = badgeSlots.map((slot, idx) => {
+        const isBadgeEarned = earnedBadgeNames.size
+          ? slot.names.some(name => earnedBadgeNames.has(name))
+          : badges.length > idx;
+        return `<span class="badge-item ${isBadgeEarned ? 'earned' : ''}" title="${slot.title} ${isBadgeEarned ? 'earned' : 'locked'}"><i data-lucide="${slot.icon}"></i></span>`;
       }).join('');
     }
+    if (typeof lucide !== 'undefined') lucide.createIcons({ node: badgesContainer });
 
   } catch (error) {
     console.error('Load gamification error:', error);
@@ -1602,6 +1613,154 @@ function initCurrencyDisplay() {
   document.querySelectorAll('.currency-prefix').forEach(el => { el.textContent = symbol; });
 }
 
+async function loadDueItemsV2() {
+  try {
+    const section = document.getElementById('dueItemsSection');
+    const list = document.getElementById('dueItemsList');
+    const countEl = document.getElementById('dueItemsCount');
+
+    if (!section || !list) return;
+
+    localStorage.removeItem('kudisave_bills');
+
+    const dueItems = [];
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    try {
+      const billsResponse = await api.getBills();
+      const bills = billsResponse && billsResponse.success && Array.isArray(billsResponse.data)
+        ? billsResponse.data
+        : [];
+
+      bills.forEach(bill => {
+        if (bill.is_paid) return;
+        const dueDate = new Date(bill.due_date);
+        dueDate.setHours(0, 0, 0, 0);
+        const daysUntilDue = Math.ceil((dueDate - today) / (1000 * 60 * 60 * 24));
+
+        if (daysUntilDue <= 3) {
+          dueItems.push({
+            type: 'bill',
+            name: bill.title || 'Unnamed Bill',
+            amount: parseFloat(bill.amount) || 0,
+            dueDate,
+            daysUntilDue,
+            isOverdue: daysUntilDue < 0,
+            icon: 'receipt-text',
+            href: 'bills.html'
+          });
+        }
+      });
+    } catch (error) {
+      console.error('Bills API Error:', error);
+    }
+
+    try {
+      const subsResponse = await api.getSubscriptions('active');
+      const subscriptions = subsResponse && subsResponse.success && Array.isArray(subsResponse.data)
+        ? subsResponse.data
+        : [];
+
+      subscriptions.forEach(subscription => {
+        if (!subscription.next_due_date) return;
+        const dueDate = new Date(subscription.next_due_date);
+        dueDate.setHours(0, 0, 0, 0);
+        const daysUntilDue = Math.ceil((dueDate - today) / (1000 * 60 * 60 * 24));
+
+        if (daysUntilDue <= 3) {
+          dueItems.push({
+            type: 'subscription',
+            name: subscription.name || 'Unnamed Subscription',
+            amount: parseFloat(subscription.amount) || 0,
+            dueDate,
+            daysUntilDue,
+            isOverdue: daysUntilDue < 0,
+            icon: 'repeat',
+            href: 'subscriptions.html'
+          });
+        }
+      });
+    } catch (error) {
+      console.error('Subscriptions API Error:', error);
+    }
+
+    dueItems.sort((a, b) => {
+      if (a.isOverdue && !b.isOverdue) return -1;
+      if (!a.isOverdue && b.isOverdue) return 1;
+      return a.daysUntilDue - b.daysUntilDue;
+    });
+
+    section.style.display = 'block';
+
+    if (countEl) {
+      countEl.textContent = dueItems.length;
+      countEl.className = `due-items-count${dueItems.length ? ' active' : ''}${dueItems.some(item => item.isOverdue) ? ' overdue' : ''}`;
+    }
+
+    if (dueItems.length === 0) {
+      list.innerHTML = `
+        <div class="due-items-empty">
+          <i data-lucide="circle-check"></i>
+          <p style="margin: 0;">No bills or subscriptions due soon</p>
+        </div>
+      `;
+      if (typeof lucide !== 'undefined') lucide.createIcons({ node: list });
+      return;
+    }
+
+    const symbol = utils.getCurrencySymbol ? utils.getCurrencySymbol() : 'GHS ';
+    list.innerHTML = dueItems.map(item => {
+      const dueDateFormatted = item.dueDate.toLocaleDateString('en-US', {
+        month: 'short',
+        day: 'numeric',
+        weekday: 'short'
+      });
+
+      let statusLabel;
+      let statusIcon = 'clock-3';
+      let dueDateText;
+
+      if (item.isOverdue) {
+        const daysOverdue = Math.abs(item.daysUntilDue);
+        statusLabel = `${daysOverdue}d late`;
+        statusIcon = 'alert-triangle';
+        dueDateText = `${daysOverdue} day${daysOverdue !== 1 ? 's' : ''} overdue - ${dueDateFormatted}`;
+      } else if (item.daysUntilDue === 0) {
+        statusLabel = 'Today';
+        dueDateText = `Due today - ${dueDateFormatted}`;
+      } else if (item.daysUntilDue === 1) {
+        statusLabel = 'Tomorrow';
+        dueDateText = `Due tomorrow - ${dueDateFormatted}`;
+      } else {
+        statusLabel = `${item.daysUntilDue} days`;
+        dueDateText = `Due in ${item.daysUntilDue} days - ${dueDateFormatted}`;
+      }
+
+      const cardClass = item.isOverdue ? `${item.type} overdue` : item.type;
+      const typeLabel = item.type === 'bill' ? 'Bill' : 'Subscription';
+
+      return `
+        <a class="due-item-card ${cardClass}" href="${item.href}">
+          <div class="due-item-icon"><i data-lucide="${item.icon}"></i></div>
+          <div class="due-item-info">
+            <div class="due-item-name">${escapeDashboardHtml(item.name)}</div>
+            <div class="due-item-details">${typeLabel} - ${dueDateText}</div>
+          </div>
+          <div class="due-item-meta">
+            <div class="due-item-amount">${symbol}${parseFloat(item.amount || 0).toFixed(2)}</div>
+            <div class="due-item-status"><i data-lucide="${statusIcon}"></i>${statusLabel}</div>
+          </div>
+        </a>
+      `;
+    }).join('');
+
+    if (typeof lucide !== 'undefined') lucide.createIcons({ node: list });
+  } catch (error) {
+    console.error('Error loading due items:', error);
+  }
+}
+
 // Initialize on page load
 document.addEventListener('DOMContentLoaded', () => {
   // Always scroll to top on page load/refresh
@@ -1610,6 +1769,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initCurrencyDisplay();
   initDashboard();
   loadWidgets();
+  loadDueItemsV2();
   
   // Add fun entrance animations
   setTimeout(() => {

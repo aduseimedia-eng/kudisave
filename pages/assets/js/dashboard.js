@@ -381,31 +381,32 @@ async function loadGamificationData() {
     const badges = badgesResponse.data || [];
     
     const badgesContainer = document.getElementById('badgesContainer');
-    const badgeEmojis = ['💰', '🎯', '📊', '⭐', '🔥', '💎'];
+    const badgeSlots = [
+      { icon: 'coins', title: 'Saver', names: ['Saver', 'Chop Saver'] },
+      { icon: 'target', title: 'Goal Achiever', names: ['Goal Achiever', 'Goal Getter'] },
+      { icon: 'bar-chart-2', title: 'Analyst', names: ['Analyst', 'Data King/Queen'] },
+      { icon: 'star', title: 'Top Performer', names: ['Top Performer', 'Budget Boss'] },
+      { icon: 'flame', title: 'Streak Master', names: ['Streak Master', 'Consistency Champ'] },
+      { icon: 'gem', title: 'Platinum Member', names: ['Platinum Member', 'Transport Wise'] }
+    ];
+    const earnedBadgeNames = new Set(badges.map(b => b.badge_name || b.name).filter(Boolean));
     
     let earnedCount = 0;
     
     if (badges.length === 0) {
-      badgesContainer.innerHTML = badgeEmojis.map(emoji => 
-        `<span class="badge-item">${emoji}</span>`
+      badgesContainer.innerHTML = badgeSlots.map(slot =>
+        `<span class="badge-item" title="${slot.title} locked"><i data-lucide="${slot.icon}"></i></span>`
       ).join('');
     } else {
-      const earnedBadgeNames = badges.map(b => b.badge_name || b.name);
-      const badgeNamesToemoji = {
-        'Saver': '💰',
-        'Goal Achiever': '🎯',
-        'Analyst': '📊',
-        'Top Performer': '⭐',
-        'Streak Master': '🔥',
-        'Platinum Member': '💎'
-      };
-      
-      badgesContainer.innerHTML = badgeEmojis.map((emoji, idx) => {
-        const isBadgeEarned = badges.length > idx;
+      badgesContainer.innerHTML = badgeSlots.map((slot, idx) => {
+        const isBadgeEarned = earnedBadgeNames.size
+          ? slot.names.some(name => earnedBadgeNames.has(name))
+          : badges.length > idx;
         if (isBadgeEarned) earnedCount++;
-        return `<span class="badge-item ${isBadgeEarned ? 'earned' : ''}" title="${isBadgeEarned ? 'Earned' : 'Locked'}">${emoji}</span>`;
+        return `<span class="badge-item ${isBadgeEarned ? 'earned' : ''}" title="${slot.title} ${isBadgeEarned ? 'earned' : 'locked'}"><i data-lucide="${slot.icon}"></i></span>`;
       }).join('');
     }
+    if (typeof lucide !== 'undefined') lucide.createIcons({ node: badgesContainer });
     
     // Sync badge count to menu
     localStorage.setItem('kudisave_api_badges', earnedCount.toString());
