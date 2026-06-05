@@ -2141,8 +2141,132 @@
     .picker-option.active { border-color: rgba(3,48,54,0.28); background: rgba(3,48,54,0.06); }
     .picker-option.active .picker-option-mark { border-color: #033036; background: radial-gradient(circle at center, #033036 0 42%, transparent 45%); }
 
+    /* Card-style dashboard hero */
+    body { background: #f5f6fa !important; }
+    .mtn-header {
+      background: #f5f6fa !important;
+      min-height: calc(278px + env(safe-area-inset-top, 0px));
+      box-shadow: 0 10px 24px rgba(17,24,39,0.03);
+    }
+    .mtn-header::before,
+    .mtn-header::after,
+    .mtn-header-curve {
+      display: none !important;
+      content: none !important;
+    }
+    .mtn-topbar { padding: 14px 20px 4px; }
+    .mtn-logo-img {
+      height: 40px;
+      filter: none;
+      transform: none;
+    }
+    .mtn-icon-btn,
+    .hamburger {
+      background: #ffffff !important;
+      color: #033036 !important;
+      border: 1px solid rgba(17,24,39,0.05) !important;
+      box-shadow: 0 8px 22px rgba(17,24,39,0.06);
+    }
+    .hamburger span { background: #033036 !important; }
+    .mtn-profile-section {
+      padding: 8px 20px 12px;
+      gap: 12px;
+    }
+    .mtn-avatar {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      background: #ffffff;
+      border: 1px solid rgba(17,24,39,0.05);
+      box-shadow: 0 8px 20px rgba(17,24,39,0.06);
+      font-size: 16px;
+    }
+    .mtn-greeting-time {
+      color: #6b7280;
+      font-size: 11px;
+      letter-spacing: 0.4px;
+    }
+    .mtn-greeting-name {
+      color: #111827;
+      font-size: 18px;
+      font-weight: 800;
+    }
+    .mtn-greeting-quote {
+      color: #9ca3af;
+      font-size: 11px;
+      font-style: normal;
+    }
+    .mtn-header-spacer { height: calc(278px + env(safe-area-inset-top, 0px)); }
+    .header-balance {
+      text-align: left;
+      margin: 0 20px 18px;
+      padding: 22px 20px 18px;
+      border-radius: 26px;
+      min-height: 164px;
+      background: linear-gradient(135deg, #033036 0%, #064a52 46%, #0b737d 100%);
+      color: #ffffff;
+      box-shadow: 0 22px 44px rgba(3,48,54,0.28);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .header-balance::before {
+      content: '';
+      position: absolute;
+      top: 18px;
+      left: 20px;
+      width: 44px;
+      height: 32px;
+      border-radius: 9px;
+      background: linear-gradient(135deg, #f8dfa1, #c89b3c);
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,0.35);
+    }
+    .header-balance::after {
+      content: 'VISA';
+      position: absolute;
+      right: 22px;
+      bottom: 18px;
+      font-size: 20px;
+      font-weight: 900;
+      font-style: italic;
+      letter-spacing: 0;
+      color: rgba(255,255,255,0.92);
+    }
+    .header-balance-label {
+      justify-content: flex-end;
+      color: rgba(255,255,255,0.72);
+      font-size: 11px;
+      letter-spacing: 1.1px;
+      margin: 0 0 26px;
+    }
+    .header-balance-label::before { display: none; }
+    .header-balance-amount {
+      font-size: 31px;
+      margin: 0;
+      text-shadow: none;
+      letter-spacing: -0.9px;
+      animation: none;
+    }
+    .header-balance-row {
+      justify-content: flex-start;
+      gap: 10px;
+      margin-top: 18px;
+      padding-right: 66px;
+    }
+    .header-balance-item {
+      flex: 0 1 auto;
+      min-width: 92px;
+      padding: 8px 10px;
+      border-radius: 14px;
+      background: rgba(255,255,255,0.1);
+      border: 1px solid rgba(255,255,255,0.12);
+      animation: none;
+    }
+    .header-balance-item-label { color: rgba(255,255,255,0.58); }
+    .header-balance-item-value { font-size: 13px; }
+
     /* Remove decorative circular accents from dashboard sections. */
-    .balance-card::after,
     .balance-label::before,
     .modern-stat::after,
     .budget-progress-card::before,
@@ -2156,12 +2280,12 @@
   </style>
 </head>
 <body>
-  <!-- MTN-Style Unified Header + Profile -->
+  <!-- Card-Style Dashboard Header + Profile -->
   <header class="mtn-header">
     <!-- Top Bar: Logo + Action Icons -->
     <div class="mtn-topbar">
       <a class="mtn-logo" href="dashboard.html">
-        <img src="../logowhite.png" alt="KudiSave" class="mtn-logo-img">
+        <img src="../logogreen.png" alt="KudiSave" class="mtn-logo-img">
       </a>
       <div class="mtn-topbar-actions">
         <button class="hamburger" onclick="toggleMobileMenu()" title="Menu">
