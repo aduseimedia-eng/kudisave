@@ -145,7 +145,8 @@ async function loadFinancialSummary() {
 
     // Calculate savings rate
     const savingsRate = totalIncome > 0 ? ((totalIncome - totalExpenses) / totalIncome * 100) : 0;
-    document.getElementById('savingsRate').textContent = `${savingsRate.toFixed(1)}%`;
+    const savingsRateEl = document.getElementById('savingsRate');
+    if (savingsRateEl) savingsRateEl.textContent = `${savingsRate.toFixed(1)}%`;
 
   } catch (error) {
     console.error('Load summary error:', error);
@@ -324,7 +325,8 @@ async function loadGamificationData() {
     const streakResponse = await api.getStreak();
     const streak = streakResponse.data;
     const streakValue = streak.current_streak || 0;
-    document.getElementById('currentStreak').textContent = `${streakValue} days`;
+    const currentStreakEl = document.getElementById('currentStreak');
+    if (currentStreakEl) currentStreakEl.textContent = `${streakValue} days`;
     
     // Sync streak to menu
     localStorage.setItem('kudisave_api_streak', streakValue.toString());

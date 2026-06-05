@@ -2145,7 +2145,7 @@
     body { background: #f5f6fa !important; }
     .mtn-header {
       background: #f5f6fa !important;
-      min-height: calc(278px + env(safe-area-inset-top, 0px));
+      min-height: calc(292px + env(safe-area-inset-top, 0px));
       box-shadow: 0 10px 24px rgba(17,24,39,0.03);
     }
     .mtn-header::before,
@@ -2154,9 +2154,9 @@
       display: none !important;
       content: none !important;
     }
-    .mtn-topbar { padding: 14px 20px 4px; }
+    .mtn-topbar { padding: 10px 20px 0; }
     .mtn-logo-img {
-      height: 40px;
+      height: 34px;
       filter: none;
       transform: none;
     }
@@ -2169,12 +2169,12 @@
     }
     .hamburger span { background: #033036 !important; }
     .mtn-profile-section {
-      padding: 8px 20px 12px;
+      padding: 4px 20px 8px;
       gap: 12px;
     }
     .mtn-avatar {
-      width: 42px;
-      height: 42px;
+      width: 36px;
+      height: 36px;
       border-radius: 50%;
       background: #ffffff;
       border: 1px solid rgba(17,24,39,0.05);
@@ -2196,13 +2196,13 @@
       font-size: 11px;
       font-style: normal;
     }
-    .mtn-header-spacer { height: calc(318px + env(safe-area-inset-top, 0px)); }
+    .mtn-header-spacer { height: calc(292px + env(safe-area-inset-top, 0px)); }
     .header-balance {
       text-align: left;
       margin: 0 20px 18px;
       padding: 18px;
       border-radius: 28px;
-      min-height: 198px;
+      min-height: 176px;
       background:
         linear-gradient(145deg, rgba(255,255,255,0.11) 0 1px, transparent 1px 100%),
         radial-gradient(circle at 14% 8%, rgba(255,255,255,0.18), transparent 31%),
@@ -2255,7 +2255,7 @@
       color: rgba(255,255,255,0.66);
       font-size: 11px;
       letter-spacing: 1.1px;
-      margin: 22px 0 4px;
+      margin: 14px 0 4px;
       position: relative;
       z-index: 1;
     }
@@ -2274,7 +2274,7 @@
       font-size: 13px;
       font-weight: 700;
       letter-spacing: 2.6px;
-      margin-top: 12px;
+      margin-top: 8px;
       position: relative;
       z-index: 1;
     }
@@ -2309,9 +2309,9 @@
       display: none !important;
     }
     @media (max-width: 380px) {
-      .mtn-header { min-height: calc(306px + env(safe-area-inset-top, 0px)); }
-      .mtn-header-spacer { height: calc(306px + env(safe-area-inset-top, 0px)); }
-      .header-balance { min-height: 188px; padding: 16px; }
+      .mtn-header { min-height: calc(282px + env(safe-area-inset-top, 0px)); }
+      .mtn-header-spacer { height: calc(282px + env(safe-area-inset-top, 0px)); }
+      .header-balance { min-height: 168px; padding: 16px; }
       .header-balance-amount { font-size: 27px; }
       .card-network { font-size: 19px; }
       .header-balance-item { min-width: 78px; }
@@ -2466,24 +2466,6 @@
   <div class="mtn-header-spacer"></div>
 
   <div class="container" style="padding-bottom: 20px;">
-    <!-- Modern Stats -->
-    <div class="modern-stats">
-      <div class="modern-stat">
-        <div class="modern-stat-icon savings"><i data-lucide="piggy-bank"></i></div>
-        <div class="modern-stat-info">
-          <div class="modern-stat-value" id="savingsRate">0%</div>
-          <div class="modern-stat-label">Savings Rate</div>
-        </div>
-      </div>
-      <div class="modern-stat">
-        <div class="modern-stat-icon streak"><i data-lucide="flame"></i></div>
-        <div class="modern-stat-info">
-          <div class="modern-stat-value" id="currentStreak">0 days</div>
-          <div class="modern-stat-label">Current Streak</div>
-        </div>
-      </div>
-    </div>
-
     <!-- Quick Actions -->
     <div class="quick-actions-modern">
       <button class="quick-btn" onclick="openExpenseModal()">
