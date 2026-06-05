@@ -1773,6 +1773,34 @@ async function loadDueItems() {
   }
 }
 
+function getDashboardSubscriptionIcon(name) {
+  const servicePresets = {
+    'snapchat': { name: 'Snapchat+', iconUrl: 'https://cdn.simpleicons.org/snapchat/white', iconClass: 'icon-snapchat' },
+    'netflix': { name: 'Netflix', iconUrl: 'https://cdn.simpleicons.org/netflix/white', iconClass: 'icon-netflix' },
+    'spotify': { name: 'Spotify', iconUrl: 'https://cdn.simpleicons.org/spotify/white', iconClass: 'icon-spotify' },
+    'apple-music': { name: 'Apple Music', iconUrl: 'https://cdn.simpleicons.org/applemusic/white', iconClass: 'icon-apple-music' },
+    'github': { name: 'GitHub Pro', iconUrl: 'https://cdn.simpleicons.org/github/white', iconClass: 'icon-github' },
+    'apple-tv': { name: 'Apple TV+', iconUrl: 'https://cdn.simpleicons.org/appletv/white', iconClass: 'icon-apple-tv' },
+    'dstv': { name: 'DStv', iconUrl: 'https://cdn.simpleicons.org/dstv/white', iconClass: 'icon-dstv' },
+    'icloud': { name: 'iCloud Storage', iconUrl: 'https://cdn.simpleicons.org/icloud/white', iconClass: 'icon-icloud' },
+    'google-storage': { name: 'Google One', iconUrl: 'https://cdn.simpleicons.org/googlecloud/white', iconClass: 'icon-google-storage' },
+    'x': { name: 'X Premium', iconUrl: 'https://cdn.simpleicons.org/x/white', iconClass: 'icon-x' },
+    'youtube': { name: 'YouTube Premium', iconUrl: 'https://cdn.simpleicons.org/youtube/white', iconClass: 'icon-youtube' },
+    'chatgpt': { name: 'ChatGPT Plus', iconUrl: 'https://cdn.simpleicons.org/openai/white', iconClass: 'icon-chatgpt' }
+  };
+  const lowName = String(name || '').toLowerCase();
+
+  for (const key in servicePresets) {
+    const service = servicePresets[key];
+    const firstWord = service.name.toLowerCase().split(' ')[0].replace('+', '');
+    if (lowName.includes(key) || lowName.includes(firstWord)) {
+      return service;
+    }
+  }
+
+  return { iconUrl: '', iconClass: '', icon: 'repeat' };
+}
+
 async function loadDueItemsV2() {
   try {
     const section = document.getElementById('dueItemsSection');
@@ -1829,6 +1857,7 @@ async function loadDueItemsV2() {
         const daysUntilDue = Math.ceil((dueDate - today) / (1000 * 60 * 60 * 24));
 
         if (daysUntilDue <= 3) {
+          const serviceIcon = getDashboardSubscriptionIcon(subscription.name);
           dueItems.push({
             type: 'subscription',
             name: subscription.name || 'Unnamed Subscription',
@@ -1836,7 +1865,9 @@ async function loadDueItemsV2() {
             dueDate,
             daysUntilDue,
             isOverdue: daysUntilDue < 0,
-            icon: 'repeat',
+            icon: serviceIcon.icon || 'repeat',
+            iconUrl: serviceIcon.iconUrl,
+            iconClass: serviceIcon.iconClass,
             href: 'subscriptions.html'
           });
         }
@@ -1899,10 +1930,14 @@ async function loadDueItemsV2() {
 
       const cardClass = item.isOverdue ? `${item.type} overdue` : item.type;
       const typeLabel = item.type === 'bill' ? 'Bill' : 'Subscription';
+      const iconHtml = item.iconUrl
+        ? `<img src="${item.iconUrl}" alt="${escapeDashboardHtml(item.name)} logo">`
+        : `<i data-lucide="${item.icon}"></i>`;
+      const iconClass = item.iconClass ? ` ${item.iconClass}` : '';
 
       return `
         <a class="due-item-card ${cardClass}" href="${item.href}">
-          <div class="due-item-icon"><i data-lucide="${item.icon}"></i></div>
+          <div class="due-item-icon${iconClass}">${iconHtml}</div>
           <div class="due-item-info">
             <div class="due-item-name">${escapeDashboardHtml(item.name)}</div>
             <div class="due-item-details">${typeLabel} - ${dueDateText}</div>
