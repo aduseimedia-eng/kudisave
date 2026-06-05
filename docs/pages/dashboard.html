@@ -2145,7 +2145,7 @@
     body { background: #f5f6fa !important; }
     .mtn-header {
       background: #f5f6fa !important;
-      position: relative !important;
+      position: fixed !important;
       min-height: 0;
       box-shadow: 0 10px 24px rgba(17,24,39,0.03);
     }
@@ -2197,10 +2197,10 @@
       font-size: 11px;
       font-style: normal;
     }
-    .mtn-header-spacer { display: none !important; height: 0 !important; }
+    .mtn-header-spacer { display: block !important; height: calc(112px + env(safe-area-inset-top, 0px)) !important; }
     .header-balance {
       text-align: left;
-      margin: 0 20px 12px;
+      margin: 8px 20px 12px;
       padding: 18px;
       border-radius: 28px;
       min-height: 176px;
@@ -2311,7 +2311,7 @@
     }
     @media (max-width: 380px) {
       .mtn-header { min-height: 0; }
-      .mtn-header-spacer { display: none !important; height: 0 !important; }
+      .mtn-header-spacer { display: block !important; height: calc(108px + env(safe-area-inset-top, 0px)) !important; }
       .header-balance { min-height: 168px; padding: 16px; }
       .header-balance-amount { font-size: 27px; }
       .card-network { font-size: 19px; }
@@ -2346,35 +2346,6 @@
         <div class="mtn-greeting-time" id="greetingTime">Good Morning</div>
         <div class="mtn-greeting-name" id="userName">Welcome!</div>
         <div class="mtn-greeting-quote" id="motivationalMessage"></div>
-      </div>
-    </div>
-
-    <!-- Balance inside header -->
-    <div class="header-balance">
-      <div class="card-topline">
-        <div class="card-chip" aria-hidden="true"></div>
-        <div class="card-network">VISA</div>
-      </div>
-      <div>
-        <div class="header-balance-label">Available Balance</div>
-        <div class="header-balance-amount" id="balanceAmount">GHS 0.00</div>
-        <div class="card-number">5421&nbsp;&nbsp;****&nbsp;&nbsp;****&nbsp;&nbsp;2408</div>
-      </div>
-      <div class="card-bottomline">
-        <div class="header-balance-row">
-          <div class="header-balance-item">
-            <div class="header-balance-item-label">Income</div>
-            <div class="header-balance-item-value income" id="totalIncome">+GHS 0</div>
-          </div>
-          <div class="header-balance-item">
-            <div class="header-balance-item-label">Expenses</div>
-            <div class="header-balance-item-value expense" id="totalExpenses">-GHS 0</div>
-          </div>
-        </div>
-        <div>
-          <div class="header-balance-item-label">VALID</div>
-          <div class="header-balance-item-value">06/29</div>
-        </div>
       </div>
     </div>
 
@@ -2463,7 +2434,38 @@
 
 
 
-  <div class="container" style="padding-bottom: 20px; padding-top: 4px;">
+  <div class="mtn-header-spacer"></div>
+
+  <!-- Balance Card -->
+  <div class="header-balance">
+    <div class="card-topline">
+      <div class="card-chip" aria-hidden="true"></div>
+      <div class="card-network">VISA</div>
+    </div>
+    <div>
+      <div class="header-balance-label">Available Balance</div>
+      <div class="header-balance-amount" id="balanceAmount">GHS 0.00</div>
+      <div class="card-number">5421&nbsp;&nbsp;****&nbsp;&nbsp;****&nbsp;&nbsp;2408</div>
+    </div>
+    <div class="card-bottomline">
+      <div class="header-balance-row">
+        <div class="header-balance-item">
+          <div class="header-balance-item-label">Income</div>
+          <div class="header-balance-item-value income" id="totalIncome">+GHS 0</div>
+        </div>
+        <div class="header-balance-item">
+          <div class="header-balance-item-label">Expenses</div>
+          <div class="header-balance-item-value expense" id="totalExpenses">-GHS 0</div>
+        </div>
+      </div>
+      <div>
+        <div class="header-balance-item-label">VALID</div>
+        <div class="header-balance-item-value">06/29</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="container" style="padding-bottom: 20px; padding-top: 0;">
     <!-- Quick Actions -->
     <div class="quick-actions-modern">
       <button class="quick-btn" onclick="openExpenseModal()">
@@ -3342,5 +3344,13 @@
       }
     });
   </script>
+  <nav class="bottom-nav" aria-label="Easy navigation">
+    <a href="dashboard.html" class="bottom-nav-item active"><span class="nav-icon"><i data-lucide="layout-dashboard"></i></span><span>Home</span></a>
+    <a href="expenses.html" class="bottom-nav-item"><span class="nav-icon"><i data-lucide="receipt"></i></span><span>Trans.</span></a>
+    <a href="goals.html" class="bottom-nav-item"><span class="nav-icon"><i data-lucide="target"></i></span><span>Goals</span></a>
+    <a href="subscriptions.html" class="bottom-nav-item"><span class="nav-icon"><i data-lucide="repeat"></i></span><span>Subs</span></a>
+    <a href="reports.html" class="bottom-nav-item"><span class="nav-icon"><i data-lucide="bar-chart-3"></i></span><span>Reports</span></a>
+  </nav>
+  <script>if (window.lucide) lucide.createIcons({ node: document.querySelector('.bottom-nav') });</script>
 </body>
 </html>
