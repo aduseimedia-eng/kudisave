@@ -153,6 +153,32 @@ async function loadFinancialSummary() {
 }
 
 // Load recent expenses
+function escapeDashboardHtml(value) {
+  return String(value || '').replace(/[&<>"']/g, (char) => ({
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '"': '&quot;',
+    "'": '&#39;'
+  })[char]);
+}
+
+function getDashboardPaymentMethods() {
+  const fallback = ['Cash', 'MTN MoMo', 'Telecel Cash', 'Visa Card', 'Bank Transfer', 'AirtelTigo Money'];
+  const methods = ((typeof utils !== 'undefined' && utils.PAYMENT_METHODS) || fallback).slice();
+  if (!methods.includes('Visa Card')) methods.splice(Math.min(3, methods.length), 0, 'Visa Card');
+  return methods;
+}
+
+function getDashboardPaymentLogoHtml(method) {
+  if (/visa|card/i.test(method)) return '<span class="payment-logo visa">VISA</span>';
+  if (/mtn|momo/i.test(method)) return '<span class="payment-logo mtn">MTN</span>';
+  if (/telecel/i.test(method)) return '<span class="payment-logo telecel">T</span>';
+  if (/airteltigo/i.test(method)) return '<span class="payment-logo airtel">AT</span>';
+  if (/bank/i.test(method)) return '<span class="payment-logo bank">BANK</span>';
+  return '<span class="payment-logo cash">Cash</span>';
+}
+
 async function loadRecentExpenses() {
   try {
     const response = await api.getExpenses({ limit: 5 });
@@ -170,12 +196,14 @@ async function loadRecentExpenses() {
       return;
     }
 
-    listContainer.innerHTML = expenses.slice(0, 5).map(expense => `
+    listContainer.innerHTML = expenses.slice(0, 5).map(expense => {
+      const paymentMethod = expense.payment_method || 'Cash';
+      return `
       <div class="transaction-item" id="expense-${expense.id}">
         <div class="transaction-icon"><i data-lucide="${utils.getCategoryIconName(expense.category)}"></i></div>
         <div class="transaction-info">
-          <div class="transaction-category">${expense.category}</div>
-          <div class="transaction-date">KudiSave transaction</div>
+          <div class="transaction-category">${escapeDashboardHtml(expense.category)}</div>
+          <div class="transaction-date dashboard-payment-line">${getDashboardPaymentLogoHtml(paymentMethod)}<span>${escapeDashboardHtml(paymentMethod)}</span></div>
         </div>
         <div class="transaction-actions">
           <div class="transaction-meta">
@@ -187,7 +215,8 @@ async function loadRecentExpenses() {
           </button>
         </div>
       </div>
-    `).join('');
+    `;
+    }).join('');
     
     // Render lucide icons (scoped to list container only)
     const listEl = document.getElementById('recentExpensesList');
@@ -432,10 +461,41 @@ function populateSelectOptions() {
     `<option value="${cat}">${utils.getCategoryIcon(cat)} ${cat}</option>`
   ).join('');
 
-  const methodSelect = document.getElementById('expensePaymentMethod');
-  methodSelect.innerHTML = utils.PAYMENT_METHODS.map(method => 
-    `<option value="${method}">${method}</option>`
-  ).join('');
+  setDashboardPaymentMethod(getDashboardPaymentMethods()[0]);
+}
+
+function setDashboardPaymentMethod(method) {
+  const input = document.getElementById('expensePaymentMethod');
+  const label = document.getElementById('paymentMethodText');
+  const logo = document.getElementById('paymentMethodIconWrap');
+  if (!input || !label || !logo) return;
+  input.value = method;
+  label.textContent = method;
+  logo.innerHTML = getDashboardPaymentLogoHtml(method);
+}
+
+function openPaymentMethodModal() {
+  const selected = document.getElementById('expensePaymentMethod').value;
+  const container = document.getElementById('paymentMethodOptions');
+  container.innerHTML = getDashboardPaymentMethods().map(method => {
+    const active = method === selected ? ' active' : '';
+    return `<button type="button" class="picker-option${active}" data-method="${escapeDashboardHtml(method)}">
+      <span class="picker-option-main">${getDashboardPaymentLogoHtml(method)}<span>${escapeDashboardHtml(method)}</span></span>
+      <span class="picker-option-mark"></span>
+    </button>`;
+  }).join('');
+  container.querySelectorAll('.picker-option').forEach(btn => {
+    btn.addEventListener('click', function() {
+      setDashboardPaymentMethod(this.dataset.method);
+      closePickerModal('paymentMethodModal');
+    });
+  });
+  document.getElementById('paymentMethodModal').classList.add('active');
+  document.body.style.overflow = 'hidden';
+}
+
+function closePickerModal(modalId) {
+  closeModal(modalId);
 }
 
 function populateIncomeOptions() {

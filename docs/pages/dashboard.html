@@ -2111,6 +2111,36 @@
       font-size: 13px;
     }
 
+    .picker-field { width: 100%; min-height: 49px; padding: 13px 14px; border-radius: 16px; border: 1.5px solid var(--border-color); background: var(--bg-secondary); color: var(--text-primary); font-size: 15px; font-family: inherit; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: space-between; gap: 10px; text-align: left; }
+    .picker-field-main, .picker-option-main, .dashboard-payment-line { display: flex; align-items: center; gap: 9px; min-width: 0; }
+    .picker-field-main span, .dashboard-payment-line span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .picker-field-chevron { width: 16px; height: 16px; color: var(--text-muted); flex-shrink: 0; }
+    .payment-logo { width: 38px; height: 26px; border-radius: 9px; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 10px; font-weight: 900; letter-spacing: 0; box-shadow: 0 8px 16px rgba(17,24,39,0.08); overflow: hidden; line-height: 1; }
+    .payment-logo.visa { background: #ffffff; color: #1434cb; border: 1px solid #e5e7eb; font-style: italic; font-size: 12px; }
+    .payment-logo.mtn { background: #ffcb05; color: #111827; border-radius: 50%; width: 40px; height: 26px; border: 1px solid rgba(17,24,39,0.1); }
+    .payment-logo.telecel { background: #e30613; color: #ffffff; font-size: 15px; }
+    .payment-logo.airtel { background: linear-gradient(135deg, #e4002b 0 50%, #005baa 50% 100%); color: #ffffff; font-size: 11px; }
+    .payment-logo.bank { background: #e0f2fe; color: #0369a1; }
+    .payment-logo.cash { background: #dcfce7; color: #15803d; }
+    .dashboard-payment-line { font-size: 11px; color: var(--text-muted); margin-top: 3px; }
+    .dashboard-payment-line .payment-logo { width: 28px; height: 18px; border-radius: 7px; font-size: 7px; box-shadow: none; }
+    .dashboard-payment-line .payment-logo.mtn { width: 30px; height: 18px; }
+    .dashboard-payment-line .payment-logo.telecel { font-size: 11px; }
+    .picker-modal { z-index: 1002; background: rgba(17,24,39,0.42); }
+    .picker-modal.active { align-items: flex-end; }
+    .picker-sheet { background: var(--card-bg); border-radius: 30px 30px 0 0; padding: 22px 20px 20px; width: 100%; max-width: 480px; box-shadow: 0 -22px 70px rgba(17,24,39,0.18); animation: slideUp 0.26s cubic-bezier(0.4,0,0.2,1); }
+    .picker-title-row { display: flex; align-items: center; gap: 12px; margin-bottom: 18px; }
+    .picker-title-icon { width: 44px; height: 44px; border-radius: 16px; background: var(--primary-gradient, linear-gradient(135deg, #033036, #0b737d)); color: #ffffff; display: flex; align-items: center; justify-content: center; box-shadow: 0 12px 24px rgba(3,48,54,0.22); }
+    .picker-title-icon i { width: 21px; height: 21px; }
+    .picker-title { font-size: 19px; font-weight: 850; color: var(--text-primary); line-height: 1.15; }
+    .picker-subtitle { font-size: 12px; color: var(--text-muted); margin-top: 3px; }
+    .picker-options { display: grid; gap: 10px; }
+    .picker-option { border: 1.5px solid var(--border-color); background: var(--bg-secondary); border-radius: 18px; padding: 13px 14px; display: flex; align-items: center; justify-content: space-between; gap: 12px; cursor: pointer; font-family: inherit; text-align: left; color: var(--text-primary); }
+    .picker-option-main { font-size: 14px; font-weight: 800; }
+    .picker-option-mark { width: 20px; height: 20px; border-radius: 50%; border: 2px solid #d1d5db; flex-shrink: 0; }
+    .picker-option.active { border-color: rgba(3,48,54,0.28); background: rgba(3,48,54,0.06); }
+    .picker-option.active .picker-option-mark { border-color: #033036; background: radial-gradient(circle at center, #033036 0 42%, transparent 45%); }
+
     /* Remove decorative circular accents from dashboard sections. */
     .balance-card::after,
     .balance-label::before,
@@ -2428,7 +2458,14 @@
 
         <div class="form-group">
           <label class="form-label">Payment Method</label>
-          <select class="form-select" id="expensePaymentMethod" required></select>
+          <input type="hidden" id="expensePaymentMethod" required>
+          <button type="button" class="picker-field" onclick="openPaymentMethodModal()">
+            <span class="picker-field-main">
+              <span id="paymentMethodIconWrap"><span class="payment-logo cash">Cash</span></span>
+              <span id="paymentMethodText">Select method</span>
+            </span>
+            <i data-lucide="chevron-down" class="picker-field-chevron"></i>
+          </button>
         </div>
 
         <div class="form-group">
@@ -2443,6 +2480,20 @@
 
         <button type="submit" class="btn btn-primary" style="width: 100%;">Add Expense</button>
       </form>
+    </div>
+  </div>
+
+  <!-- Payment Method Picker -->
+  <div id="paymentMethodModal" class="modal picker-modal">
+    <div class="picker-sheet">
+      <div class="picker-title-row">
+        <div class="picker-title-icon"><i data-lucide="credit-card"></i></div>
+        <div>
+          <div class="picker-title">Payment Method</div>
+          <div class="picker-subtitle">Choose how you paid</div>
+        </div>
+      </div>
+      <div class="picker-options" id="paymentMethodOptions"></div>
     </div>
   </div>
 
