@@ -3889,7 +3889,7 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
     position: fixed;
     left: 50%;
     right: auto;
-    bottom: max(18px, calc(var(--safe-area-bottom) + 18px));
+    bottom: var(--safe-area-bottom);
     width: min(480px, calc(100vw - 32px));
     height: 68px;
     display: flex !important;
