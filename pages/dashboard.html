@@ -307,7 +307,7 @@
       border: 1.5px solid rgba(3,48,54,0.15);
       border-radius: 24px;
       padding: 28px 24px 24px;
-      margin-bottom: 10px;
+      margin-bottom: 8px;
       text-align: center;
       animation: zoomIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) 0.2s both;
       position: relative;
@@ -2417,7 +2417,7 @@
         <img src="../logogreen.png" alt="KudiSave" class="mtn-logo-img">
       </a>
       <div class="mtn-topbar-actions">
-        <button class="hamburger" onclick="toggleMobileMenu()" title="Menu">
+        <button class="hamburger" onclick="toggleMobileMenu()" title="Menu" aria-label="Open menu" aria-expanded="false" type="button">
           <span></span>
           <span></span>
           <span></span>
@@ -2448,8 +2448,11 @@
     <!-- Profile Header -->
     <div class="mobile-menu-header">
       <div class="menu-header-top">
-        <span style="color: #fff; font-size: 15px; font-weight: 700; letter-spacing: 0.5px;">Menu</span>
-        <button class="menu-close-btn" onclick="toggleMobileMenu()" title="Close">
+        <div class="menu-title-stack">
+          <span class="menu-title">KudiSave</span>
+          <span class="menu-subtitle">Menu</span>
+        </div>
+        <button class="menu-close-btn" onclick="toggleMobileMenu()" title="Close" aria-label="Close menu" type="button">
           <i data-lucide="x"></i>
         </button>
       </div>
@@ -2964,9 +2967,11 @@
       if (hamburger) hamburger.classList.toggle('active');
       menu.classList.toggle('active');
       overlay.classList.toggle('active');
-      document.body.style.overflow = menu.classList.contains('active') ? 'hidden' : '';
+      const isOpen = menu.classList.contains('active');
+      if (hamburger) hamburger.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+      document.body.style.overflow = isOpen ? 'hidden' : '';
       // Re-render icons inside menu
-      if (menu.classList.contains('active')) {
+      if (isOpen) {
         lucide.createIcons({ node: menu });
         // Highlight active page
         const currentPage = window.location.pathname.split('/').pop() || 'dashboard.html';
@@ -2982,6 +2987,13 @@
         populateMenuStats();
       }
     }
+
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') {
+        const menu = document.querySelector('.mobile-menu');
+        if (menu && menu.classList.contains('active')) toggleMobileMenu();
+      }
+    });
 
     // Gamified menu data
     function populateMenuStats() {
