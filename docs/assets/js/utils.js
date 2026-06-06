@@ -7,20 +7,26 @@ function getStoredTheme() {
   return localStorage.getItem(THEME_STORAGE_KEY) === 'dark' ? 'dark' : 'light';
 }
 
-function applyTheme(theme) {
+function applyTheme(theme, persist = true) {
   const nextTheme = theme === 'dark' ? 'dark' : 'light';
-  localStorage.setItem(THEME_STORAGE_KEY, nextTheme);
+  if (persist) localStorage.setItem(THEME_STORAGE_KEY, nextTheme);
   document.documentElement.setAttribute('data-theme', nextTheme);
   updateThemeIcon(nextTheme);
   return nextTheme;
 }
 
 function initTheme() {
-  applyTheme(getStoredTheme());
+  applyTheme(getStoredTheme(), false);
 }
 
 // Called by api.js after preferences are loaded (syncs localStorage)
 function initThemeFromPreferences() {
+  const storedTheme = localStorage.getItem(THEME_STORAGE_KEY);
+  if (storedTheme === 'dark' || storedTheme === 'light') {
+    applyTheme(storedTheme);
+    return;
+  }
+
   const preferredTheme = typeof getUserPreference === 'function' ? getUserPreference('theme') : null;
   applyTheme(preferredTheme === 'dark' || preferredTheme === 'light' ? preferredTheme : getStoredTheme());
 }
@@ -68,7 +74,21 @@ function initPopupCloseButtons(root = document) {
 }
 
 function initBottomTapBar() {
-  if (document.querySelector('.bottom-nav')) return;
+  const existingNav = document.querySelector('.bottom-nav');
+  if (existingNav) {
+    existingNav.querySelectorAll('.bottom-nav-item').forEach(item => {
+      const label = item.querySelector('span:last-child');
+      if (label && label.textContent.trim() === 'Bills') {
+        item.setAttribute('href', 'reports.html');
+        item.setAttribute('aria-label', 'Reports');
+        const icon = item.querySelector('[data-lucide]');
+        if (icon) icon.setAttribute('data-lucide', 'bar-chart-3');
+        label.textContent = 'Reports';
+      }
+    });
+    if (typeof lucide !== 'undefined') lucide.createIcons({ node: existingNav });
+    return;
+  }
 
   const page = (window.location.pathname.split('/').pop() || 'dashboard.html').toLowerCase();
   const enabledPages = new Set([

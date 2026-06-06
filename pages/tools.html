@@ -110,8 +110,74 @@
     .green { background: linear-gradient(135deg, #10b981, #34d399); }
     .gold { background: linear-gradient(135deg, #eab308, #facc15); }
     .red { background: linear-gradient(135deg, #ef4444, #f87171); }
+    .tools-currency-modal {
+      max-width: 430px;
+    }
+    .currency-form {
+      display: grid;
+      gap: 14px;
+    }
+    .currency-field {
+      display: grid;
+      gap: 7px;
+    }
+    .currency-field label {
+      font-size: 12px;
+      font-weight: 800;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+    }
+    .currency-row {
+      display: grid;
+      grid-template-columns: 1fr 120px;
+      gap: 10px;
+    }
+    .currency-row input,
+    .currency-row select {
+      min-height: 48px;
+      border: 1px solid var(--border-color);
+      border-radius: 14px;
+      background: var(--bg-secondary);
+      color: var(--text-primary);
+      padding: 0 12px;
+      font: inherit;
+      font-weight: 700;
+    }
+    .currency-swap {
+      width: 44px;
+      height: 44px;
+      border-radius: 15px;
+      border: 1px solid var(--border-color);
+      background: var(--bg-secondary);
+      color: var(--primary-color);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      margin: -2px auto;
+      cursor: pointer;
+    }
+    .currency-result {
+      border-radius: 18px;
+      padding: 16px;
+      background: linear-gradient(135deg, rgba(3,48,54,0.08), rgba(11,115,125,0.08));
+      border: 1px solid rgba(3,48,54,0.12);
+    }
+    .currency-result-value {
+      font-size: 25px;
+      font-weight: 900;
+      color: var(--text-primary);
+      letter-spacing: -0.5px;
+    }
+    .currency-result-rate {
+      margin-top: 4px;
+      font-size: 12px;
+      color: var(--text-muted);
+      font-weight: 700;
+    }
     @media (max-width: 360px) {
       .tools-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .currency-row { grid-template-columns: 1fr; }
     }
   </style>
 </head>
@@ -142,7 +208,7 @@
         <span class="tool-label">Challenges</span>
         <span class="tool-hint">Build habits</span>
       </a>
-      <a class="tool-card" href="dashboard.html?openCurrency=true">
+      <a class="tool-card" href="#" onclick="openToolsCurrencyModal(); return false;">
         <span class="tool-icon"><i data-lucide="calculator"></i></span>
         <span class="tool-label">Currency</span>
         <span class="tool-hint">Convert rates</span>
@@ -155,10 +221,110 @@
     </div>
   </main>
 
+  <div id="toolsCurrencyModal" class="modal" onclick="if (event.target === this) closeToolsCurrencyModal()">
+    <div class="modal-content tools-currency-modal">
+      <div class="modal-header">
+        <h2 class="modal-title"><i data-lucide="calculator" class="icon-inline"></i> Currency Converter</h2>
+        <button class="close-btn" onclick="closeToolsCurrencyModal()" aria-label="Close" title="Close" type="button"><i data-lucide="x"></i></button>
+      </div>
+      <div class="currency-form">
+        <div class="currency-field">
+          <label for="toolsCurrencyAmount">Amount</label>
+          <div class="currency-row">
+            <input id="toolsCurrencyAmount" type="number" inputmode="decimal" min="0" value="1" oninput="convertToolsCurrency()">
+            <select id="toolsFromCurrency" onchange="convertToolsCurrency()">
+              <option value="GHS">GHS</option>
+              <option value="USD">USD</option>
+              <option value="EUR">EUR</option>
+              <option value="GBP">GBP</option>
+              <option value="NGN">NGN</option>
+            </select>
+          </div>
+        </div>
+        <button class="currency-swap" onclick="swapToolsCurrencies()" type="button" aria-label="Swap currencies">
+          <i data-lucide="arrow-up-down"></i>
+        </button>
+        <div class="currency-field">
+          <label for="toolsToCurrency">Convert to</label>
+          <div class="currency-row">
+            <input id="toolsCurrencyOutput" type="text" readonly value="0.00">
+            <select id="toolsToCurrency" onchange="convertToolsCurrency()">
+              <option value="USD">USD</option>
+              <option value="GHS">GHS</option>
+              <option value="EUR">EUR</option>
+              <option value="GBP">GBP</option>
+              <option value="NGN">NGN</option>
+            </select>
+          </div>
+        </div>
+        <div class="currency-result">
+          <div class="currency-result-value" id="toolsCurrencyResult">USD 0.00</div>
+          <div class="currency-result-rate" id="toolsCurrencyRate">1 GHS = 0.07 USD</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <script src="../assets/js/config.js"></script>
   <script src="../assets/js/api.js"></script>
   <script src="../assets/js/utils.js"></script>
   <script>
+    const toolsCurrencyRates = {
+      GHS: 1,
+      USD: 0.074,
+      EUR: 0.068,
+      GBP: 0.058,
+      NGN: 112.5
+    };
+
+    const toolsCurrencyNames = {
+      GHS: 'Ghana Cedi',
+      USD: 'US Dollar',
+      EUR: 'Euro',
+      GBP: 'British Pound',
+      NGN: 'Nigerian Naira'
+    };
+
+    function openToolsCurrencyModal() {
+      const modal = document.getElementById('toolsCurrencyModal');
+      if (!modal) return;
+      modal.classList.add('active');
+      document.body.style.overflow = 'hidden';
+      convertToolsCurrency();
+      if (typeof lucide !== 'undefined') lucide.createIcons({ node: modal });
+    }
+
+    function closeToolsCurrencyModal() {
+      const modal = document.getElementById('toolsCurrencyModal');
+      if (!modal) return;
+      modal.classList.remove('active');
+      document.body.style.overflow = '';
+    }
+
+    function convertToolsCurrency() {
+      const amount = parseFloat(document.getElementById('toolsCurrencyAmount').value) || 0;
+      const from = document.getElementById('toolsFromCurrency').value;
+      const to = document.getElementById('toolsToCurrency').value;
+      const converted = (amount / toolsCurrencyRates[from]) * toolsCurrencyRates[to];
+      const rate = toolsCurrencyRates[to] / toolsCurrencyRates[from];
+      document.getElementById('toolsCurrencyOutput').value = converted.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+      document.getElementById('toolsCurrencyResult').textContent = `${to} ${converted.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+      document.getElementById('toolsCurrencyRate').textContent = `1 ${from} = ${rate < 1 ? rate.toFixed(4) : rate.toFixed(2)} ${to} · ${toolsCurrencyNames[to]}`;
+    }
+
+    function swapToolsCurrencies() {
+      const from = document.getElementById('toolsFromCurrency');
+      const to = document.getElementById('toolsToCurrency');
+      const nextFrom = to.value;
+      to.value = from.value;
+      from.value = nextFrom;
+      convertToolsCurrency();
+    }
+
+    document.addEventListener('keydown', event => {
+      if (event.key === 'Escape') closeToolsCurrencyModal();
+    });
+
     lucide.createIcons();
   </script>
 </body>
