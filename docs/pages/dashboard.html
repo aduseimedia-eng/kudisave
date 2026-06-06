@@ -1139,6 +1139,22 @@
       animation: shimmer 1.5s infinite;
     }
 
+    .gamification-card:nth-child(2),
+    .gamification-card:nth-child(2):active {
+      animation: none !important;
+      transform: none !important;
+    }
+
+    .gamification-card:nth-child(2) .level-badge,
+    .gamification-card:nth-child(2) .xp-fill,
+    .gamification-card:nth-child(2) .xp-fill::before {
+      animation: none !important;
+    }
+
+    .gamification-card:nth-child(2) .xp-fill {
+      background-size: 100% 100%;
+    }
+
     @keyframes xpGradient {
       0%, 100% { background-position: 0% 50%; }
       50% { background-position: 100% 50%; }
@@ -2359,13 +2375,13 @@
       gap: 12px;
     }
     .mtn-avatar {
-      width: 36px;
-      height: 36px;
+      width: 42px;
+      height: 42px;
       border-radius: 50%;
       background: #ffffff;
       border: 1px solid rgba(17,24,39,0.05);
       box-shadow: 0 8px 20px rgba(17,24,39,0.06);
-      font-size: 16px;
+      font-size: 18px;
     }
     .mtn-greeting-time {
       color: #6b7280;
@@ -3552,12 +3568,19 @@
       populateFavorites();
     }
 
-    // Check URL param to auto-open currency calculator
+    // Check URL params to auto-open dashboard tools
     document.addEventListener('DOMContentLoaded', function() {
       const urlParams = new URLSearchParams(window.location.search);
-      if (urlParams.get('openCurrency') === 'true') {
-        setTimeout(() => openCurrencyCalculator(), 500);
+      const openTool = function(fn) {
+        setTimeout(fn, 120);
         window.history.replaceState({}, document.title, window.location.pathname);
+      };
+      if (urlParams.get('openCurrency') === 'true') {
+        openTool(openCurrencyCalculator);
+      } else if (urlParams.get('openIncome') === 'true') {
+        openTool(openIncomeModal);
+      } else if (urlParams.get('openBudget') === 'true') {
+        openTool(openBudgetModal);
       }
     });
   </script>

@@ -1,36 +1,50 @@
 // KudiSave - Utility Functions
 
-// Theme Management - KudiSave uses light mode as the main app theme
+// Theme Management
+const THEME_STORAGE_KEY = 'kudisave_theme';
+
+function getStoredTheme() {
+  return localStorage.getItem(THEME_STORAGE_KEY) === 'dark' ? 'dark' : 'light';
+}
+
+function applyTheme(theme) {
+  const nextTheme = theme === 'dark' ? 'dark' : 'light';
+  localStorage.setItem(THEME_STORAGE_KEY, nextTheme);
+  document.documentElement.setAttribute('data-theme', nextTheme);
+  updateThemeIcon(nextTheme);
+  return nextTheme;
+}
+
 function initTheme() {
-  localStorage.setItem('kudisave_theme', 'light');
-  localStorage.setItem('kudisave_theme_v2_reset', 'true');
-  document.documentElement.setAttribute('data-theme', 'light');
-  updateThemeIcon('light');
+  applyTheme(getStoredTheme());
 }
 
 // Called by api.js after preferences are loaded (syncs localStorage)
 function initThemeFromPreferences() {
-  localStorage.setItem('kudisave_theme', 'light');
-  document.documentElement.setAttribute('data-theme', 'light');
-  updateThemeIcon('light');
+  const preferredTheme = typeof getUserPreference === 'function' ? getUserPreference('theme') : null;
+  applyTheme(preferredTheme === 'dark' || preferredTheme === 'light' ? preferredTheme : getStoredTheme());
 }
 
-async function toggleTheme() {
-  localStorage.setItem('kudisave_theme', 'light');
-  document.documentElement.setAttribute('data-theme', 'light');
-  updateThemeIcon('light');
+async function toggleTheme(theme) {
+  const nextTheme = theme === 'dark' || theme === 'light'
+    ? theme
+    : (getStoredTheme() === 'dark' ? 'light' : 'dark');
+  applyTheme(nextTheme);
   
   if (typeof setUserPreference === 'function') {
-    await setUserPreference('theme', 'light');
+    await setUserPreference('theme', nextTheme);
   }
+
+  return nextTheme;
 }
 
 function updateThemeIcon(theme) {
   const themeButtons = document.querySelectorAll('.theme-toggle');
   themeButtons.forEach(btn => {
-    btn.innerHTML = theme === 'dark' ? '☀️' : '🌙';
-    btn.setAttribute('title', 'Light Mode');
+    btn.innerHTML = theme === 'dark' ? '<i data-lucide="sun"></i>' : '<i data-lucide="moon"></i>';
+    btn.setAttribute('title', theme === 'dark' ? 'Switch to Light Mode' : 'Switch to Dark Mode');
   });
+  if (typeof lucide !== 'undefined') lucide.createIcons();
 }
 
 // Initialize theme on page load
@@ -76,7 +90,7 @@ function initBottomTapBar() {
     { href: 'dashboard.html', label: 'Home', icon: 'house', match: ['dashboard.html'] },
     { href: 'expenses.html', label: 'List', icon: 'list', match: ['expenses.html', 'reports.html'] },
     { href: 'expenses.html', label: 'Add', icon: 'plus', center: true, action: 'add-expense' },
-    { href: 'bills.html', label: 'Bills', icon: 'receipt', match: ['bills.html', 'subscriptions.html'] },
+    { href: 'reports.html', label: 'Reports', icon: 'bar-chart-3', match: ['reports.html'] },
     { href: 'settings.html', label: 'Settings', icon: 'settings', match: ['settings.html', 'challenges.html', 'goals.html', 'achievements.html'] }
   ];
 
