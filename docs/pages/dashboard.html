@@ -113,12 +113,26 @@
       -webkit-backdrop-filter: blur(10px);
     }
 
-    .header-streak-pill i {
-      width: 17px;
-      height: 17px;
-      color: #f59e0b;
-      fill: rgba(245, 158, 11, 0.18);
-      stroke-width: 2.4;
+    .header-streak-fire {
+      width: 25px;
+      height: 25px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 45% 35%, #fff7ad 0 18%, #ffcf33 34%, #ff8a00 72%, #ff4d00 100%);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 5px 12px rgba(255, 138, 0, 0.28), inset 0 1px 1px rgba(255,255,255,0.65);
+      flex-shrink: 0;
+    }
+
+    .header-streak-fire i {
+      width: 16px;
+      height: 16px;
+      color: #ff3d00;
+      fill: #ff7a00;
+      stroke: #ff3d00;
+      stroke-width: 2.8;
+      filter: drop-shadow(0 1px 0 rgba(255,255,255,0.45));
     }
 
     .header-streak-label {
@@ -1948,13 +1962,51 @@
     }
 
     /* Feature Widgets */
+    .widgets-section-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin: 2px 2px 10px;
+    }
+    .widgets-section-title {
+      font-size: 15px;
+      font-weight: 850;
+      color: var(--text-primary);
+      letter-spacing: -0.2px;
+    }
+    .widgets-view-all {
+      border: none;
+      background: rgba(3,48,54,0.07);
+      color: var(--primary-color);
+      min-height: 30px;
+      padding: 0 12px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 800;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      white-space: nowrap;
+    }
+    .widgets-view-all i { width: 14px; height: 14px; }
     .widgets-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
+      display: flex;
+      overflow-x: auto;
+      overflow-y: hidden;
+      scroll-snap-type: x mandatory;
       gap: 12px;
       margin-bottom: 16px;
+      padding: 2px 2px 12px;
+      scrollbar-width: none;
+      -webkit-overflow-scrolling: touch;
     }
+    .widgets-grid::-webkit-scrollbar { display: none; }
     .widget-card {
+      min-width: 106px;
+      flex: 0 0 106px;
+      scroll-snap-align: start;
       background: var(--card-bg);
       border: 1px solid var(--border-color);
       border-radius: 20px;
@@ -1984,6 +2036,8 @@
     .widget-card:nth-child(1)::after { background: #f59e0b; }
     .widget-card:nth-child(2)::after { background: #6366f1; }
     .widget-card:nth-child(3)::after { background: #eab308; }
+    .widget-card:nth-child(4)::after { background: #0b737d; }
+    .widget-card:nth-child(5)::after { background: #10b981; }
     .widget-card:active { transform: scale(0.95); box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
     .widget-icon {
       width: 44px;
@@ -1999,6 +2053,8 @@
     .bills-icon { background: linear-gradient(135deg, #f59e0b, #fbbf24); color: #fff; box-shadow: 0 4px 12px rgba(245,158,11,0.3); }
     .challenges-icon { background: linear-gradient(135deg, #6366f1, #818cf8); color: #fff; box-shadow: 0 4px 12px rgba(99,102,241,0.3); }
     .badges-icon { background: linear-gradient(135deg, #eab308, #facc15); color: #fff; box-shadow: 0 4px 12px rgba(234,179,8,0.3); }
+    .currency-icon { background: linear-gradient(135deg, #033036, #0b737d); color: #fff; box-shadow: 0 4px 12px rgba(3,48,54,0.24); }
+    .reports-icon { background: linear-gradient(135deg, #10b981, #34d399); color: #fff; box-shadow: 0 4px 12px rgba(16,185,129,0.24); }
     .widget-counter {
       display: inline-flex;
       align-items: center;
@@ -2017,7 +2073,7 @@
     .widget-counter.bills-active { background: rgba(245,158,11,0.13); color: #f59e0b; }
     .widget-counter.challenges-active { background: rgba(99,102,241,0.13); color: #6366f1; }
     .widget-counter.badges-active { background: rgba(234,179,8,0.13); color: #ca8a04; }
-    .widget-label { font-size: 11px; color: var(--text-muted); font-weight: 600; letter-spacing: -0.1px; }
+    .widget-label { font-size: 11px; color: var(--text-muted); font-weight: 650; letter-spacing: -0.1px; line-height: 1.18; min-height: 26px; display: flex; align-items: center; justify-content: center; }
 
     /* Bills alert banner on dashboard */
     .bills-alert-banner {
@@ -2460,7 +2516,7 @@
       </a>
       <div class="mtn-topbar-actions">
         <a class="header-streak-pill" href="achievements.html" aria-label="Current streak">
-          <i data-lucide="flame"></i>
+          <span class="header-streak-fire"><i data-lucide="flame"></i></span>
           <span id="headerStreakCount">0</span>
           <span class="header-streak-label">day</span>
         </a>
@@ -2620,7 +2676,11 @@
     </div>
 
     <!-- Feature Widgets -->
-    <div class="widgets-grid">
+    <div class="widgets-section-header">
+      <div class="widgets-section-title">Shortcuts</div>
+      <a class="widgets-view-all" href="tools.html">View all <i data-lucide="chevron-right"></i></a>
+    </div>
+    <div class="widgets-grid" aria-label="Dashboard shortcuts">
       <!-- Bills Widget -->
       <a href="bills.html" class="widget-card">
         <div class="widget-icon bills-icon"><i data-lucide="calendar-check"></i></div>
@@ -2638,6 +2698,18 @@
         <div class="widget-icon challenges-icon"><i data-lucide="swords"></i></div>
         <div class="widget-counter" id="activeChallenges">–</div>
         <div class="widget-label">Challenges</div>
+      </a>
+      <!-- Currency Converter Widget -->
+      <a href="#" class="widget-card" onclick="openCurrencyCalculator(); return false;">
+        <div class="widget-icon currency-icon"><i data-lucide="calculator"></i></div>
+        <div class="widget-counter"><i data-lucide="repeat-2" style="width:16px;height:16px"></i></div>
+        <div class="widget-label">Currency</div>
+      </a>
+      <!-- Reports Widget -->
+      <a href="reports.html" class="widget-card">
+        <div class="widget-icon reports-icon"><i data-lucide="bar-chart-3"></i></div>
+        <div class="widget-counter"><i data-lucide="trending-up" style="width:16px;height:16px"></i></div>
+        <div class="widget-label">Reports</div>
       </a>
     </div>
 

@@ -64,6 +64,7 @@ function initBottomTapBar() {
     'subscriptions.html',
     'reports.html',
     'settings.html',
+    'tools.html',
     'challenges.html',
     'goals.html',
     'achievements.html'
