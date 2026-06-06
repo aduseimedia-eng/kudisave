@@ -3748,6 +3748,10 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
   .bottom-nav {
     bottom: 0 !important;
   }
+
+  .hamburger {
+    display: none !important;
+  }
 }
 
 /* Offline indicator */

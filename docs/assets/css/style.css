@@ -3878,11 +3878,11 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
 /* Floating Tap Bar */
 @media (max-width: 767px) {
   :root {
-    --bottom-nav-height: 92px;
+    --bottom-nav-height: 98px;
   }
 
   body {
-    padding-bottom: calc(76px + var(--safe-area-bottom)) !important;
+    padding-bottom: calc(82px + var(--safe-area-bottom)) !important;
   }
 
   .bottom-nav {
@@ -3890,15 +3890,15 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
     left: 50%;
     right: auto;
     bottom: 0 !important;
-    width: min(480px, calc(100vw - 32px));
-    height: 68px;
+    width: min(500px, calc(100vw - 24px));
+    height: 74px;
     display: flex !important;
     align-items: center;
     justify-content: space-between;
     gap: 4px;
-    padding: 8px 16px 12px;
+    padding: 9px 18px 13px;
     border: 1px solid rgba(17, 24, 39, 0.04);
-    border-radius: 24px;
+    border-radius: 26px;
     background: rgba(255, 255, 255, 0.96);
     box-shadow: 0 24px 54px rgba(17, 24, 39, 0.14), 0 8px 18px rgba(17, 24, 39, 0.06);
     backdrop-filter: blur(18px);
@@ -3913,8 +3913,8 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
     position: absolute;
     left: 50%;
     top: -1px;
-    width: 86px;
-    height: 44px;
+    width: 90px;
+    height: 46px;
     border-radius: 0 0 999px 999px;
     background: var(--bg-primary, #f5f6fa);
     transform: translate(-50%, -1px);
@@ -3935,7 +3935,7 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
   }
 
   .bottom-nav-item {
-    height: 48px;
+    height: 52px;
     min-width: 0;
     max-width: none;
     flex: 1 1 0;
@@ -3944,12 +3944,12 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 5px;
+    gap: 6px;
     color: #a5a7aa;
     background: transparent;
     box-shadow: none;
     text-decoration: none;
-    font-size: 11px;
+    font-size: 11.5px;
     font-weight: 600;
     line-height: 1;
     transition: transform 0.2s ease, color 0.2s ease;
@@ -3971,7 +3971,7 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
 
   .bottom-nav-item span:last-child {
     color: currentColor;
-    font-size: 11px;
+    font-size: 11.5px;
     font-weight: 600;
     letter-spacing: 0;
     opacity: 1;
@@ -4001,10 +4001,10 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
   .bottom-nav-center {
     position: relative;
     z-index: 2;
-    width: 58px;
-    height: 58px;
-    flex: 0 0 58px;
-    margin: -38px 8px 0;
+    width: 62px;
+    height: 62px;
+    flex: 0 0 62px;
+    margin: -40px 9px 0;
     padding: 0;
     border-radius: 50%;
     background: linear-gradient(180deg, #303030 0%, #121212 100%);
@@ -4063,6 +4063,11 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
   .bottom-nav {
     display: none !important;
   }
+}
+
+/* Bottom navigation replaces the hamburger menu. */
+.hamburger {
+  display: none !important;
 }
 
 /* Offline indicator */

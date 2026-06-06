@@ -76,7 +76,7 @@ function initBottomTapBar() {
     { href: 'expenses.html', label: 'List', icon: 'list', match: ['expenses.html', 'reports.html'] },
     { href: 'expenses.html', label: 'Add', icon: 'plus', center: true, action: 'add-expense' },
     { href: 'bills.html', label: 'Bills', icon: 'receipt', match: ['bills.html', 'subscriptions.html'] },
-    { href: 'settings.html', label: 'My', icon: 'circle-user-round', match: ['settings.html', 'challenges.html', 'goals.html', 'achievements.html'] }
+    { href: 'settings.html', label: 'Settings', icon: 'settings', match: ['settings.html', 'challenges.html', 'goals.html', 'achievements.html'] }
   ];
 
   const nav = document.createElement('nav');

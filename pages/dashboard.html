@@ -92,6 +92,42 @@
       height: 18px;
     }
 
+    .header-streak-pill {
+      min-width: 64px;
+      height: 38px;
+      padding: 0 12px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.14);
+      border: 1px solid rgba(255,255,255,0.16);
+      color: #ffffff;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      font-size: 13px;
+      font-weight: 800;
+      letter-spacing: 0;
+      text-decoration: none;
+      box-shadow: 0 8px 20px rgba(17,24,39,0.08);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+    }
+
+    .header-streak-pill i {
+      width: 17px;
+      height: 17px;
+      color: #f59e0b;
+      fill: rgba(245, 158, 11, 0.18);
+      stroke-width: 2.4;
+    }
+
+    .header-streak-label {
+      font-size: 10px;
+      font-weight: 700;
+      color: rgba(255,255,255,0.74);
+      margin-left: -2px;
+    }
+
     .mtn-notification-dot {
       position: absolute;
       top: 6px;
@@ -2248,14 +2284,20 @@
       filter: none;
       transform: none;
     }
-    .mtn-icon-btn,
-    .hamburger {
+    .mtn-icon-btn {
       background: #ffffff !important;
       color: #033036 !important;
       border: 1px solid rgba(17,24,39,0.05) !important;
       box-shadow: 0 8px 22px rgba(17,24,39,0.06);
     }
-    .hamburger span { background: #033036 !important; }
+    .header-streak-pill {
+      background: #ffffff;
+      color: #033036;
+      border: 1px solid rgba(17,24,39,0.05);
+      box-shadow: 0 8px 22px rgba(17,24,39,0.06);
+    }
+    .header-streak-label { color: rgba(3,48,54,0.55); }
+    .hamburger { display: none !important; }
     .mtn-profile-section {
       padding: 6px 20px 12px;
       gap: 12px;
@@ -2417,11 +2459,11 @@
         <img src="../logogreen.png" alt="KudiSave" class="mtn-logo-img">
       </a>
       <div class="mtn-topbar-actions">
-        <button class="hamburger" onclick="toggleMobileMenu()" title="Menu" aria-label="Open menu" aria-expanded="false" type="button">
-          <span></span>
-          <span></span>
-          <span></span>
-        </button>
+        <a class="header-streak-pill" href="achievements.html" aria-label="Current streak">
+          <i data-lucide="flame"></i>
+          <span id="headerStreakCount">0</span>
+          <span class="header-streak-label">day</span>
+        </a>
       </div>
     </div>
 
@@ -3044,6 +3086,8 @@
         var streak = apiStreak ? parseInt(apiStreak) : calculateStreak();
         var streakEl = document.getElementById('menuStreakCount');
         if (streakEl) streakEl.textContent = streak;
+        var headerStreakEl = document.getElementById('headerStreakCount');
+        if (headerStreakEl) headerStreakEl.textContent = streak;
 
         // Badge count - use API value if available
         var apiBadges = localStorage.getItem('kudisave_api_badges');

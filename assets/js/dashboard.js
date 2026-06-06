@@ -326,6 +326,9 @@ async function loadGamificationData() {
     const streak = streakResponse.data;
     const currentStreakEl = document.getElementById('currentStreak');
     if (currentStreakEl) currentStreakEl.textContent = `${streak.current_streak || 0} days`;
+    const headerStreakEl = document.getElementById('headerStreakCount');
+    if (headerStreakEl) headerStreakEl.textContent = streak.current_streak || 0;
+    localStorage.setItem('kudisave_api_streak', String(streak.current_streak || 0));
     
     // Celebrate streaks (only once per session)
     const streakKey = `streakCelebrated_${streak.current_streak}`;
