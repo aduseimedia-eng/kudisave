@@ -546,12 +546,30 @@
     }
 
     .close-btn {
-      background: none;
-      border: none;
-      font-size: 24px;
-      color: var(--text-muted);
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      color: var(--text-secondary);
       cursor: pointer;
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0;
       line-height: 1;
+      box-shadow: 0 8px 18px rgba(17, 24, 39, 0.06);
+      transition: all 0.22s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .close-btn svg,
+    .close-btn i {
+      width: 19px;
+      height: 19px;
+      stroke-width: 2.4;
+    }
+    .close-btn:active {
+      transform: scale(0.92);
+      background: var(--border-color);
     }
 
     .modal-icon {
@@ -818,7 +836,7 @@
   <div id="challengeModal" class="modal">
     <div class="modal-content" style="text-align: center;">
       <div class="modal-header" style="justify-content: flex-end;">
-        <button class="close-btn" onclick="closeModal('challengeModal')">&times;</button>
+        <button class="close-btn" onclick="closeModal('challengeModal')" aria-label="Close" title="Close" type="button"><i data-lucide="x"></i></button>
       </div>
       <div class="modal-icon" id="modalIcon">🎯</div>
       <h2 class="modal-title" id="modalTitle">Challenge Name</h2>
@@ -847,7 +865,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <h2 class="modal-title">Create Challenge</h2>
-        <button class="close-btn" onclick="closeModal('addModal')">&times;</button>
+        <button class="close-btn" onclick="closeModal('addModal')" aria-label="Close" title="Close" type="button"><i data-lucide="x"></i></button>
       </div>
       <form id="challengeForm" onsubmit="saveChallenge(event)">
         <div class="form-group">
@@ -904,7 +922,7 @@
     <div class="modal-content" style="text-align: center;">
       <div class="modal-header">
         <h2 class="modal-title">Update Progress</h2>
-        <button class="close-btn" onclick="closeModal('progressModal')">&times;</button>
+        <button class="close-btn" onclick="closeModal('progressModal')" aria-label="Close" title="Close" type="button"><i data-lucide="x"></i></button>
       </div>
       <p id="progressChallengeTitle" style="color: var(--text-muted); margin-bottom: 16px;">Challenge Name</p>
       <div class="form-group">

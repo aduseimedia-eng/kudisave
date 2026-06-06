@@ -472,6 +472,12 @@
       border-color: var(--primary-color);
       background: rgba(3,48,54,0.08);
     }
+    .service-preset-btn img {
+      width: 15px;
+      height: 15px;
+      object-fit: contain;
+      flex-shrink: 0;
+    }
     /* Bill Category Select */
     .category-grid {
       display: grid;
@@ -500,8 +506,21 @@
     }
 
     .category-option-icon {
-      font-size: 24px;
+      width: 34px;
+      height: 34px;
       margin-bottom: 6px;
+      border-radius: 12px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(3, 48, 54, 0.08);
+      color: var(--primary-color);
+    }
+
+    .category-option-icon i {
+      width: 18px;
+      height: 18px;
+      stroke-width: 2.2;
     }
 
     .category-option-label {
@@ -804,7 +823,7 @@
     <div class="modal-content" style="max-height: 90vh; overflow-y: auto;">
       <div class="modal-header">
         <h2 class="modal-title" id="billModalTitle">Add New Bill</h2>
-        <button class="close-btn" onclick="closeModal('billModal')">&times;</button>
+        <button class="close-btn" onclick="closeModal('billModal')" aria-label="Close" title="Close" type="button"><i data-lucide="x"></i></button>
       </div>
       <form id="billForm" onsubmit="handleSaveBill(event)">
         <input type="hidden" id="billId">
@@ -913,7 +932,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <h2 class="modal-title">Bill Details</h2>
-        <button class="close-btn" onclick="closeModal('billDetailsModal')">&times;</button>
+        <button class="close-btn" onclick="closeModal('billDetailsModal')" aria-label="Close" title="Close" type="button"><i data-lucide="x"></i></button>
       </div>
       <div id="billDetailsContent"></div>
     </div>
@@ -936,6 +955,7 @@
       // Set currency prefix
       const prefix = document.getElementById('currencyPrefix');
       if (prefix) prefix.textContent = utils.getCurrencySymbol();
+      upgradeBillModalIcons();
       
       // Load bills from API
       loadBillsFromAPI();
@@ -960,6 +980,47 @@
         // Fallback to empty array
         bills = [];
         renderBills();
+      }
+    }
+
+    function upgradeBillModalIcons() {
+      const categoryIcons = {
+        electricity: 'zap',
+        water: 'droplets',
+        internet: 'wifi',
+        rent: 'house',
+        phone: 'smartphone',
+        insurance: 'shield-check',
+        subscription: 'repeat',
+        loan: 'hand-coins',
+        other: 'clipboard-list'
+      };
+
+      Object.entries(categoryIcons).forEach(([category, icon]) => {
+        const iconWrap = document.querySelector(`.category-option[data-category="${category}"] .category-option-icon`);
+        if (iconWrap) iconWrap.innerHTML = `<i data-lucide="${icon}"></i>`;
+      });
+
+      const servicePresets = [
+        { name: 'Netflix', amount: 45.99, freq: 'monthly', icon: 'https://cdn.simpleicons.org/netflix/E50914', alt: 'Netflix' },
+        { name: 'Spotify', amount: 19.99, freq: 'monthly', icon: 'https://cdn.simpleicons.org/spotify/1DB954', alt: 'Spotify' },
+        { name: 'YouTube Premium', amount: 29.99, freq: 'monthly', icon: 'https://cdn.simpleicons.org/youtube/FF0000', alt: 'YouTube', label: 'YouTube' },
+        { name: 'Apple Music', amount: 19.99, freq: 'monthly', icon: 'https://cdn.simpleicons.org/applemusic/FA233B', alt: 'Apple Music' },
+        { name: 'ShowMax', amount: 35.00, freq: 'monthly', icon: 'https://cdn.simpleicons.org/showtime/7D23C7', alt: 'ShowMax' },
+        { name: 'Amazon Prime', amount: 25.00, freq: 'monthly', icon: 'https://cdn.simpleicons.org/prime/00A8E1', alt: 'Prime', label: 'Prime' },
+        { name: 'Microsoft 365', amount: 89.00, freq: 'yearly', icon: 'https://cdn.simpleicons.org/microsoft/5E5E5E', alt: 'Microsoft' },
+        { name: 'iCloud+', amount: 14.99, freq: 'monthly', icon: 'https://cdn.simpleicons.org/icloud/3693F3', alt: 'iCloud' },
+        { name: 'Canva Pro', amount: 55.00, freq: 'monthly', icon: 'https://cdn.simpleicons.org/canva/00C4CC', alt: 'Canva' },
+        { name: 'ChatGPT Plus', amount: 100.00, freq: 'monthly', icon: 'https://cdn.simpleicons.org/openai/10A37F', alt: 'ChatGPT', label: 'ChatGPT+' }
+      ];
+
+      const presets = document.getElementById('servicePresets');
+      if (presets && !presets.dataset.iconsUpgraded) {
+        const label = presets.querySelector('.service-presets-label')?.outerHTML || '<span class="service-presets-label">Quick Pick a Service</span>';
+        presets.innerHTML = label + servicePresets.map(service =>
+          `<button type="button" class="service-preset-btn" onclick="applyPreset('${service.name}', ${service.amount.toFixed(2)}, '${service.freq}')"><img src="${service.icon}" alt="${service.alt}">${service.label || service.name}</button>`
+        ).join('');
+        presets.dataset.iconsUpgraded = 'true';
       }
     }
 
@@ -1002,6 +1063,7 @@
         document.getElementById('billDueDate').value = tomorrow.toISOString().split('T')[0];
       }
 
+      upgradeBillModalIcons();
       modal.classList.add('active');
       document.body.style.overflow = 'hidden';
       lucide.createIcons({ node: modal });

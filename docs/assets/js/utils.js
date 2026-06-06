@@ -36,7 +36,21 @@ function updateThemeIcon(theme) {
 // Initialize theme on page load
 document.addEventListener('DOMContentLoaded', () => {
   initTheme();
+  initPopupCloseButtons();
 });
+
+function initPopupCloseButtons(root = document) {
+  const buttons = root.querySelectorAll('.close-btn, .currency-close-btn');
+  buttons.forEach(btn => {
+    if (!btn.querySelector('[data-lucide="x"]')) {
+      btn.innerHTML = '<i data-lucide="x"></i>';
+    }
+    if (!btn.getAttribute('aria-label')) btn.setAttribute('aria-label', 'Close');
+    if (!btn.getAttribute('title')) btn.setAttribute('title', 'Close');
+    if (!btn.getAttribute('type')) btn.setAttribute('type', 'button');
+  });
+  if (typeof lucide !== 'undefined') lucide.createIcons({ node: root });
+}
 
 // Currency configuration
 const CURRENCY_CONFIG = {

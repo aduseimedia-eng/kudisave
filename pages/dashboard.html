@@ -307,7 +307,7 @@
       border: 1.5px solid rgba(3,48,54,0.15);
       border-radius: 24px;
       padding: 28px 24px 24px;
-      margin-bottom: 16px;
+      margin-bottom: 10px;
       text-align: center;
       animation: zoomIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) 0.2s both;
       position: relative;
@@ -1126,17 +1126,32 @@
       position: absolute;
       top: 12px;
       right: 12px;
-      background: rgba(255,255,255,0.2);
-      border: none;
+      background: rgba(255,255,255,0.18);
+      border: 1px solid rgba(255,255,255,0.22);
       color: white;
-      width: 30px;
-      height: 30px;
+      width: 40px;
+      height: 40px;
       border-radius: 50%;
       cursor: pointer;
-      font-size: 18px;
+      font-size: 0;
       display: flex;
       align-items: center;
       justify-content: center;
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      transition: all 0.22s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .currency-close-btn svg,
+    .currency-close-btn i {
+      width: 18px;
+      height: 18px;
+      stroke-width: 2.5;
+    }
+
+    .currency-close-btn:active {
+      transform: scale(0.92);
+      background: rgba(255,255,255,0.28);
     }
 
     .currency-body {
@@ -2673,7 +2688,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <h2 class="modal-title">Add Expense</h2>
-        <button class="close-btn" onclick="closeModal('expenseModal')">&times;</button>
+        <button class="close-btn" onclick="closeModal('expenseModal')" aria-label="Close" title="Close" type="button"><i data-lucide="x"></i></button>
       </div>
       <form id="expenseForm" onsubmit="handleAddExpense(event)">
         <div class="form-group">
@@ -2735,7 +2750,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <h2 class="modal-title">Add Income</h2>
-        <button class="close-btn" onclick="closeModal('incomeModal')">&times;</button>
+        <button class="close-btn" onclick="closeModal('incomeModal')" aria-label="Close" title="Close" type="button"><i data-lucide="x"></i></button>
       </div>
       <form id="incomeForm" onsubmit="handleAddIncome(event)">
         <div class="form-group">
@@ -2771,7 +2786,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <h2 class="modal-title">Set Budget</h2>
-        <button class="close-btn" onclick="closeModal('budgetModal')">&times;</button>
+        <button class="close-btn" onclick="closeModal('budgetModal')" aria-label="Close" title="Close" type="button"><i data-lucide="x"></i></button>
       </div>
       <form id="budgetForm" onsubmit="handleSetBudget(event)">
         <div class="form-group">
@@ -2805,7 +2820,7 @@
     <div class="currency-modal-content">
       <div class="currency-modal-header">
         <h2><i data-lucide="repeat" style="width:20px;height:20px"></i> Currency Converter</h2>
-        <button class="currency-close-btn" onclick="closeModal('currencyModal')">&times;</button>
+        <button class="currency-close-btn" onclick="closeModal('currencyModal')" aria-label="Close" title="Close" type="button"><i data-lucide="x"></i></button>
       </div>
       <div class="currency-body">
         <!-- Tabs -->
