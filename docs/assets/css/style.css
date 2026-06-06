@@ -3882,14 +3882,14 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
   }
 
   body {
-    padding-bottom: calc(var(--bottom-nav-height) + var(--safe-area-bottom)) !important;
+    padding-bottom: calc(76px + var(--safe-area-bottom)) !important;
   }
 
   .bottom-nav {
     position: fixed;
     left: 50%;
     right: auto;
-    bottom: var(--safe-area-bottom);
+    bottom: 0 !important;
     width: min(480px, calc(100vw - 32px));
     height: 68px;
     display: flex !important;
