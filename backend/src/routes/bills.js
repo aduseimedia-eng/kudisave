@@ -7,6 +7,7 @@ const express = require('express');
 const router = express.Router();
 const { query } = require('../config/database');
 const { authenticateToken } = require('../middleware/auth');
+const { PAYMENT_METHODS } = require('../config/constants');
 
 // Get all bill reminders
 router.get('/', authenticateToken, async (req, res) => {
@@ -129,7 +130,11 @@ router.post('/:id/pay', authenticateToken, async (req, res) => {
   try {
     const userId = req.user.id;
     const { id } = req.params;
-    const { create_expense = true } = req.body;
+    const { create_expense = true, payment_method = 'Visa Card' } = req.body;
+
+    if (!PAYMENT_METHODS.includes(payment_method)) {
+      return res.status(400).json({ success: false, message: 'Invalid payment method' });
+    }
 
     // Get the bill first
     const billResult = await query(
@@ -147,8 +152,8 @@ router.post('/:id/pay', authenticateToken, async (req, res) => {
     if (create_expense || bill.auto_create_expense) {
       await query(
         `INSERT INTO expenses (user_id, amount, category, payment_method, expense_date, note, currency)
-         VALUES ($1, $2, $3, 'Cash', CURRENT_DATE, $4, $5)`,
-        [userId, bill.amount, bill.category, `Bill payment: ${bill.title}`, bill.currency]
+         VALUES ($1, $2, $3, $4, CURRENT_DATE, $5, $6)`,
+        [userId, bill.amount, 'Utilities', payment_method, `Bill payment: ${bill.title}`, bill.currency]
       );
     }
 

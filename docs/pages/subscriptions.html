@@ -730,7 +730,7 @@
       if (!confirm('Record payment for ' + name + '?')) return;
       try {
         utils.showLoading();
-        await api.paySubscription(id);
+        await api.paySubscription(id, { payment_method: 'Visa Card' });
         utils.hideLoading();
         utils.showAlert('Payment recorded for ' + name + '!', 'success');
         await loadAll();

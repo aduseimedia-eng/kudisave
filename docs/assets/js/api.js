@@ -516,10 +516,11 @@ class APIService {
     return await this.handleResponse(response);
   }
 
-  async paySubscription(id) {
+  async paySubscription(id, data = {}) {
     const response = await fetch(`${API_BASE_URL}/subscriptions/${id}/pay`, {
       method: 'POST',
-      headers: this.getHeaders()
+      headers: this.getHeaders(),
+      body: JSON.stringify(data)
     });
     return await this.handleResponse(response);
   }

@@ -126,6 +126,12 @@
       box-shadow: 0 4px 16px rgba(0,0,0,0.12);
     }
 
+    .mtn-challenge-icon i {
+      width: 26px;
+      height: 26px;
+      stroke-width: 2.3;
+    }
+
     .mtn-challenge-info {
       flex: 1;
       min-width: 0;
@@ -149,6 +155,12 @@
       font-size: 13px;
       font-weight: 600;
       color: rgba(255,255,255,0.9);
+    }
+
+    .mtn-challenge-xp i {
+      width: 14px;
+      height: 14px;
+      stroke-width: 2.5;
     }
 
     /* Stats row inside header */
@@ -218,6 +230,13 @@
       gap: 8px;
     }
 
+    .section-title i {
+      width: 17px;
+      height: 17px;
+      color: var(--primary-color);
+      stroke-width: 2.4;
+    }
+
     /* Challenge Cards */
     .active-challenges {
       margin-bottom: 20px;
@@ -273,14 +292,19 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 24px;
       flex-shrink: 0;
     }
 
-    .challenge-icon.easy { background: rgba(76, 175, 80, 0.1); }
-    .challenge-icon.medium { background: rgba(255, 152, 0, 0.1); }
-    .challenge-icon.hard { background: rgba(233, 30, 99, 0.1); }
-    .challenge-icon.extreme { background: rgba(156, 39, 176, 0.1); }
+    .challenge-icon i {
+      width: 23px;
+      height: 23px;
+      stroke-width: 2.35;
+    }
+
+    .challenge-icon.easy { background: rgba(76, 175, 80, 0.1); color: #16a34a; }
+    .challenge-icon.medium { background: rgba(255, 152, 0, 0.1); color: #d97706; }
+    .challenge-icon.hard { background: rgba(233, 30, 99, 0.1); color: #dc3545; }
+    .challenge-icon.extreme { background: rgba(156, 39, 176, 0.1); color: #7c3aed; }
 
     .challenge-info {
       flex: 1;
@@ -326,6 +350,13 @@
       display: flex;
       align-items: center;
       gap: 4px;
+    }
+
+    .meta-item i {
+      width: 13px;
+      height: 13px;
+      flex-shrink: 0;
+      stroke-width: 2.4;
     }
 
     .difficulty-badge {
@@ -469,8 +500,21 @@
     }
 
     .available-icon {
-      font-size: 32px;
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      background: rgba(11, 115, 125, 0.1);
+      color: var(--primary-color);
+      display: flex;
+      align-items: center;
+      justify-content: center;
       margin-bottom: 8px;
+    }
+
+    .available-icon i {
+      width: 23px;
+      height: 23px;
+      stroke-width: 2.35;
     }
 
     .available-name {
@@ -573,9 +617,23 @@
     }
 
     .modal-icon {
-      font-size: 48px;
-      text-align: center;
+      width: 72px;
+      height: 72px;
+      border-radius: 20px;
+      background: rgba(11, 115, 125, 0.1);
+      color: var(--primary-color);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-left: auto;
+      margin-right: auto;
       margin-bottom: 12px;
+    }
+
+    .modal-icon i {
+      width: 38px;
+      height: 38px;
+      stroke-width: 2.2;
     }
 
     .modal-desc {
@@ -780,11 +838,11 @@
 
     <!-- Challenge Info Section -->
     <div class="mtn-challenge-section">
-      <div class="mtn-challenge-icon">🏆</div>
+      <div class="mtn-challenge-icon"><i data-lucide="trophy"></i></div>
       <div class="mtn-challenge-info">
         <div class="mtn-challenge-title">Challenges</div>
         <div class="mtn-challenge-xp">
-          ⚡ <span id="totalXP">0</span> XP Earned
+          <i data-lucide="zap"></i> <span id="totalXP">0</span> XP Earned
         </div>
       </div>
     </div>
@@ -814,13 +872,13 @@
   <!-- Main Content -->
   <main class="main-content">
     <!-- Active Challenges Section -->
-    <div class="section-title">🔥 Active Challenges</div>
+    <div class="section-title"><i data-lucide="flame"></i> Active Challenges</div>
     <div class="active-challenges" id="activeChallenges">
       <!-- Rendered dynamically -->
     </div>
 
     <!-- Available Challenges Section -->
-    <div class="section-title">✨ Available Challenges</div>
+    <div class="section-title"><i data-lucide="sparkles"></i> Available Challenges</div>
     
     <div class="available-grid" id="availableChallenges">
       <!-- Rendered dynamically -->
@@ -838,7 +896,7 @@
       <div class="modal-header" style="justify-content: flex-end;">
         <button class="close-btn" onclick="closeModal('challengeModal')" aria-label="Close" title="Close" type="button"><i data-lucide="x"></i></button>
       </div>
-      <div class="modal-icon" id="modalIcon">🎯</div>
+      <div class="modal-icon" id="modalIcon"><i data-lucide="target"></i></div>
       <h2 class="modal-title" id="modalTitle">Challenge Name</h2>
       <p class="modal-desc" id="modalDesc">Challenge description goes here with details about what you need to do.</p>
       
@@ -849,8 +907,8 @@
       
       <div class="challenge-meta" style="justify-content: center; margin-bottom: 16px;">
         <span class="difficulty-badge medium" id="modalDifficulty">Medium</span>
-        <span class="meta-item" id="modalDuration">📅 30 days</span>
-        <span class="meta-item" id="modalTarget">🎯 Target: ₵500</span>
+        <span class="meta-item" id="modalDuration"><i data-lucide="calendar-days"></i> 30 days</span>
+        <span class="meta-item" id="modalTarget"><i data-lucide="target"></i> Target: ₵500</span>
       </div>
       
       <div class="challenge-actions">
@@ -880,11 +938,11 @@
           <div class="form-group">
             <label class="form-label">Type</label>
             <select class="form-select" id="challengeType">
-              <option value="savings">💰 Savings</option>
-              <option value="no-spend">🚫 No-Spend</option>
-              <option value="budget">📊 Budget</option>
-              <option value="streak">🔥 Streak</option>
-              <option value="goal">🎯 Goal</option>
+              <option value="savings">Savings</option>
+              <option value="no-spend">No-Spend</option>
+              <option value="budget">Budget</option>
+              <option value="streak">Streak</option>
+              <option value="goal">Goal</option>
             </select>
           </div>
           <div class="form-group">
@@ -943,11 +1001,16 @@
     lucide.createIcons();
 
     const challengeIcons = {
-      'no_spend': '🚫', 'no-spend': '🚫',
-      'save_amount': '💰', 'savings': '💰',
-      'reduce_category': '📉', 'budget': '📊',
-      'streak': '🔥', 'goal': '🎯', 'custom': '⭐'
+      'no_spend': 'ban', 'no-spend': 'ban',
+      'save_amount': 'coins', 'savings': 'coins',
+      'reduce_category': 'trending-down', 'budget': 'bar-chart-3',
+      'streak': 'flame', 'goal': 'target', 'custom': 'sparkles'
     };
+
+    function challengeIconHtml(type) {
+      const icon = challengeIcons[type] || 'sparkles';
+      return `<i data-lucide="${icon}"></i>`;
+    }
 
     let challenges = [];      // available from DB
     let activeChallenges = []; // user's active from DB
@@ -1071,7 +1134,7 @@
       }
 
       const active = activeChallenges.filter(c => c.status === 'active');
-      console.log('🔥 Rendering active challenges:', active.length);
+      console.log('Rendering active challenges:', active.length);
 
       if (active.length === 0) {
         container.innerHTML = `
@@ -1089,7 +1152,7 @@
         const daysLeft = Math.max(0, Math.ceil(
           (new Date(ac.end_date) - new Date()) / (1000 * 60 * 60 * 24)
         ));
-        const icon = challengeIcons[ac.challenge_type] || '⭐';
+        const icon = challengeIconHtml(ac.challenge_type);
         return `
           <div class="challenge-card">
             <div class="challenge-header">
@@ -1111,7 +1174,7 @@
             </div>
             <div class="challenge-meta">
               <span class="difficulty-badge ${ac.difficulty || 'easy'}">${ac.difficulty || 'easy'}</span>
-              <span class="meta-item">📅 ${daysLeft} days left</span>
+              <span class="meta-item"><i data-lucide="calendar-days"></i> ${daysLeft} days left</span>
             </div>
             <div class="challenge-actions">
               <button class="challenge-btn btn-secondary" onclick="openProgressModal('${ac.id}','${escapeHtml(ac.title)}')">Log Progress</button>
@@ -1130,7 +1193,7 @@
       }
 
       console.log('🎬 START renderAvailableChallenges');
-      console.log('📊 Total challenges loaded:', challenges.length);
+      console.log('Total challenges loaded:', challenges.length);
       console.log('📋 Challenge count:', challenges ? challenges.length : 0);
       console.log('📄 HTML before render:', container.innerHTML);
 
@@ -1143,7 +1206,7 @@
       // Build HTML for each challenge
       let html = '';
       challenges.forEach((c, index) => {
-        const icon = challengeIcons[c.challenge_type] || '⭐';
+        const icon = challengeIconHtml(c.challenge_type);
         const difficultyColor = {
           easy: '#10b981',
           medium: '#f59e0b',
@@ -1180,16 +1243,17 @@
       const sc = selectedChallenge;
       const target = sc.target_amount || sc.target_days || 0;
       const prefix = sc.challenge_type === 'save_amount' ? utils.getCurrencySymbol() : '';
-      document.getElementById('modalIcon').textContent = challengeIcons[sc.challenge_type] || '⭐';
+      document.getElementById('modalIcon').innerHTML = challengeIconHtml(sc.challenge_type);
       document.getElementById('modalTitle').textContent = sc.title;
       document.getElementById('modalDesc').textContent = sc.description || '';
       document.getElementById('modalXP').textContent = `+${sc.xp_reward} XP`;
       document.getElementById('modalDifficulty').textContent = sc.difficulty;
       document.getElementById('modalDifficulty').className = `difficulty-badge ${sc.difficulty}`;
-      document.getElementById('modalDuration').textContent = `📅 ${sc.target_days || 30} days`;
-      document.getElementById('modalTarget').textContent = `🎯 Target: ${prefix}${target}`;
+      document.getElementById('modalDuration').innerHTML = `<i data-lucide="calendar-days"></i> ${sc.target_days || 30} days`;
+      document.getElementById('modalTarget').innerHTML = `<i data-lucide="target"></i> Target: ${prefix}${target}`;
       document.getElementById('challengeModal').classList.add('active');
       document.body.style.overflow = 'hidden';
+      lucide.createIcons({ node: document.getElementById('challengeModal') });
     }
 
     async function joinChallenge() {
@@ -1201,7 +1265,7 @@
         const res = await api.post(`/challenges/${selectedChallenge.id}/join`, {});
         if (res.success) {
           closeModal('challengeModal');
-          showToast('Challenge started! Good luck! 🔥');
+          showToast('Challenge started! Good luck!');
           await loadChallenges();
         } else {
           showToast(res.message || 'Could not join challenge', 'error');
@@ -1234,7 +1298,7 @@
         if (res.success) {
           closeModal('progressModal');
           if (res.data && res.data.status === 'completed') {
-            showToast(`🎉 Challenge completed! +${res.data.xp_earned || 0} XP`);
+            showToast(`Challenge completed! +${res.data.xp_earned || 0} XP`);
           } else {
             showToast('Progress updated!');
           }

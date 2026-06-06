@@ -1356,8 +1356,8 @@
         try {
           await api.createExpense({
             amount: bill.amount,
-            category: bill.category || 'Bills',
-            payment_method: 'other',
+            category: 'Utilities',
+            payment_method: 'Visa Card',
             expense_date: new Date().toISOString().split('T')[0],
             note: `Bill payment: ${bill.name}`,
             is_recurring: bill.frequency !== 'once'

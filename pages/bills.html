@@ -1389,7 +1389,7 @@
       if (index !== -1) {
         const bill = bills[index];
         try {
-          const response = await api.payBill(billId);
+          const response = await api.payBill(billId, { payment_method: 'Visa Card' });
           if (response.success) {
             bills[index].is_paid = true;
             closeModal('billDetailsModal');
@@ -1400,8 +1400,8 @@
             try {
               await api.createExpense({
                 amount: bill.amount,
-                category: bill.category || 'Bills',
-                payment_method: 'other',
+                category: 'Utilities',
+                payment_method: 'Visa Card',
                 expense_date: new Date().toISOString().split('T')[0],
                 note: `Bill payment: ${bill.title}`,
                 is_recurring: bill.frequency !== 'once'

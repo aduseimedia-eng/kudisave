@@ -3,6 +3,7 @@ const router = express.Router();
 const { query } = require('../config/database');
 const { authenticateToken } = require('../middleware/auth');
 const { uuidParamValidation } = require('../middleware/validation');
+const { PAYMENT_METHODS } = require('../config/constants');
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 
@@ -204,6 +205,11 @@ router.post('/:id/pay', authenticateToken, uuidParamValidation, async (req, res)
   try {
     const userId = req.user.id;
     const { id } = req.params;
+    const { payment_method = 'Visa Card' } = req.body || {};
+
+    if (!PAYMENT_METHODS.includes(payment_method)) {
+      return res.status(400).json({ success: false, message: 'Invalid payment method' });
+    }
 
     // Fetch subscription
     const subResult = await query(
@@ -220,7 +226,7 @@ router.post('/:id/pay', authenticateToken, uuidParamValidation, async (req, res)
     await query(
       `INSERT INTO expenses (user_id, amount, category, payment_method, expense_date, note)
        VALUES ($1, $2, $3, $4, $5, $6)`,
-      [userId, sub.amount, sub.category, 'other', today, `Subscription: ${sub.name}`]
+      [userId, sub.amount, sub.category, payment_method, today, `Subscription: ${sub.name}`]
     );
 
     // Update next_due_date
