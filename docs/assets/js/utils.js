@@ -37,6 +37,7 @@ function updateThemeIcon(theme) {
 document.addEventListener('DOMContentLoaded', () => {
   initTheme();
   initPopupCloseButtons();
+  initBottomTapBar();
 });
 
 function initPopupCloseButtons(root = document) {
@@ -50,6 +51,64 @@ function initPopupCloseButtons(root = document) {
     if (!btn.getAttribute('type')) btn.setAttribute('type', 'button');
   });
   if (typeof lucide !== 'undefined') lucide.createIcons({ node: root });
+}
+
+function initBottomTapBar() {
+  if (document.querySelector('.bottom-nav')) return;
+
+  const page = (window.location.pathname.split('/').pop() || 'dashboard.html').toLowerCase();
+  const enabledPages = new Set([
+    'dashboard.html',
+    'expenses.html',
+    'bills.html',
+    'subscriptions.html',
+    'reports.html',
+    'settings.html',
+    'challenges.html',
+    'goals.html',
+    'achievements.html'
+  ]);
+
+  if (!enabledPages.has(page)) return;
+
+  const items = [
+    { href: 'dashboard.html', label: 'Home', icon: 'house', match: ['dashboard.html'] },
+    { href: 'expenses.html', label: 'List', icon: 'list', match: ['expenses.html', 'reports.html'] },
+    { href: 'expenses.html', label: 'Add', icon: 'plus', center: true, action: 'add-expense' },
+    { href: 'bills.html', label: 'Bills', icon: 'receipt', match: ['bills.html', 'subscriptions.html'] },
+    { href: 'settings.html', label: 'My', icon: 'circle-user-round', match: ['settings.html', 'challenges.html', 'goals.html', 'achievements.html'] }
+  ];
+
+  const nav = document.createElement('nav');
+  nav.className = 'bottom-nav';
+  nav.setAttribute('aria-label', 'Primary navigation');
+  nav.innerHTML = items.map(item => {
+    const active = item.match && item.match.includes(page) ? ' active' : '';
+    const center = item.center ? ' bottom-nav-center' : '';
+    const action = item.action ? ` data-action="${item.action}"` : '';
+    return `
+      <a class="bottom-nav-item${active}${center}" href="${item.href}"${action} aria-label="${item.label}">
+        <span class="nav-icon"><i data-lucide="${item.icon}"></i></span>
+        <span>${item.label}</span>
+      </a>`;
+  }).join('');
+
+  document.body.appendChild(nav);
+
+  const addBtn = nav.querySelector('[data-action="add-expense"]');
+  if (addBtn) {
+    addBtn.addEventListener('click', event => {
+      if (typeof openAddModal === 'function') {
+        event.preventDefault();
+        openAddModal();
+      } else if (typeof openExpenseModal === 'function') {
+        event.preventDefault();
+        openExpenseModal();
+      }
+    });
+  }
+
+  if (typeof lucide !== 'undefined') lucide.createIcons({ node: nav });
 }
 
 // Currency configuration
@@ -686,6 +745,7 @@ function getRandomEncouragement() {
 
 // Export functions
 window.utils = {
+  initBottomTapBar,
   formatCurrency,
   formatCurrencyAmount,
   getCurrentCurrency,
