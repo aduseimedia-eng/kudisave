@@ -62,6 +62,35 @@
       margin-bottom: 16px;
     }
 
+    .report-actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+
+    .report-action-btn {
+      min-height: 44px;
+      border: 1px solid var(--border-color);
+      border-radius: 14px;
+      background: var(--card-bg);
+      color: var(--text-primary);
+      font: inherit;
+      font-size: 13px;
+      font-weight: 800;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      cursor: pointer;
+      box-shadow: 0 8px 22px rgba(17,24,39,0.045);
+    }
+
+    .report-action-btn i {
+      width: 16px;
+      height: 16px;
+    }
+
     .overview-card {
       background: var(--card-bg);
       border-radius: 16px;
@@ -221,6 +250,60 @@
       font-weight: 600;
     }
 
+    .report-panel {
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      padding: 16px;
+      margin-bottom: 16px;
+      box-shadow: 0 8px 22px rgba(17,24,39,0.045);
+    }
+
+    .report-panel-title {
+      font-size: 14px;
+      font-weight: 850;
+      color: var(--text-primary);
+      margin-bottom: 6px;
+    }
+
+    .report-panel-text {
+      font-size: 12px;
+      line-height: 1.55;
+      color: var(--text-secondary);
+    }
+
+    .report-stat-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    .report-stat-tile {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: 14px;
+      padding: 12px;
+      min-width: 0;
+    }
+
+    .report-stat-label {
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+      color: var(--text-muted);
+      font-weight: 800;
+      margin-bottom: 4px;
+    }
+
+    .report-stat-value {
+      font-size: 15px;
+      line-height: 1.2;
+      font-weight: 900;
+      color: var(--text-primary);
+      overflow-wrap: anywhere;
+    }
+
     .category-list {
       background: var(--card-bg);
       border-radius: 16px;
@@ -250,8 +333,26 @@
       display: flex;
       align-items: center;
       gap: 12px;
+      width: 100%;
       padding: 10px 0;
       border-bottom: 1px solid var(--border-color);
+      border-top: 0;
+      border-left: 0;
+      border-right: 0;
+      background: transparent;
+      color: inherit;
+      font: inherit;
+      text-align: left;
+      cursor: pointer;
+    }
+
+    .category-item.active {
+      background: var(--bg-secondary);
+      margin: 0 -8px;
+      padding-left: 8px;
+      padding-right: 8px;
+      border-radius: 12px;
+      border-bottom-color: transparent;
     }
 
     .category-item:last-child {
@@ -756,7 +857,7 @@
     .compare-summary {
       background: var(--card-bg);
       border-radius: 16px;
-      padding: 14px;
+      padding: 12px;
       margin-bottom: 80px;
       animation: slideUp 0.4s ease-out both;
       overflow-x: auto;
@@ -764,14 +865,14 @@
     }
 
     .compare-summary-inner {
-      min-width: 420px;
+      min-width: 540px;
     }
 
     .summary-row {
       display: grid;
-      grid-template-columns: minmax(90px, 1.2fr) minmax(85px, 1fr) minmax(85px, 1fr) minmax(80px, 0.9fr);
-      gap: 6px;
-      padding: 10px 0;
+      grid-template-columns: minmax(130px, 1.15fr) minmax(120px, 1fr) minmax(120px, 1fr) minmax(110px, 0.95fr);
+      gap: 10px;
+      padding: 11px 8px;
       border-bottom: 1px solid var(--border-color);
       align-items: center;
     }
@@ -785,23 +886,33 @@
       padding-bottom: 0;
     }
 
-    .summary-row.header {
+    .summary-row.summary-header {
       font-size: 10px;
-      color: var(--text-secondary);
+      color: var(--text-primary);
       text-transform: uppercase;
-      font-weight: 600;
-      padding-bottom: 8px;
+      font-weight: 800;
+      padding: 9px 8px;
+      margin-bottom: 2px;
+      border-radius: 10px;
+      background: var(--bg-secondary);
+      border-bottom: none;
     }
 
-    .summary-row.header > div {
-      white-space: nowrap;
-      overflow: visible;
+    .summary-row.summary-header > div {
+      line-height: 1.2;
+      min-width: 0;
+      overflow-wrap: anywhere;
+    }
+
+    .summary-row.summary-header > div:not(:first-child) {
+      text-align: center;
     }
 
     .summary-metric {
       font-size: 12px;
       color: var(--text-secondary);
-      white-space: nowrap;
+      line-height: 1.25;
+      min-width: 0;
     }
 
     .summary-value {
@@ -809,7 +920,9 @@
       font-weight: 600;
       color: var(--text-primary);
       text-align: center;
-      white-space: nowrap;
+      line-height: 1.25;
+      overflow-wrap: anywhere;
+      min-width: 0;
     }
 
     .summary-diff {
@@ -818,12 +931,34 @@
       text-align: center;
       padding: 4px 6px;
       border-radius: 6px;
-      white-space: nowrap;
+      line-height: 1.25;
+      overflow-wrap: anywhere;
+      min-width: 0;
     }
 
     .summary-diff.better { background: rgba(11, 115, 125, 0.15); color: #0b737d; }
     .summary-diff.worse { background: rgba(220, 53, 69, 0.15); color: #dc3545; }
     .summary-diff.neutral { background: rgba(108, 117, 125, 0.15); color: #6c757d; }
+
+    .budget-bar-real {
+      height: 10px;
+      background: var(--bg-secondary);
+      border-radius: 999px;
+      overflow: hidden;
+      margin: 12px 0 8px;
+      border: 1px solid var(--border-color);
+    }
+
+    .budget-bar-real-fill {
+      height: 100%;
+      width: 0%;
+      border-radius: inherit;
+      background: linear-gradient(90deg, #0b737d, #10b981);
+      transition: width 0.35s ease;
+    }
+
+    .budget-bar-real-fill.warning { background: linear-gradient(90deg, #f59e0b, #f97316); }
+    .budget-bar-real-fill.danger { background: linear-gradient(90deg, #ef4444, #dc2626); }
 
     /* ===== Modern Header for Reports ===== */
     body { padding-top: 0 !important; }
@@ -1123,6 +1258,11 @@
       </button>
     </div>
 
+    <div class="report-actions">
+      <button class="report-action-btn" onclick="exportReport()" type="button"><i data-lucide="download"></i> Export PDF</button>
+      <button class="report-action-btn" onclick="shareReport()" type="button"><i data-lucide="share-2"></i> Share Report</button>
+    </div>
+
     <!-- Overview Section -->
     <div class="overview-section" id="overviewSection">
     <!-- Period Label -->
@@ -1185,6 +1325,11 @@
       </div>
     </div>
 
+    <div class="report-panel" id="aiSummaryCard">
+      <div class="report-panel-title">Summary</div>
+      <div class="report-panel-text" id="aiSummaryText">Your report summary will appear after your data loads.</div>
+    </div>
+
     <!-- Financial Health Score -->
     <div class="section-header">
       <div class="section-title">
@@ -1233,6 +1378,18 @@
     </div>
     <div id="reportInsightDots" class="insights-dots" aria-hidden="true"></div>
 
+    <div class="section-header">
+      <div class="section-title">
+        <i data-lucide="line-chart" style="width:18px;height:18px"></i>
+        Cash Flow
+      </div>
+    </div>
+    <div class="daily-chart">
+      <div class="chart-canvas-wrap" id="cashFlowChartWrap">
+        <canvas id="cashFlowChart"></canvas>
+      </div>
+    </div>
+
     <!-- Daily/Weekly Spending Chart -->
     <div class="section-header">
       <div class="section-title">
@@ -1244,6 +1401,11 @@
       <div class="chart-canvas-wrap" id="spendingChartWrap">
         <canvas id="spendingChart"></canvas>
       </div>
+    </div>
+
+    <div class="report-panel" id="spendingHighlights">
+      <div class="report-panel-title">Best & Worst Spending Days</div>
+      <div class="report-panel-text">Highlights will appear after your spending data loads.</div>
     </div>
 
     <!-- Spending by Category -->
@@ -1262,6 +1424,21 @@
       </div>
     </div>
 
+    <div class="report-panel" id="categoryDrilldown">
+      <div class="report-panel-title">Category Drilldown</div>
+      <div class="report-panel-text">Tap a category above to see its transactions for this period.</div>
+    </div>
+
+    <div class="section-header">
+      <div class="section-title">
+        <i data-lucide="wallet" style="width:18px;height:18px"></i>
+        Budget vs Actual
+      </div>
+    </div>
+    <div class="report-panel" id="budgetActual">
+      <div class="report-panel-text">Budget performance will appear when a budget is set.</div>
+    </div>
+
     <!-- Bills & Subscriptions Payments -->
     <div class="section-header">
       <div class="section-title">
@@ -1272,6 +1449,11 @@
     </div>
     <div id="billSubPayments" style="margin-bottom:16px;">
       <!-- Bill/sub payments will be inserted here -->
+    </div>
+
+    <div class="report-panel" id="recurringSummary">
+      <div class="report-panel-title">Recurring Payments Summary</div>
+      <div class="report-panel-text">Recurring payment activity will appear after bills and subscriptions load.</div>
     </div>
 
     <!-- Top Expenses -->
@@ -1294,6 +1476,16 @@
     </div>
     <div class="comparison-card" id="comparison">
       <!-- Comparison data will be inserted here -->
+    </div>
+
+    <div class="section-header">
+      <div class="section-title">
+        <i data-lucide="target" style="width:18px;height:18px"></i>
+        Savings Goal Impact
+      </div>
+    </div>
+    <div class="report-panel" id="goalImpact">
+      <div class="report-panel-text">Goal impact will appear when you have active savings goals.</div>
     </div>
     </div><!-- End overview-section -->
 
@@ -1402,11 +1594,11 @@
       </div>
       <div class="compare-summary" id="compareSummary">
         <div class="compare-summary-inner">
-          <div class="summary-row header">
+          <div class="summary-row summary-header">
             <div>Metric</div>
-            <div style="text-align:center" id="summaryHeader1">Period 1</div>
-            <div style="text-align:center" id="summaryHeader2">Period 2</div>
-            <div style="text-align:center">Change</div>
+            <div id="summaryHeader1">Period 1</div>
+            <div id="summaryHeader2">Period 2</div>
+            <div>Change</div>
           </div>
           <!-- Summary rows will be inserted here -->
         </div>
@@ -1424,6 +1616,10 @@
     let currentMode = 'overview';
     let allExpenses = [];
     let allIncome = [];
+    let currentPeriodExpenses = [];
+    let currentPeriodIncome = [];
+    let activeBudget = null;
+    let allGoals = [];
     
     let reportData = {
       current: { income: 0, expenses: 0, savings: 0 },
@@ -1441,6 +1637,7 @@
     const chartState = {
       spending: null,
       category: null,
+      cashflow: null,
       comparison: null
     };
 
@@ -1482,6 +1679,21 @@
         container.innerHTML = `<canvas id="${canvasId}"></canvas>`;
       }
       return document.getElementById(canvasId);
+    }
+
+    async function loadExtraReportData() {
+      const [budgetResult, goalsResult] = await Promise.allSettled([
+        api.getActiveBudget(),
+        api.getGoals()
+      ]);
+
+      activeBudget = budgetResult.status === 'fulfilled' && budgetResult.value && budgetResult.value.success
+        ? budgetResult.value.data
+        : null;
+
+      allGoals = goalsResult.status === 'fulfilled' && goalsResult.value && goalsResult.value.success
+        ? (Array.isArray(goalsResult.value.data) ? goalsResult.value.data : [])
+        : [];
     }
 
     // Category icons mapping (Lucide icon names)
@@ -1751,7 +1963,7 @@
 
       const container = document.getElementById('compareSummary');
       const inner = container.querySelector('.compare-summary-inner');
-      const headerRow = inner.querySelector('.summary-row.header');
+      const headerRow = inner.querySelector('.summary-row.summary-header');
       
       inner.innerHTML = '';
       inner.appendChild(headerRow);
@@ -1886,6 +2098,10 @@
           return date >= prevStart && date <= prevEnd;
         });
 
+        currentPeriodExpenses = currentExpenses;
+        currentPeriodIncome = currentIncome;
+        await loadExtraReportData();
+
         // Calculate totals
         reportData.current.expenses = currentExpenses.reduce((sum, e) => sum + parseFloat(e.amount), 0);
         reportData.current.income = currentIncome.reduce((sum, i) => sum + parseFloat(i.amount), 0);
@@ -1919,6 +2135,10 @@
             return {
               label: day,
               amount: dayExpenses.reduce((sum, e) => sum + parseFloat(e.amount), 0),
+              income: currentIncome.filter(i => {
+                const date = new Date(i.income_date || i.date);
+                return date.toDateString() === dayDate.toDateString();
+              }).reduce((sum, i) => sum + parseFloat(i.amount), 0),
               isCurrent: dayDate.toDateString() === new Date().toDateString()
             };
           });
@@ -1934,9 +2154,14 @@
               const date = new Date(e.expense_date || e.date);
               return date >= weekStart && date <= weekEnd;
             });
+            const weekIncome = currentIncome.filter(i => {
+              const date = new Date(i.income_date || i.date);
+              return date >= weekStart && date <= weekEnd;
+            });
             return {
               label: `W${index + 1}`,
               amount: weekExpenses.reduce((sum, e) => sum + parseFloat(e.amount), 0),
+              income: weekIncome.reduce((sum, i) => sum + parseFloat(i.amount), 0),
               isCurrent: new Date() >= weekStart && new Date() <= weekEnd
             };
           }).filter((_, i) => {
@@ -1953,13 +2178,18 @@
 
         // Render all sections
         renderOverview();
+        renderAiSummary();
         renderHealthScore();
         loadSmartInsights();
+        renderCashFlowChart();
         renderSpendingChart();
+        renderSpendingHighlights();
         renderCategories();
+        renderBudgetActual();
         renderBillSubPayments(currentExpenses);
         renderTopExpenses();
         renderComparison();
+        renderGoalImpact();
 
         const overviewSection = document.getElementById('overviewSection');
         if (overviewSection) lucide.createIcons({ node: overviewSection });
@@ -2027,6 +2257,7 @@
       });
 
       if (countEl) countEl.textContent = billSubExpenses.length > 0 ? billSubExpenses.length + ' payments' : '';
+      renderRecurringSummary(billSubExpenses);
 
       if (billSubExpenses.length === 0) {
         container.innerHTML = `
@@ -2066,6 +2297,49 @@
         </div>
       `;
       if (typeof lucide !== 'undefined') lucide.createIcons({ node: container });
+    }
+
+    function renderRecurringSummary(billSubExpenses) {
+      const el = document.getElementById('recurringSummary');
+      if (!el) return;
+
+      if (!billSubExpenses.length) {
+        el.innerHTML = `
+          <div class="report-panel-title">Recurring payments</div>
+          <div class="report-panel-text">No recurring bill or subscription payment has been recorded for this period.</div>
+        `;
+        return;
+      }
+
+      const bills = billSubExpenses.filter(e => (e.note || '').toLowerCase().includes('bill payment:'));
+      const subs = billSubExpenses.filter(e => (e.note || '').toLowerCase().includes('subscription:'));
+      const total = billSubExpenses.reduce((sum, e) => sum + parseFloat(e.amount || 0), 0);
+      const average = total / billSubExpenses.length;
+      const largest = [...billSubExpenses].sort((a, b) => parseFloat(b.amount || 0) - parseFloat(a.amount || 0))[0];
+      const largestName = (largest.note || largest.description || largest.category || 'Largest payment').replace(/^(Bill payment:|Subscription:)\s*/i, '');
+
+      el.innerHTML = `
+        <div class="report-panel-title">Recurring payments</div>
+        <div class="report-stat-grid">
+          <div class="report-stat-tile">
+            <span class="report-stat-label">Total paid</span>
+            <span class="report-stat-value">${utils.formatCurrency(total)}</span>
+          </div>
+          <div class="report-stat-tile">
+            <span class="report-stat-label">Average</span>
+            <span class="report-stat-value">${utils.formatCurrency(average)}</span>
+          </div>
+          <div class="report-stat-tile">
+            <span class="report-stat-label">Bills</span>
+            <span class="report-stat-value">${bills.length}</span>
+          </div>
+          <div class="report-stat-tile">
+            <span class="report-stat-label">Subscriptions</span>
+            <span class="report-stat-value">${subs.length}</span>
+          </div>
+        </div>
+        <div class="report-panel-text">Largest recurring payment: ${largestName} at ${utils.formatCurrency(largest.amount)}.</div>
+      `;
     }
 
     function renderOverview() {
@@ -2263,13 +2537,19 @@
                   }
                 }
               }
+            },
+            onClick: (event, elements) => {
+              const index = elements && elements[0] ? elements[0].index : null;
+              if (index !== null && reportData.categories[index]) {
+                renderCategoryDrilldown(reportData.categories[index].name);
+              }
             }
           }
         });
       }
 
-      container.innerHTML = reportData.categories.map(cat => `
-        <div class="category-item">
+      container.innerHTML = reportData.categories.map((cat, index) => `
+        <button class="category-item" type="button" data-category-index="${index}">
           <div class="category-icon"><i data-lucide="${categoryIcons[cat.name] || 'package'}" style="width:18px;height:18px;"></i></div>
           <div class="category-info">
             <div class="category-name">${cat.name}</div>
@@ -2281,9 +2561,67 @@
             <div class="category-value">${utils.formatCurrency(cat.amount)}</div>
             <div class="category-percent">${cat.percent.toFixed(1)}%</div>
           </div>
-        </div>
+        </button>
       `).join('');
+      container.querySelectorAll('.category-item').forEach(item => {
+        item.addEventListener('click', () => {
+          const category = reportData.categories[Number(item.dataset.categoryIndex)];
+          if (category) renderCategoryDrilldown(category.name);
+        });
+      });
+      renderCategoryDrilldown(reportData.categories[0].name);
       if (typeof lucide !== 'undefined') lucide.createIcons({ node: container });
+    }
+
+    function renderCategoryDrilldown(categoryName) {
+      const el = document.getElementById('categoryDrilldown');
+      if (!el) return;
+
+      document.querySelectorAll('#categoryBreakdownList .category-item').forEach(item => {
+        const category = reportData.categories[Number(item.dataset.categoryIndex)];
+        item.classList.toggle('active', Boolean(category && category.name === categoryName));
+      });
+
+      const category = reportData.categories.find(cat => cat.name === categoryName);
+      const transactions = currentPeriodExpenses
+        .filter(expense => expense.category === categoryName)
+        .sort((a, b) => parseFloat(b.amount || 0) - parseFloat(a.amount || 0));
+
+      if (!category || !transactions.length) {
+        el.innerHTML = `
+          <div class="report-panel-title">Category drilldown</div>
+          <div class="report-panel-text">Choose a category to see what is driving the total.</div>
+        `;
+        return;
+      }
+
+      const average = category.amount / transactions.length;
+      const topTransactions = transactions.slice(0, 4);
+      el.innerHTML = `
+        <div class="report-panel-title">${category.name} drilldown</div>
+        <div class="report-stat-grid">
+          <div class="report-stat-tile">
+            <span class="report-stat-label">Total</span>
+            <span class="report-stat-value">${utils.formatCurrency(category.amount)}</span>
+          </div>
+          <div class="report-stat-tile">
+            <span class="report-stat-label">Transactions</span>
+            <span class="report-stat-value">${transactions.length}</span>
+          </div>
+          <div class="report-stat-tile">
+            <span class="report-stat-label">Average</span>
+            <span class="report-stat-value">${utils.formatCurrency(average)}</span>
+          </div>
+          <div class="report-stat-tile">
+            <span class="report-stat-label">Share</span>
+            <span class="report-stat-value">${category.percent.toFixed(1)}%</span>
+          </div>
+        </div>
+        <div class="report-panel-text">${topTransactions.map(expense => {
+          const label = expense.description || expense.note || category.name;
+          return `${label}: ${utils.formatCurrency(expense.amount)}`;
+        }).join(' • ')}</div>
+      `;
     }
 
     function renderTopExpenses() {
@@ -2351,6 +2689,149 @@
           </div>
         `;
       }).join('');
+    }
+
+    function renderAiSummary() {
+      const el = document.getElementById('aiSummaryText');
+      if (!el) return;
+      const { current, previous } = reportData;
+      const expenseDelta = previous.expenses > 0 ? ((current.expenses - previous.expenses) / previous.expenses * 100) : 0;
+      const savingsRate = current.income > 0 ? (current.savings / current.income * 100) : 0;
+      const topCategory = reportData.categories[0];
+      const topText = topCategory ? `${topCategory.name} led spending at ${utils.formatCurrency(topCategory.amount)}.` : 'No spending category stands out yet.';
+      const direction = expenseDelta > 0 ? 'up' : 'down';
+      el.textContent = `This ${currentPeriod === 'weekly' ? 'week' : 'month'}, income was ${utils.formatCurrency(current.income)} and expenses were ${utils.formatCurrency(current.expenses)}. Spending is ${Math.abs(expenseDelta).toFixed(1)}% ${direction} versus the previous period, with a savings rate of ${savingsRate.toFixed(1)}%. ${topText}`;
+    }
+
+    function renderCashFlowChart() {
+      destroyChart('cashflow');
+      const canvas = ensureCanvas('cashFlowChartWrap', 'cashFlowChart');
+      if (!canvas) return;
+      if (typeof Chart === 'undefined') {
+        renderChartEmpty('cashFlowChartWrap', 'line-chart', 'Chart unavailable');
+        return;
+      }
+
+      if (!reportData.daily || reportData.daily.every(d => !d.amount && !d.income)) {
+        renderChartEmpty('cashFlowChartWrap', 'line-chart', 'No cash flow data for this period');
+        return;
+      }
+
+      chartState.cashflow = new Chart(canvas, {
+        type: 'bar',
+        data: {
+          labels: reportData.daily.map(d => d.label),
+          datasets: [
+            {
+              type: 'line',
+              label: 'Income',
+              data: reportData.daily.map(d => d.income || 0),
+              borderColor: '#10b981',
+              backgroundColor: 'rgba(16,185,129,0.12)',
+              pointRadius: 4,
+              tension: 0.35,
+              fill: false
+            },
+            {
+              type: 'bar',
+              label: 'Expenses',
+              data: reportData.daily.map(d => d.amount || 0),
+              backgroundColor: 'rgba(239,68,68,0.72)',
+              borderRadius: 8,
+              maxBarThickness: 26
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { labels: { color: getChartTextColor(), font: { weight: 700 } } },
+            tooltip: { callbacks: { label: ctx => `${ctx.dataset.label}: ${utils.formatCurrency(ctx.parsed.y)}` } }
+          },
+          scales: {
+            x: { grid: { display: false }, ticks: { color: getChartTextColor(), font: { weight: 700 } } },
+            y: { beginAtZero: true, grid: { color: getChartGridColor() }, ticks: { color: getChartTextColor(), callback: value => utils.formatCurrency(value).replace(/\.00$/, '') } }
+          }
+        }
+      });
+    }
+
+    function renderSpendingHighlights() {
+      const el = document.getElementById('spendingHighlights');
+      if (!el) return;
+      const days = (reportData.daily || []).filter(d => d.amount > 0);
+      if (!days.length) {
+        el.innerHTML = '<div class="report-panel-title">Best & Worst Spending Days</div><div class="report-panel-text">No spending days recorded for this period yet.</div>';
+        return;
+      }
+      const highest = days.reduce((max, d) => d.amount > max.amount ? d : max, days[0]);
+      const lowest = days.reduce((min, d) => d.amount < min.amount ? d : min, days[0]);
+      el.innerHTML = `
+        <div class="report-panel-title">Best & Worst Spending Days</div>
+        <div class="report-stat-grid">
+          <div class="report-stat-tile"><div class="report-stat-label">Lowest Spend</div><div class="report-stat-value">${lowest.label} · ${utils.formatCurrency(lowest.amount)}</div></div>
+          <div class="report-stat-tile"><div class="report-stat-label">Highest Spend</div><div class="report-stat-value">${highest.label} · ${utils.formatCurrency(highest.amount)}</div></div>
+        </div>
+      `;
+    }
+
+    function renderBudgetActual() {
+      const el = document.getElementById('budgetActual');
+      if (!el) return;
+      const budgetTotal = activeBudget ? parseFloat(activeBudget.budget_amount || activeBudget.amount || activeBudget.total_budget || 0) : 0;
+      if (!budgetTotal) {
+        el.innerHTML = '<div class="report-panel-text">No active budget found. Set a budget from the dashboard to compare planned vs actual spending.</div>';
+        return;
+      }
+      const spent = reportData.current.expenses;
+      const usage = budgetTotal > 0 ? spent / budgetTotal * 100 : 0;
+      const remaining = budgetTotal - spent;
+      const status = usage >= 100 ? 'danger' : (usage >= 80 ? 'warning' : '');
+      el.innerHTML = `
+        <div class="report-panel-title">${utils.formatCurrency(spent)} of ${utils.formatCurrency(budgetTotal)} used</div>
+        <div class="budget-bar-real"><div class="budget-bar-real-fill ${status}" style="width:${Math.min(100, usage)}%;"></div></div>
+        <div class="report-panel-text">${usage.toFixed(1)}% used · ${remaining >= 0 ? utils.formatCurrency(remaining) + ' left' : utils.formatCurrency(Math.abs(remaining)) + ' over budget'}.</div>
+      `;
+    }
+
+    function renderGoalImpact() {
+      const el = document.getElementById('goalImpact');
+      if (!el) return;
+      const activeGoals = allGoals.filter(g => g.status !== 'completed');
+      if (!activeGoals.length) {
+        el.innerHTML = '<div class="report-panel-text">No active savings goals yet. Create a goal to see how this period affects your progress.</div>';
+        return;
+      }
+      const goal = activeGoals.sort((a, b) => {
+        const ap = parseFloat(a.progress_percentage || 0);
+        const bp = parseFloat(b.progress_percentage || 0);
+        return bp - ap;
+      })[0];
+      const target = parseFloat(goal.target_amount || 0);
+      const current = parseFloat(goal.current_amount || 0);
+      const remaining = Math.max(target - current, 0);
+      const periodSavings = Math.max(reportData.current.savings, 0);
+      const monthlyPace = currentPeriod === 'weekly' ? periodSavings * 4.33 : periodSavings;
+      const months = monthlyPace > 0 ? Math.ceil(remaining / monthlyPace) : null;
+      el.innerHTML = `
+        <div class="report-panel-title">${goal.title || 'Top goal'}</div>
+        <div class="report-panel-text">${utils.formatCurrency(current)} saved of ${utils.formatCurrency(target)}. ${periodSavings > 0 ? `This period's savings pace could cover the remaining ${utils.formatCurrency(remaining)} in about ${months} month${months === 1 ? '' : 's'}.` : 'Positive savings this period will improve your goal timeline.'}</div>
+      `;
+    }
+
+    function exportReport() {
+      window.print();
+    }
+
+    async function shareReport() {
+      const text = `KudiSave report: Income ${utils.formatCurrency(reportData.current.income)}, Expenses ${utils.formatCurrency(reportData.current.expenses)}, Savings ${utils.formatCurrency(reportData.current.savings)}.`;
+      if (navigator.share) {
+        await navigator.share({ title: 'KudiSave Report', text });
+      } else if (navigator.clipboard) {
+        await navigator.clipboard.writeText(text);
+        utils.showAlert('Report summary copied', 'success');
+      }
     }
 
     function logout() {
