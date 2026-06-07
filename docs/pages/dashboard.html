@@ -342,7 +342,7 @@
     body {
       padding-top: 0 !important;
     }
-    
+
     /* Ensure fixed header accounts for safe area */
     .mtn-header {
       height: auto;
@@ -1284,16 +1284,29 @@
       gap: 12px;
     }
 
-    .currency-select {
-      background: var(--card-bg);
+    .currency-picker-field {
+      min-width: 112px;
       border: 1px solid var(--border-color);
-      border-radius: 10px;
-      padding: 12px 14px;
-      font-size: 17px;
-      font-weight: 600;
+      background: var(--card-bg);
       color: var(--text-primary);
+      border-radius: 14px;
+      padding: 10px 12px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
       cursor: pointer;
-      min-width: 110px;
+      font-family: inherit;
+      font-size: 17px;
+      font-weight: 800;
+      box-shadow: 0 8px 18px rgba(17,24,39,0.05);
+    }
+
+    .currency-picker-field i {
+      width: 15px;
+      height: 15px;
+      color: var(--text-muted);
+      flex-shrink: 0;
     }
 
     .currency-amount-input {
@@ -2322,6 +2335,15 @@
     .picker-field-icon.donation { background: #fff1f2; color: #e11d48; }
     .picker-field-icon.gaming { background: #faf5ff; color: #9333ea; }
     .picker-field-icon.other { background: #f8fafc; color: #475569; }
+    .picker-field-icon.income-allowance { background: #eef2ff; color: #4f46e5; }
+    .picker-field-icon.income-salary { background: #ecfdf5; color: #059669; }
+    .picker-field-icon.income-business { background: #eff6ff; color: #2563eb; }
+    .picker-field-icon.income-gift { background: #fdf2f8; color: #db2777; }
+    .picker-field-icon.income-hustle { background: #fff7ed; color: #f97316; }
+    .picker-field-icon.income-investment { background: #f0fdf4; color: #16a34a; }
+    .picker-field-icon.income-other { background: #f8fafc; color: #475569; }
+    .picker-field-icon.budget-weekly { background: #fefce8; color: #ca8a04; }
+    .picker-field-icon.budget-monthly { background: #ecfdf5; color: #059669; }
     .picker-field-chevron { width: 16px; height: 16px; color: var(--text-muted); flex-shrink: 0; }
     .payment-logo { width: 38px; height: 26px; border-radius: 9px; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 10px; font-weight: 900; letter-spacing: 0; box-shadow: 0 8px 16px rgba(17,24,39,0.08); overflow: hidden; line-height: 1; }
     .payment-logo.visa { background: #ffffff; color: #1434cb; border: 1px solid #e5e7eb; font-style: italic; font-size: 12px; }
@@ -2350,6 +2372,37 @@
     .category-option .picker-option-main { flex-direction: column; align-items: flex-start; gap: 10px; }
     .category-option .picker-field-icon { width: 42px; height: 42px; border-radius: 15px; }
     .category-option .picker-field-icon i { width: 20px; height: 20px; }
+    .income-source-options { grid-template-columns: repeat(2, minmax(0, 1fr)); max-height: 58vh; overflow-y: auto; padding-right: 2px; }
+    .income-source-option { align-items: flex-start; min-height: 88px; padding: 14px; }
+    .income-source-option .picker-option-main { flex-direction: column; align-items: flex-start; gap: 10px; }
+    .income-source-option .picker-field-icon { width: 42px; height: 42px; border-radius: 15px; }
+    .income-source-option .picker-field-icon i { width: 20px; height: 20px; }
+    .budget-period-options { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .budget-period-option { align-items: flex-start; min-height: 96px; padding: 14px; }
+    .budget-period-option .picker-option-main { flex-direction: column; align-items: flex-start; gap: 8px; }
+    .budget-period-option .picker-field-icon { width: 42px; height: 42px; border-radius: 15px; }
+    .budget-period-option .picker-field-icon i { width: 20px; height: 20px; }
+    .picker-option-hint { display: block; color: var(--text-muted); font-size: 11px; font-weight: 650; line-height: 1.25; }
+    .currency-picker-options { max-height: 62vh; overflow-y: auto; padding-right: 2px; }
+    .currency-picker-option .picker-option-main { gap: 11px; }
+    .currency-picker-flag { width: 40px; height: 40px; border-radius: 14px; background: var(--card-bg); display: inline-flex; align-items: center; justify-content: center; font-size: 21px; box-shadow: 0 8px 18px rgba(17,24,39,0.06); flex-shrink: 0; }
+    .currency-picker-copy { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+    .currency-picker-code { font-size: 14px; font-weight: 850; color: var(--text-primary); }
+    .currency-picker-name { font-size: 11px; color: var(--text-muted); font-weight: 650; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .income-submit-btn {
+      width: 100%;
+      background: var(--primary-gradient, linear-gradient(135deg, #033036, #0b737d)) !important;
+      color: #ffffff !important;
+      border: 0;
+      box-shadow: 0 14px 30px rgba(3,48,54,0.24);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 9px;
+    }
+    .income-submit-btn i { width: 18px; height: 18px; stroke-width: 2.5; }
+    .income-submit-btn:hover { box-shadow: 0 16px 34px rgba(3,48,54,0.3); transform: translateY(-1px); }
+    .income-submit-btn:active { transform: translateY(0) scale(0.98); box-shadow: 0 10px 22px rgba(3,48,54,0.22); }
     .picker-option-mark { width: 20px; height: 20px; border-radius: 50%; border: 2px solid #d1d5db; flex-shrink: 0; }
     .picker-option.active { border-color: rgba(3,48,54,0.28); background: rgba(3,48,54,0.06); }
     .picker-option.active .picker-option-mark { border-color: #033036; background: radial-gradient(circle at center, #033036 0 42%, transparent 45%); }
@@ -2948,6 +3001,48 @@
     </div>
   </div>
 
+  <!-- Income Source Picker -->
+  <div id="incomeSourceModal" class="modal picker-modal">
+    <div class="picker-sheet">
+      <div class="picker-title-row">
+        <div class="picker-title-icon"><i data-lucide="badge-dollar-sign"></i></div>
+        <div>
+          <div class="picker-title">Income Source</div>
+          <div class="picker-subtitle">Choose where the money came from</div>
+        </div>
+      </div>
+      <div class="picker-options income-source-options" id="incomeSourceOptions"></div>
+    </div>
+  </div>
+
+  <!-- Budget Period Picker -->
+  <div id="budgetPeriodModal" class="modal picker-modal">
+    <div class="picker-sheet">
+      <div class="picker-title-row">
+        <div class="picker-title-icon"><i data-lucide="calendar-range"></i></div>
+        <div>
+          <div class="picker-title">Budget Period</div>
+          <div class="picker-subtitle">Choose how this budget should be tracked</div>
+        </div>
+      </div>
+      <div class="picker-options budget-period-options" id="budgetPeriodOptions"></div>
+    </div>
+  </div>
+
+  <!-- Currency Picker -->
+  <div id="currencyPickerModal" class="modal picker-modal">
+    <div class="picker-sheet">
+      <div class="picker-title-row">
+        <div class="picker-title-icon"><i data-lucide="coins"></i></div>
+        <div>
+          <div class="picker-title" id="currencyPickerTitle">Choose Currency</div>
+          <div class="picker-subtitle">Select a currency for conversion</div>
+        </div>
+      </div>
+      <div class="picker-options currency-picker-options" id="currencyPickerOptions"></div>
+    </div>
+  </div>
+
   <!-- Income Modal -->
   <div id="incomeModal" class="modal">
     <div class="modal-content">
@@ -2966,7 +3061,14 @@
 
         <div class="form-group">
           <label class="form-label">Source</label>
-          <select class="form-select" id="incomeSource" required></select>
+          <input type="hidden" id="incomeSource" required>
+          <button type="button" class="picker-field" onclick="openIncomeSourceModal()">
+            <span class="picker-field-main">
+              <span class="picker-field-icon income-other" id="incomeSourceIconWrap"><i data-lucide="badge-dollar-sign"></i></span>
+              <span id="incomeSourceText">Select source</span>
+            </span>
+            <i data-lucide="chevron-down" class="picker-field-chevron"></i>
+          </button>
         </div>
 
         <div class="form-group">
@@ -2979,7 +3081,7 @@
           <textarea class="form-textarea" id="incomeNote" rows="3" placeholder="Add a note..."></textarea>
         </div>
 
-        <button type="submit" class="btn btn-success" style="width: 100%;">Add Income</button>
+        <button type="submit" class="btn income-submit-btn"><i data-lucide="plus-circle"></i> Add Income</button>
       </form>
     </div>
   </div>
@@ -2994,10 +3096,14 @@
       <form id="budgetForm" onsubmit="handleSetBudget(event)">
         <div class="form-group">
           <label class="form-label">Period Type</label>
-          <select class="form-select" id="budgetPeriod" required>
-            <option value="weekly">Weekly</option>
-            <option value="monthly">Monthly</option>
-          </select>
+          <input type="hidden" id="budgetPeriod" value="monthly" required>
+          <button type="button" class="picker-field" onclick="openBudgetPeriodModal()">
+            <span class="picker-field-main">
+              <span class="picker-field-icon budget-monthly" id="budgetPeriodIconWrap"><i data-lucide="calendar-range"></i></span>
+              <span id="budgetPeriodText">Monthly</span>
+            </span>
+            <i data-lucide="chevron-down" class="picker-field-chevron"></i>
+          </button>
         </div>
 
         <div class="form-group">
@@ -3048,22 +3154,12 @@
           <div class="currency-input-group">
             <label>From</label>
             <div class="currency-input-row">
-              <select class="currency-select" id="fromCurrency" onchange="convertCurrency()">
-                <option value="GHS" selected>🇬🇭 GHS</option>
-                <option value="USD">🇺🇸 USD</option>
-                <option value="EUR">🇪🇺 EUR</option>
-                <option value="GBP">🇬🇧 GBP</option>
-                <option value="NGN">🇳🇬 NGN</option>
-                <option value="ZAR">🇿🇦 ZAR</option>
-                <option value="KES">🇰🇪 KES</option>
-                <option value="XOF">🇨🇮 XOF</option>
-                <option value="CNY">🇨🇳 CNY</option>
-                <option value="JPY">🇯🇵 JPY</option>
-                <option value="AED">🇦🇪 AED</option>
-                <option value="CAD">🇨🇦 CAD</option>
-                <option value="INR">🇮🇳 INR</option>
-              </select>
-              <input type="number" class="currency-amount-input" id="fromAmount" 
+              <input type="hidden" id="fromCurrency" value="GHS">
+              <button type="button" class="currency-picker-field" onclick="openCurrencyPicker('from')">
+                <span id="fromCurrencyText">GHS</span>
+                <i data-lucide="chevron-down"></i>
+              </button>
+              <input type="number" class="currency-amount-input" id="fromAmount"
                 placeholder="0.00" step="0.01" oninput="debouncedConvert()">
             </div>
             <!-- Quick Amount Buttons -->
@@ -3087,22 +3183,12 @@
           <div class="currency-input-group">
             <label>To</label>
             <div class="currency-input-row">
-              <select class="currency-select" id="toCurrency" onchange="convertCurrency()">
-                <option value="GHS">🇬🇭 GHS</option>
-                <option value="USD" selected>🇺🇸 USD</option>
-                <option value="EUR">🇪🇺 EUR</option>
-                <option value="GBP">🇬🇧 GBP</option>
-                <option value="NGN">🇳🇬 NGN</option>
-                <option value="ZAR">🇿🇦 ZAR</option>
-                <option value="KES">🇰🇪 KES</option>
-                <option value="XOF">🇨🇮 XOF</option>
-                <option value="CNY">🇨🇳 CNY</option>
-                <option value="JPY">🇯🇵 JPY</option>
-                <option value="AED">🇦🇪 AED</option>
-                <option value="CAD">🇨🇦 CAD</option>
-                <option value="INR">🇮🇳 INR</option>
-              </select>
-              <input type="number" class="currency-amount-input" id="toAmount" 
+              <input type="hidden" id="toCurrency" value="USD">
+              <button type="button" class="currency-picker-field" onclick="openCurrencyPicker('to')">
+                <span id="toCurrencyText">USD</span>
+                <i data-lucide="chevron-down"></i>
+              </button>
+              <input type="number" class="currency-amount-input" id="toAmount"
                 placeholder="0.00" readonly>
             </div>
           </div>
@@ -3203,7 +3289,7 @@
         var apiXP = localStorage.getItem('kudisave_api_xp');
         var apiXPNext = localStorage.getItem('kudisave_api_xp_next');
         var apiXPPct = localStorage.getItem('kudisave_api_xp_pct');
-        
+
         var lvl, xp, needed, pct;
         if (apiLevel && apiXP) {
           lvl = parseInt(apiLevel);
@@ -3419,7 +3505,7 @@
         if (data.result === 'success' && data.rates) {
           const supportedCurrencies = Object.keys(fallbackRates);
           const newRates = { GHS: 1 };
-          
+
           supportedCurrencies.forEach(code => {
             if (code !== 'GHS' && data.rates[code]) {
               newRates[code] = data.rates[code];
@@ -3452,7 +3538,7 @@
       const el = document.querySelector('.last-updated');
       if (!el) return;
       if (ratesLastUpdated) {
-        const timeStr = ratesLastUpdated.toLocaleString('en-GB', { 
+        const timeStr = ratesLastUpdated.toLocaleString('en-GB', {
           day: 'numeric', month: 'short', year: 'numeric',
           hour: '2-digit', minute: '2-digit'
         });
@@ -3490,11 +3576,59 @@
       INR: { flag: '🇮🇳', name: 'Indian Rupee', symbol: '₹' }
     };
 
+    const currencyCodes = Object.keys(currencyInfo);
+
+    function setCurrencyPicker(side, code, shouldConvert = true) {
+      const input = document.getElementById(side + 'Currency');
+      const label = document.getElementById(side + 'CurrencyText');
+      const info = currencyInfo[code] || currencyInfo.GHS;
+      if (!input || !label) return;
+      input.value = code;
+      label.textContent = `${info.flag} ${code}`;
+      if (shouldConvert) convertCurrency();
+    }
+
+    function syncCurrencyPickerLabels() {
+      setCurrencyPicker('from', document.getElementById('fromCurrency').value || 'GHS', false);
+      setCurrencyPicker('to', document.getElementById('toCurrency').value || 'USD', false);
+    }
+
+    function openCurrencyPicker(side) {
+      const selected = document.getElementById(side + 'Currency').value;
+      const container = document.getElementById('currencyPickerOptions');
+      const title = document.getElementById('currencyPickerTitle');
+      title.textContent = side === 'from' ? 'From Currency' : 'To Currency';
+      container.innerHTML = currencyCodes.map(code => {
+        const info = currencyInfo[code];
+        const active = code === selected ? ' active' : '';
+        return `<button type="button" class="picker-option currency-picker-option${active}" data-code="${code}" data-side="${side}">
+          <span class="picker-option-main">
+            <span class="currency-picker-flag">${info.flag}</span>
+            <span class="currency-picker-copy">
+              <span class="currency-picker-code">${code}</span>
+              <span class="currency-picker-name">${info.name}</span>
+            </span>
+          </span>
+          <span class="picker-option-mark"></span>
+        </button>`;
+      }).join('');
+      container.querySelectorAll('.currency-picker-option').forEach(btn => {
+        btn.addEventListener('click', function() {
+          setCurrencyPicker(this.dataset.side, this.dataset.code);
+          closePickerModal('currencyPickerModal');
+        });
+      });
+      document.getElementById('currencyPickerModal').classList.add('active');
+      document.body.style.overflow = 'hidden';
+      if (typeof lucide !== 'undefined') lucide.createIcons({ node: document.getElementById('currencyPickerModal') });
+    }
+
     let favoriteConversions = JSON.parse(localStorage.getItem('currencyFavorites')) || [];
 
     function openCurrencyCalculator() {
       document.getElementById('currencyModal').classList.add('active');
       document.body.style.overflow = 'hidden';
+      syncCurrencyPickerLabels();
       switchCurrencyTab('convert');
       // Fetch live rates when opening
       fetchLiveRates().then(() => convertCurrency());
@@ -3511,7 +3645,7 @@
     }
 
     function setQuickAmount(amount) {
-      document.getElementById('fromCurrency').value = 'GHS';
+      setCurrencyPicker('from', 'GHS', false);
       document.getElementById('fromAmount').value = amount;
       convertCurrency();
     }
@@ -3527,10 +3661,10 @@
       if (fromAmount > 0) {
         resultDiv.style.display = 'block';
         const info = currencyInfo[toCurrency];
-        document.getElementById('resultValue').textContent = 
+        document.getElementById('resultValue').textContent =
           `${info.flag} ${info.symbol}${toAmount.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
         const rate = exchangeRates[toCurrency] / exchangeRates[fromCurrency];
-        document.getElementById('resultRate').textContent = 
+        document.getElementById('resultRate').textContent =
           `1 ${fromCurrency} = ${rate < 1 ? rate.toFixed(4) : rate.toFixed(2)} ${toCurrency}`;
       } else {
         resultDiv.style.display = 'none';
@@ -3543,8 +3677,8 @@
       const fromAmount = document.getElementById('fromAmount');
       const toAmount = document.getElementById('toAmount');
       const temp = fromSelect.value;
-      fromSelect.value = toSelect.value;
-      toSelect.value = temp;
+      setCurrencyPicker('from', toSelect.value, false);
+      setCurrencyPicker('to', temp, false);
       fromAmount.value = toAmount.value;
       convertCurrency();
     }
@@ -3573,8 +3707,8 @@
     }
 
     function quickConvertFromRate(code) {
-      document.getElementById('fromCurrency').value = code;
-      document.getElementById('toCurrency').value = 'GHS';
+      setCurrencyPicker('from', code, false);
+      setCurrencyPicker('to', 'GHS', false);
       document.getElementById('fromAmount').value = 1;
       switchCurrencyTab('convert');
       convertCurrency();
@@ -3625,8 +3759,8 @@
     }
 
     function loadFavorite(from, to) {
-      document.getElementById('fromCurrency').value = from;
-      document.getElementById('toCurrency').value = to;
+      setCurrencyPicker('from', from, false);
+      setCurrencyPicker('to', to, false);
       document.getElementById('fromAmount').value = 100;
       switchCurrencyTab('convert');
       convertCurrency();

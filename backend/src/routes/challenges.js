@@ -7,7 +7,8 @@ const express = require('express');
 const router = express.Router();
 const { query } = require('../config/database');
 const { authenticateToken } = require('../middleware/auth');
-const { awardXP } = require('../services/gamificationService');
+const { awardXP, checkAndAwardChallengeBadge } = require('../services/gamificationService');
+const { checkAndAwardAchievements } = require('../services/achievementService');
 const { generateInsights } = require('../services/insightsService');
 
 // Create a custom challenge (saved to DB)
@@ -41,7 +42,9 @@ router.get('/', async (req, res) => {
   try {
     const { difficulty, type } = req.query;
 
-    let queryText = 'SELECT * FROM savings_challenges WHERE is_active = TRUE';
+    let queryText = `SELECT * FROM savings_challenges
+      WHERE is_active = TRUE
+      AND LOWER(TRIM(title)) NOT IN ('xcvxv', 'ghh')`;
     const params = [];
     let paramIndex = 1;
 
@@ -84,7 +87,9 @@ router.get('/active', authenticateToken, async (req, res) => {
         uc.end_date - CURRENT_DATE as days_remaining
        FROM user_challenges uc
        JOIN savings_challenges sc ON uc.challenge_id = sc.id
-       WHERE uc.user_id = $1 AND uc.status = 'active'
+       WHERE uc.user_id = $1
+        AND uc.status = 'active'
+        AND LOWER(TRIM(sc.title)) NOT IN ('xcvxv', 'ghh')
        ORDER BY uc.end_date ASC`,
       [userId]
     );
@@ -265,6 +270,29 @@ router.post('/:userChallengeId/progress', authenticateToken, async (req, res) =>
         console.error('Error awarding XP:', xpError);
       }
 
+      let challengeBadge = { earned: false };
+      try {
+        const completedResult = await query(
+          `SELECT COUNT(*) as completed_count
+           FROM user_challenges
+           WHERE user_id = $1 AND status = 'completed'`,
+          [userId]
+        );
+        challengeBadge = await checkAndAwardChallengeBadge(
+          userId,
+          parseInt(completedResult.rows[0].completed_count) || 0
+        );
+      } catch (badgeError) {
+        console.error('Error awarding challenge badge:', badgeError);
+      }
+
+      let newlyEarnedAchievements = [];
+      try {
+        newlyEarnedAchievements = await checkAndAwardAchievements(userId, ['challenges_completed']);
+      } catch (achievementError) {
+        console.error('Error awarding challenge achievements:', achievementError);
+      }
+
       // Get user profile for insight generation
       const userResult = await query(
         'SELECT username, email FROM users WHERE id = $1',
@@ -281,6 +309,8 @@ router.post('/:userChallengeId/progress', authenticateToken, async (req, res) =>
             type: challenge.challenge_type,
             difficulty: challenge.difficulty,
             xpEarned: xpReward,
+            badgeEarned: challengeBadge.earned,
+            newlyEarnedAchievements,
             leveledUp: xpResult.leveledUp,
             newLevel: xpResult.newLevel
           }
@@ -302,6 +332,9 @@ router.post('/:userChallengeId/progress', authenticateToken, async (req, res) =>
           status: 'completed',
           challengeTitle: challenge.title,
           xpEarned: xpReward,
+          badgeEarned: challengeBadge.earned,
+          badge: challengeBadge.badge || null,
+          newlyEarnedAchievements,
           leveledUp: xpResult.leveledUp,
           newLevel: xpResult.newLevel
         },

@@ -439,6 +439,7 @@ function openIncomeModal() {
 }
 
 function openBudgetModal() {
+  populateBudgetPeriodOptions();
   document.getElementById('budgetStartDate').value = utils.getTodayDate();
   document.getElementById('budgetModal').classList.add('active');
   document.body.style.overflow = 'hidden';
@@ -480,6 +481,37 @@ function getDashboardCategoryIconInfo(category) {
     icon: utils.getCategoryIconName(category),
     cls: clsMap[category] || 'other'
   };
+}
+
+function getDashboardIncomeSourceIconInfo(source) {
+  const sourceMap = {
+    'Allowance': { icon: 'hand-coins', cls: 'income-allowance' },
+    'Salary': { icon: 'briefcase-business', cls: 'income-salary' },
+    'Business': { icon: 'store', cls: 'income-business' },
+    'Gift': { icon: 'gift', cls: 'income-gift' },
+    'Hustle': { icon: 'zap', cls: 'income-hustle' },
+    'Investment': { icon: 'trending-up', cls: 'income-investment' },
+    'Other': { icon: 'badge-dollar-sign', cls: 'income-other' }
+  };
+  return sourceMap[source] || sourceMap.Other;
+}
+
+function getDashboardBudgetPeriodInfo(period) {
+  const periodMap = {
+    weekly: {
+      icon: 'calendar-days',
+      cls: 'budget-weekly',
+      label: 'Weekly',
+      hint: 'Best for short spending control'
+    },
+    monthly: {
+      icon: 'calendar-range',
+      cls: 'budget-monthly',
+      label: 'Monthly',
+      hint: 'Best for salaries and regular bills'
+    }
+  };
+  return periodMap[period] || periodMap.monthly;
 }
 
 function populateSelectOptions() {
@@ -557,10 +589,87 @@ function closePickerModal(modalId) {
 }
 
 function populateIncomeOptions() {
-  const sourceSelect = document.getElementById('incomeSource');
-  sourceSelect.innerHTML = utils.INCOME_SOURCES.map(source => 
-    `<option value="${source}">${source}</option>`
-  ).join('');
+  setDashboardIncomeSource(utils.INCOME_SOURCES[0] || 'Other');
+}
+
+function setDashboardIncomeSource(source) {
+  const input = document.getElementById('incomeSource');
+  const label = document.getElementById('incomeSourceText');
+  const iconWrap = document.getElementById('incomeSourceIconWrap');
+  if (!input || !label || !iconWrap) return;
+  const icon = getDashboardIncomeSourceIconInfo(source);
+  input.value = source;
+  label.textContent = source;
+  iconWrap.className = `picker-field-icon ${icon.cls}`;
+  iconWrap.innerHTML = `<i data-lucide="${icon.icon}"></i>`;
+  if (typeof lucide !== 'undefined') lucide.createIcons({ node: iconWrap });
+}
+
+function openIncomeSourceModal() {
+  const selected = document.getElementById('incomeSource').value;
+  const container = document.getElementById('incomeSourceOptions');
+  container.innerHTML = utils.INCOME_SOURCES.map(source => {
+    const icon = getDashboardIncomeSourceIconInfo(source);
+    const active = source === selected ? ' active' : '';
+    return `<button type="button" class="picker-option income-source-option ${icon.cls}${active}" data-source="${escapeDashboardHtml(source)}">
+      <span class="picker-option-main"><span class="picker-field-icon ${icon.cls}"><i data-lucide="${icon.icon}"></i></span><span>${escapeDashboardHtml(source)}</span></span>
+      <span class="picker-option-mark"></span>
+    </button>`;
+  }).join('');
+  container.querySelectorAll('.income-source-option').forEach(btn => {
+    btn.addEventListener('click', function() {
+      setDashboardIncomeSource(this.dataset.source);
+      closePickerModal('incomeSourceModal');
+    });
+  });
+  document.getElementById('incomeSourceModal').classList.add('active');
+  document.body.style.overflow = 'hidden';
+  if (typeof lucide !== 'undefined') lucide.createIcons({ node: document.getElementById('incomeSourceModal') });
+}
+
+function populateBudgetPeriodOptions() {
+  const current = document.getElementById('budgetPeriod')?.value || 'monthly';
+  setDashboardBudgetPeriod(current);
+}
+
+function setDashboardBudgetPeriod(period) {
+  const input = document.getElementById('budgetPeriod');
+  const label = document.getElementById('budgetPeriodText');
+  const iconWrap = document.getElementById('budgetPeriodIconWrap');
+  if (!input || !label || !iconWrap) return;
+  const info = getDashboardBudgetPeriodInfo(period);
+  input.value = period;
+  label.textContent = info.label;
+  iconWrap.className = `picker-field-icon ${info.cls}`;
+  iconWrap.innerHTML = `<i data-lucide="${info.icon}"></i>`;
+  if (typeof lucide !== 'undefined') lucide.createIcons({ node: iconWrap });
+}
+
+function openBudgetPeriodModal() {
+  const selected = document.getElementById('budgetPeriod').value || 'monthly';
+  const container = document.getElementById('budgetPeriodOptions');
+  const periods = ['weekly', 'monthly'];
+  container.innerHTML = periods.map(period => {
+    const info = getDashboardBudgetPeriodInfo(period);
+    const active = period === selected ? ' active' : '';
+    return `<button type="button" class="picker-option budget-period-option ${info.cls}${active}" data-period="${period}">
+      <span class="picker-option-main">
+        <span class="picker-field-icon ${info.cls}"><i data-lucide="${info.icon}"></i></span>
+        <span>${escapeDashboardHtml(info.label)}</span>
+        <span class="picker-option-hint">${escapeDashboardHtml(info.hint)}</span>
+      </span>
+      <span class="picker-option-mark"></span>
+    </button>`;
+  }).join('');
+  container.querySelectorAll('.budget-period-option').forEach(btn => {
+    btn.addEventListener('click', function() {
+      setDashboardBudgetPeriod(this.dataset.period);
+      closePickerModal('budgetPeriodModal');
+    });
+  });
+  document.getElementById('budgetPeriodModal').classList.add('active');
+  document.body.style.overflow = 'hidden';
+  if (typeof lucide !== 'undefined') lucide.createIcons({ node: document.getElementById('budgetPeriodModal') });
 }
 
 // Handle add expense

@@ -94,6 +94,15 @@ const BADGES = {
       silver: { threshold: 75, xp: 100 },
       gold: { threshold: 50, xp: 200 }
     }
+  },
+  CHALLENGE_CHAMP: {
+    name: 'Challenge Champ',
+    description: 'Complete money challenges',
+    tiers: {
+      bronze: { challenges: 1, xp: 75 },
+      silver: { challenges: 3, xp: 150 },
+      gold: { challenges: 5, xp: 300 }
+    }
   }
 };
 

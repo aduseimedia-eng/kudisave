@@ -171,9 +171,18 @@ const checkAndAwardStreakBadge = async (userId, streak) => {
  */
 const awardBadge = async (userId, badgeName, tier, description, bonusXP = 0) => {
   try {
+    const existing = await query(
+      'SELECT * FROM badges WHERE user_id = $1 AND badge_name = $2 AND badge_tier = $3',
+      [userId, badgeName, tier]
+    );
+
+    if (existing.rows.length > 0) {
+      return { earned: false, badge: existing.rows[0] };
+    }
+
     // Insert badge
-    await query(
-      'INSERT INTO badges (user_id, badge_name, badge_tier, description) VALUES ($1, $2, $3, $4)',
+    const badgeResult = await query(
+      'INSERT INTO badges (user_id, badge_name, badge_tier, description) VALUES ($1, $2, $3, $4) RETURNING *',
       [userId, badgeName, tier, description]
     );
 
@@ -190,10 +199,38 @@ const awardBadge = async (userId, badgeName, tier, description, bonusXP = 0) => 
       `You've earned the ${badgeName} (${tier}) badge! ${description}`
     );
 
-    return true;
+    return { earned: true, badge: badgeResult.rows[0] };
   } catch (error) {
     console.error('Award badge error:', error);
-    return false;
+    return { earned: false, error: error.message };
+  }
+};
+
+/**
+ * Check challenge completion milestones and award challenge badges.
+ */
+const checkAndAwardChallengeBadge = async (userId, completedCount) => {
+  try {
+    const badgeInfo = BADGES.CHALLENGE_CHAMP;
+    let tier, xp;
+
+    if (completedCount >= badgeInfo.tiers.gold.challenges) {
+      tier = 'gold';
+      xp = badgeInfo.tiers.gold.xp;
+    } else if (completedCount >= badgeInfo.tiers.silver.challenges) {
+      tier = 'silver';
+      xp = badgeInfo.tiers.silver.xp;
+    } else if (completedCount >= badgeInfo.tiers.bronze.challenges) {
+      tier = 'bronze';
+      xp = badgeInfo.tiers.bronze.xp;
+    } else {
+      return { earned: false };
+    }
+
+    return awardBadge(userId, badgeInfo.name, tier, badgeInfo.description, xp);
+  } catch (error) {
+    console.error('Check challenge badge error:', error);
+    return { earned: false, error: error.message };
   }
 };
 
@@ -351,6 +388,7 @@ module.exports = {
   addXP: awardXP,  // Alias for consistency
   updateStreak,
   awardBadge,
+  checkAndAwardChallengeBadge,
   checkBudgetBadges,
   checkCategoryBadges,
   getUserBadges,

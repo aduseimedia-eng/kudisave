@@ -215,9 +215,9 @@
     [data-theme="dark"] .mtn-header-curve { background: var(--bg-primary, #0f172a); opacity: 0.25; }
 
     .mtn-header-spacer {
-      display: block;
-      height: calc(245px + env(safe-area-inset-top, 0px));
-      width: 100%;
+      height: auto;
+      min-height: calc(245px + env(safe-area-inset-top, 0px));
+      display: contents;
     }
 
     body {
@@ -609,7 +609,7 @@
 
         if (statsRes.success) {
           updateStats(statsRes.data);
-          updateLevel(statsRes.data.total_xp_from_achievements || statsRes.data.total_xp || 0);
+          updateLevel(statsRes.data.total_xp || statsRes.data.total_xp_from_achievements || 0);
         }
       } catch (error) {
         console.error('Error loading achievements:', error);
@@ -719,9 +719,12 @@
       _achievementCheckDone = true;
       try {
         const response = await api.post('/achievements/check');
-        if (response.success && response.data.newly_earned && response.data.newly_earned.length > 0) {
+        const newlyEarned = Array.isArray(response.data)
+          ? response.data
+          : (response.data && response.data.newly_earned) || [];
+        if (response.success && newlyEarned.length > 0) {
           // Show only the first unlock overlay to avoid stacking
-          showAchievementUnlock(response.data.newly_earned[0]);
+          showAchievementUnlock(newlyEarned[0]);
           loadAchievements(); // Reload to update UI
         }
       } catch (error) {

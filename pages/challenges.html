@@ -1291,8 +1291,15 @@
       }
     ];
 
+    const junkChallengeTitles = new Set(['xcvxv', 'ghh']);
+
+    function isRealChallenge(challenge) {
+      const title = (challenge && challenge.title ? challenge.title : '').trim().toLowerCase();
+      return title && !junkChallengeTitles.has(title);
+    }
+
     function normalizeChallengeList(list) {
-      return (Array.isArray(list) ? list : []).map((challenge, index) => ({
+      return (Array.isArray(list) ? list : []).filter(isRealChallenge).map((challenge, index) => ({
         id: challenge.id || `challenge-${index}`,
         title: challenge.title || 'Money Challenge',
         description: challenge.description || 'Start this challenge to build a stronger saving habit.',
@@ -1602,7 +1609,11 @@
         if (res.success) {
           closeModal('progressModal');
           if (res.data && res.data.status === 'completed') {
-            showToast(`Challenge completed! +${res.data.xp_earned || 0} XP`);
+            const badgeText = res.data.badgeEarned ? ' Badge unlocked!' : '';
+            const achievementCount = (res.data.newlyEarnedAchievements || []).length;
+            const achievementText = achievementCount ? ` ${achievementCount} achievement${achievementCount > 1 ? 's' : ''} earned!` : '';
+            const levelText = res.data.leveledUp ? ` Level ${res.data.newLevel} unlocked!` : '';
+            showToast(`Challenge completed! +${res.data.xpEarned || res.data.xp_earned || 0} XP.${badgeText}${achievementText}${levelText}`);
           } else {
             showToast('Progress updated!');
           }
