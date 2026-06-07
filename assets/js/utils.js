@@ -1,4 +1,4 @@
-// KudiSave - Utility Functions
+﻿// KudiSave - Utility Functions
 
 // Theme Management
 const THEME_STORAGE_KEY = 'kudisave_theme';
@@ -148,11 +148,11 @@ function initBottomTapBar() {
 
 // Currency configuration
 const CURRENCY_CONFIG = {
-  'GHS': { symbol: 'GH₵', name: 'Ghana Cedi', locale: 'en-GH' },
+  'GHS': { symbol: 'GH\u20b5', name: 'Ghana Cedi', locale: 'en-GH' },
   'USD': { symbol: '$', name: 'US Dollar', locale: 'en-US' },
-  'EUR': { symbol: '€', name: 'Euro', locale: 'de-DE' },
-  'GBP': { symbol: '£', name: 'British Pound', locale: 'en-GB' },
-  'NGN': { symbol: '₦', name: 'Nigerian Naira', locale: 'en-NG' },
+  'EUR': { symbol: '\u20ac', name: 'Euro', locale: 'de-DE' },
+  'GBP': { symbol: '\u00a3', name: 'British Pound', locale: 'en-GB' },
+  'NGN': { symbol: '\u20a6', name: 'Nigerian Naira', locale: 'en-NG' },
   'KES': { symbol: 'KSh', name: 'Kenyan Shilling', locale: 'en-KE' },
   'ZAR': { symbol: 'R', name: 'South African Rand', locale: 'en-ZA' },
   'XOF': { symbol: 'CFA', name: 'West African CFA', locale: 'fr-SN' }
@@ -168,9 +168,12 @@ function getCurrentCurrency() {
 
 // Set currency preference
 async function setCurrency(currencyCode) {
+  localStorage.setItem('currency', currencyCode);
   if (typeof setUserPreference === 'function') {
     await setUserPreference('currency', currencyCode);
   }
+  window.dispatchEvent(new CustomEvent('currencychange', { detail: { currency: currencyCode } }));
+  return currencyCode;
 }
 
 // Get currency symbol
@@ -219,8 +222,8 @@ function showAlert(message, type = 'success') {
   }
 
   const icons = {
-    success: '✓',
-    error: '✕',
+    success: 'âœ“',
+    error: 'âœ•',
     warning: '!',
     info: 'i'
   };
@@ -273,11 +276,11 @@ function showAlert(message, type = 'success') {
 
 function getAlertIcon(type) {
   const icons = {
-    success: '✅',
-    error: '❌',
-    warning: '⚠️'
+    success: 'âœ…',
+    error: 'âŒ',
+    warning: 'âš ï¸'
   };
-  return icons[type] || '💡';
+  return icons[type] || 'ðŸ’¡';
 }
 
 // Show loading overlay
@@ -395,18 +398,18 @@ const INCOME_SOURCES = [
 // Get category icon
 function getCategoryIcon(category) {
   const icons = {
-    'Food / Chop Bar': '🍛',
-    'Transport (Trotro / Bolt)': '🚌',
-    'Data / Airtime': '📱',
-    'Rent / Hostel': '🏠',
-    'Utilities': '💡',
-    'Church / Donations': '⛪',
-    'Betting / Gaming': '🎲',
-    'Entertainment': '🎬',
-    'Shopping': '🛍️',
-    'Miscellaneous': '📦'
+    'Food / Chop Bar': 'ðŸ›',
+    'Transport (Trotro / Bolt)': 'ðŸšŒ',
+    'Data / Airtime': 'ðŸ“±',
+    'Rent / Hostel': 'ðŸ ',
+    'Utilities': 'ðŸ’¡',
+    'Church / Donations': 'â›ª',
+    'Betting / Gaming': 'ðŸŽ²',
+    'Entertainment': 'ðŸŽ¬',
+    'Shopping': 'ðŸ›ï¸',
+    'Miscellaneous': 'ðŸ“¦'
   };
-  return icons[category] || '💰';
+  return icons[category] || 'ðŸ’°';
 }
 
 function getCategoryIconName(category) {
@@ -433,13 +436,13 @@ function getCategoryIconName(category) {
 // Get motivational message based on budget usage
 function getMotivationalMessage(budgetUsage) {
   if (budgetUsage <= 50) {
-    return "Chale, you dey do well! 💪";
+    return "Chale, you dey do well! ðŸ’ª";
   } else if (budgetUsage <= 75) {
-    return "You dey on point! Keep pushing 🚀";
+    return "You dey on point! Keep pushing ðŸš€";
   } else if (budgetUsage <= 90) {
-    return "Small small ooo, you go reach 😅";
+    return "Small small ooo, you go reach ðŸ˜…";
   } else {
-    return "Masa, check your spending waa 🤔";
+    return "Masa, check your spending waa ðŸ¤”";
   }
 }
 
@@ -452,14 +455,14 @@ function calculateProgress(current, target) {
 // Get badge emoji
 function getBadgeEmoji(badgeName) {
   const emojis = {
-    'Data King/Queen': '👑',
-    'Chop Saver': '🍽️',
-    'Budget Boss': '💼',
-    'Consistency Champ': '🔥',
-    'Goal Getter': '🎯',
-    'Transport Wise': '🚗'
+    'Data King/Queen': 'ðŸ‘‘',
+    'Chop Saver': 'ðŸ½ï¸',
+    'Budget Boss': 'ðŸ’¼',
+    'Consistency Champ': 'ðŸ”¥',
+    'Goal Getter': 'ðŸŽ¯',
+    'Transport Wise': 'ðŸš—'
   };
-  return emojis[badgeName] || '🏆';
+  return emojis[badgeName] || 'ðŸ†';
 }
 
 // Get tier color
@@ -558,7 +561,7 @@ function getDateRange(period) {
 }
 
 // ================================
-// FUN & LIVELY UTILITIES 🎉
+// FUN & LIVELY UTILITIES ðŸŽ‰
 // ================================
 
 // Confetti celebration
@@ -600,7 +603,7 @@ function showConfetti(particleCount = 50) {
 }
 
 // Fun toast notification with emoji
-function showFunToast(message, emoji = '🎉', duration = 3000) {
+function showFunToast(message, emoji = 'ðŸŽ‰', duration = 3000) {
   // Remove existing toasts
   const existing = document.querySelector('.fun-toast');
   if (existing) existing.remove();
@@ -658,7 +661,7 @@ function showFunToast(message, emoji = '🎉', duration = 3000) {
 // Celebration with sound
 function celebrate(title = 'Great Job!', type = 'success') {
   showConfetti(60);
-  showFunToast(title, type === 'success' ? '🎉' : '🏆', 4000);
+  showFunToast(title, type === 'success' ? 'ðŸŽ‰' : 'ðŸ†', 4000);
   
   // Play celebration sound
   try {
@@ -766,14 +769,14 @@ function pulseSuccess(element) {
 // Get random encouraging message
 function getRandomEncouragement() {
   const messages = [
-    { text: "You're doing great! 💪", emoji: "💪" },
-    { text: "Keep up the good work! 🌟", emoji: "🌟" },
-    { text: "Awesome progress! 🚀", emoji: "🚀" },
-    { text: "You're on fire! 🔥", emoji: "🔥" },
-    { text: "Financial ninja! 🥷", emoji: "🥷" },
-    { text: "Money master! 💰", emoji: "💰" },
-    { text: "Saving superstar! ⭐", emoji: "⭐" },
-    { text: "Budget boss! 👑", emoji: "👑" }
+    { text: "You're doing great! ðŸ’ª", emoji: "ðŸ’ª" },
+    { text: "Keep up the good work! ðŸŒŸ", emoji: "ðŸŒŸ" },
+    { text: "Awesome progress! ðŸš€", emoji: "ðŸš€" },
+    { text: "You're on fire! ðŸ”¥", emoji: "ðŸ”¥" },
+    { text: "Financial ninja! ðŸ¥·", emoji: "ðŸ¥·" },
+    { text: "Money master! ðŸ’°", emoji: "ðŸ’°" },
+    { text: "Saving superstar! â­", emoji: "â­" },
+    { text: "Budget boss! ðŸ‘‘", emoji: "ðŸ‘‘" }
   ];
   return messages[Math.floor(Math.random() * messages.length)];
 }
@@ -784,6 +787,7 @@ window.utils = {
   formatCurrency,
   formatCurrencyAmount,
   getCurrentCurrency,
+  setCurrency,
   getCurrencySymbol,
   CURRENCY_CONFIG,
   formatDate,

@@ -146,8 +146,133 @@
       margin-bottom: 10px;
     }
 
+    .settings-account-card {
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      align-items: center;
+      gap: 14px;
+      padding: 16px;
+      margin-bottom: 16px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 18px;
+      box-shadow: 0 10px 26px rgba(15, 23, 42, 0.06);
+    }
+
+    .settings-account-avatar {
+      width: 66px;
+      height: 66px;
+      border-radius: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      background: linear-gradient(145deg, rgba(11,115,125,0.14), rgba(252,209,22,0.2));
+      color: var(--primary-color);
+      font-size: 22px;
+      font-weight: 800;
+      border: 1px solid rgba(11,115,125,0.16);
+      flex-shrink: 0;
+    }
+
+    .settings-account-avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .settings-account-main {
+      min-width: 0;
+    }
+
+    .settings-account-name {
+      font-size: 18px;
+      line-height: 1.2;
+      font-weight: 800;
+      color: var(--text-primary);
+      margin-bottom: 4px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .settings-account-email {
+      font-size: 13px;
+      color: var(--text-secondary);
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .settings-account-meta {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--text-muted);
+      font-size: 12px;
+      margin-top: 8px;
+    }
+
+    .settings-account-meta i {
+      width: 14px;
+      height: 14px;
+    }
+
+    .settings-account-edit {
+      width: 42px;
+      height: 42px;
+      border: 0;
+      border-radius: 50%;
+      background: var(--bg-secondary);
+      color: var(--primary-color);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+
+    .settings-account-edit i {
+      width: 18px;
+      height: 18px;
+    }
+
+    .settings-trust-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 8px;
+      margin-bottom: 18px;
+    }
+
+    .settings-trust-item {
+      min-height: 76px;
+      padding: 10px 8px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 14px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      text-align: center;
+    }
+
+    .settings-trust-item i {
+      width: 19px;
+      height: 19px;
+      color: var(--primary-color);
+    }
+
+    .settings-trust-item span {
+      font-size: 11px;
+      line-height: 1.2;
+      font-weight: 700;
+      color: var(--text-secondary);
+    }
+
     .settings-section {
-      margin-bottom: 12px;
+      margin-bottom: 16px;
     }
 
     .settings-section-title {
@@ -173,6 +298,11 @@
       border: 1px solid var(--border-color);
     }
 
+    .settings-item:hover {
+      border-color: rgba(11, 115, 125, 0.22);
+      box-shadow: 0 8px 20px rgba(15, 23, 42, 0.06);
+    }
+
     .settings-item:active {
       transform: scale(0.98);
       opacity: 0.9;
@@ -182,10 +312,26 @@
       display: flex;
       align-items: center;
       gap: 10px;
+      min-width: 0;
     }
 
     .settings-icon {
+      width: 38px;
+      height: 38px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       font-size: 19px;
+      background: rgba(11, 115, 125, 0.1);
+      color: var(--primary-color);
+      flex-shrink: 0;
+    }
+
+    .settings-icon .icon,
+    .settings-icon i {
+      width: 18px;
+      height: 18px;
     }
 
     .settings-item-info h4 {
@@ -198,11 +344,22 @@
     .settings-item-info p {
       font-size: 13px;
       color: var(--text-secondary);
+      line-height: 1.35;
     }
 
     .settings-arrow {
-      font-size: 17px;
+      width: 18px;
+      height: 18px;
       color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .settings-arrow i {
+      width: 18px;
+      height: 18px;
     }
 
     .profile-info-grid {
@@ -248,6 +405,19 @@
       color: var(--text-secondary);
       font-size: 13px;
       margin-bottom: 8px;
+    }
+
+    .settings-logout-btn {
+      width: 100%;
+      margin-top: 20px;
+      margin-bottom: 40px;
+    }
+
+    [data-theme="dark"] .settings-account-card,
+    [data-theme="dark"] .settings-trust-item,
+    [data-theme="dark"] .settings-item,
+    [data-theme="dark"] .notification-item {
+      box-shadow: none;
     }
 
     /* Toggle Switch Styles */
@@ -342,8 +512,21 @@
     }
 
     .notification-icon {
+      width: 38px;
+      height: 38px;
+      border-radius: 12px;
       margin-right: 12px;
-      font-size: 21px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(11, 115, 125, 0.1);
+      color: var(--primary-color);
+      flex-shrink: 0;
+    }
+
+    .notification-icon i {
+      width: 18px;
+      height: 18px;
     }
 
     .notification-left {
@@ -531,7 +714,37 @@
   <div class="container">
     <!-- Hidden file input for avatar -->
     <input type="file" id="avatarInput" accept="image/*" onchange="handleAvatarUpload(event)" style="display:none">
-    <div class="profile-joined" id="profileJoined">Member since ...</div>
+    <div class="settings-account-card">
+      <div class="settings-account-avatar" id="contentProfileAvatar">
+        <i data-lucide="user"></i>
+      </div>
+      <div class="settings-account-main">
+        <div class="settings-account-name" id="contentProfileName">Loading...</div>
+        <div class="settings-account-email" id="contentProfileEmail">...</div>
+        <div class="settings-account-meta">
+          <i data-lucide="calendar-days"></i>
+          <span id="profileJoined">Member since ...</span>
+        </div>
+      </div>
+      <button class="settings-account-edit" onclick="openModal('editProfileModal')" aria-label="Edit profile" title="Edit profile" type="button">
+        <i data-lucide="pencil"></i>
+      </button>
+    </div>
+
+    <div class="settings-trust-grid">
+      <div class="settings-trust-item">
+        <i data-lucide="shield-check"></i>
+        <span>Protected</span>
+      </div>
+      <div class="settings-trust-item">
+        <i data-lucide="database-backup"></i>
+        <span>Backup Ready</span>
+      </div>
+      <div class="settings-trust-item">
+        <i data-lucide="bell-ring"></i>
+        <span>Alerts</span>
+      </div>
+    </div>
 
     <!-- Profile Information -->
     <div class="settings-section">
@@ -558,17 +771,6 @@
     <div class="settings-section">
       <div class="settings-section-title">Account Settings</div>
       
-      <div class="settings-item" onclick="openModal('passwordModal')">
-        <div class="settings-item-left">
-          <span class="settings-icon"><i data-lucide="lock" class="icon"></i></span>
-          <div class="settings-item-info">
-            <h4>Change Password</h4>
-            <p>Update your account password</p>
-          </div>
-        </div>
-        <span class="settings-arrow">›</span>
-      </div>
-
       <div class="settings-item" onclick="openModal('editProfileModal')">
         <div class="settings-item-left">
           <span class="settings-icon"><i data-lucide="pencil" class="icon"></i></span>
@@ -577,7 +779,7 @@
             <p>Update your personal information</p>
           </div>
         </div>
-        <span class="settings-arrow">›</span>
+        <span class="settings-arrow"><i data-lucide="chevron-right"></i></span>
       </div>
     </div>
 
@@ -607,22 +809,9 @@
             <p id="currencyText">GHS (Ghana Cedi)</p>
           </div>
         </div>
-        <span class="settings-arrow">›</span>
+        <span class="settings-arrow"><i data-lucide="chevron-right"></i></span>
       </div>
 
-      <div class="settings-item" onclick="toggleLowDataMode()">
-        <div class="settings-item-left">
-          <span class="settings-icon" id="dataSaverIcon"><i data-lucide="wifi-off" class="icon"></i></span>
-          <div class="settings-item-info">
-            <h4>Low Data Mode</h4>
-            <p id="dataSaverText">Cache data & reduce network usage</p>
-          </div>
-        </div>
-        <label class="toggle-switch" onclick="event.stopPropagation()">
-          <input type="checkbox" id="lowDataToggle" onchange="toggleLowDataMode()">
-          <span class="toggle-slider"></span>
-        </label>
-      </div>
     </div>
 
     <!-- Email Notifications -->
@@ -637,7 +826,7 @@
             <p id="notifStatusText">Manage email alerts</p>
           </div>
         </div>
-        <span class="settings-arrow">›</span>
+        <span class="settings-arrow"><i data-lucide="chevron-right"></i></span>
       </div>
     </div>
 
@@ -653,7 +842,7 @@
             <p>Download as PDF or CSV</p>
           </div>
         </div>
-        <span class="settings-arrow">›</span>
+        <span class="settings-arrow"><i data-lucide="chevron-right"></i></span>
       </div>
     </div>
 
@@ -679,7 +868,7 @@
             <p>Read our terms and conditions</p>
           </div>
         </div>
-        <span class="settings-arrow">›</span>
+        <span class="settings-arrow"><i data-lucide="chevron-right"></i></span>
       </div>
 
       <div class="settings-item" onclick="window.location.href='privacy.html'" style="cursor:pointer;">
@@ -690,7 +879,7 @@
             <p>Learn how we protect your data</p>
           </div>
         </div>
-        <span class="settings-arrow">›</span>
+        <span class="settings-arrow"><i data-lucide="chevron-right"></i></span>
       </div>
     </div>
 
@@ -705,7 +894,7 @@
     </div>
 
     <!-- Logout Button -->
-    <button class="btn btn-outline" style="width: 100%; margin-top: 20px; margin-bottom: 40px;" onclick="logout()">
+    <button class="btn btn-outline settings-logout-btn" onclick="logout()">
       <i data-lucide="log-out" class="icon-inline"></i> Logout
     </button>
   </div>
@@ -749,7 +938,7 @@
 
       <div class="notification-item">
         <div class="notification-left">
-          <span class="notification-icon">📊</span>
+          <span class="notification-icon"><i data-lucide="chart-column"></i></span>
           <div class="notification-item-info">
             <h4>Weekly Summary</h4>
             <p>Get a report of your spending each week</p>
@@ -763,7 +952,7 @@
 
       <div class="notification-item">
         <div class="notification-left">
-          <span class="notification-icon">🔔</span>
+          <span class="notification-icon"><i data-lucide="bell-ring"></i></span>
           <div class="notification-item-info">
             <h4>Bill Reminders</h4>
             <p>Get notified before bills are due</p>
@@ -777,7 +966,7 @@
 
       <div class="notification-item">
         <div class="notification-left">
-          <span class="notification-icon">🎯</span>
+          <span class="notification-icon"><i data-lucide="target"></i></span>
           <div class="notification-item-info">
             <h4>Goal Progress</h4>
             <p>Updates when you reach milestones</p>
@@ -791,7 +980,7 @@
 
       <div class="notification-item">
         <div class="notification-left">
-          <span class="notification-icon">🏆</span>
+          <span class="notification-icon"><i data-lucide="trophy"></i></span>
           <div class="notification-item-info">
             <h4>Challenges & Badges</h4>
             <p>Alerts when you complete challenges</p>
@@ -805,7 +994,7 @@
 
       <div class="notification-item">
         <div class="notification-left">
-          <span class="notification-icon">⚠️</span>
+          <span class="notification-icon"><i data-lucide="triangle-alert"></i></span>
           <div class="notification-item-info">
             <h4>Budget Alerts</h4>
             <p>Warnings when nearing budget limits</p>
@@ -819,7 +1008,7 @@
 
       <div class="notification-item">
         <div class="notification-left">
-          <span class="notification-icon">💡</span>
+          <span class="notification-icon"><i data-lucide="lightbulb"></i></span>
           <div class="notification-item-info">
             <h4>Tips & Insights</h4>
             <p>Money-saving tips personalized for you</p>
@@ -839,34 +1028,6 @@
     </div>
   </div>
 
-  <!-- Change Password Modal -->
-  <div id="passwordModal" class="modal">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h2 class="modal-title">Change Password</h2>
-        <button class="close-btn" onclick="closeModal('passwordModal')" aria-label="Close" title="Close" type="button"><i data-lucide="x"></i></button>
-      </div>
-      <form id="passwordForm" onsubmit="handleChangePassword(event)">
-        <div class="form-group">
-          <label class="form-label">Current Password</label>
-          <input type="password" class="form-input" id="currentPassword" placeholder="Enter current password" required>
-        </div>
-
-        <div class="form-group">
-          <label class="form-label">New Password</label>
-          <input type="password" class="form-input" id="newPassword" placeholder="Enter new password" required minlength="8">
-        </div>
-
-        <div class="form-group">
-          <label class="form-label">Confirm New Password</label>
-          <input type="password" class="form-input" id="confirmPassword" placeholder="Confirm new password" required>
-        </div>
-
-        <button type="submit" class="btn btn-primary" style="width: 100%;">Update Password</button>
-      </form>
-    </div>
-  </div>
-
   <!-- Edit Profile Modal -->
   <div id="editProfileModal" class="modal">
     <div class="modal-content">
@@ -879,11 +1040,11 @@
       <div class="avatar-edit-section">
         <input type="file" id="editAvatarInput" accept="image/*" onchange="handleEditAvatarUpload(event)">
         <div class="avatar-edit-preview" id="editAvatarPreview">
-          <span>👤</span>
+          <i data-lucide="user"></i>
         </div>
         <div class="avatar-buttons">
-          <button type="button" class="btn btn-primary btn-sm" onclick="document.getElementById('editAvatarInput').click()">📷 Change Photo</button>
-          <button type="button" class="btn btn-outline btn-sm" onclick="removeProfilePicture()">🗑️ Remove</button>
+          <button type="button" class="btn btn-primary btn-sm" onclick="document.getElementById('editAvatarInput').click()"><i data-lucide="camera" class="icon-inline"></i> Change Photo</button>
+          <button type="button" class="btn btn-outline btn-sm" onclick="removeProfilePicture()"><i data-lucide="trash-2" class="icon-inline"></i> Remove</button>
         </div>
       </div>
 
@@ -918,53 +1079,53 @@
       <div id="currencyList" style="max-height: 300px; overflow-y: auto;">
         <div class="settings-item" onclick="setCurrency('GHS', 'Ghana Cedi')">
           <div class="settings-item-left">
-            <span class="settings-icon">🇬🇭</span>
+            <span class="settings-icon"><i data-lucide="circle-dollar-sign" class="icon"></i></span>
             <div class="settings-item-info">
               <h4>GHS</h4>
               <p>Ghana Cedi</p>
             </div>
           </div>
-          <span class="settings-arrow" id="check-GHS">✓</span>
+          <span class="settings-arrow" id="check-GHS"><i data-lucide="check"></i></span>
         </div>
         <div class="settings-item" onclick="setCurrency('USD', 'US Dollar')">
           <div class="settings-item-left">
-            <span class="settings-icon">🇺🇸</span>
+            <span class="settings-icon"><i data-lucide="banknote" class="icon"></i></span>
             <div class="settings-item-info">
               <h4>USD</h4>
               <p>US Dollar</p>
             </div>
           </div>
-          <span class="settings-arrow" id="check-USD" style="display:none">✓</span>
+          <span class="settings-arrow" id="check-USD" style="display:none"><i data-lucide="check"></i></span>
         </div>
         <div class="settings-item" onclick="setCurrency('EUR', 'Euro')">
           <div class="settings-item-left">
-            <span class="settings-icon">🇪🇺</span>
+            <span class="settings-icon"><i data-lucide="landmark" class="icon"></i></span>
             <div class="settings-item-info">
               <h4>EUR</h4>
               <p>Euro</p>
             </div>
           </div>
-          <span class="settings-arrow" id="check-EUR" style="display:none">✓</span>
+          <span class="settings-arrow" id="check-EUR" style="display:none"><i data-lucide="check"></i></span>
         </div>
         <div class="settings-item" onclick="setCurrency('GBP', 'British Pound')">
           <div class="settings-item-left">
-            <span class="settings-icon">🇬🇧</span>
+            <span class="settings-icon"><i data-lucide="pound-sterling" class="icon"></i></span>
             <div class="settings-item-info">
               <h4>GBP</h4>
               <p>British Pound</p>
             </div>
           </div>
-          <span class="settings-arrow" id="check-GBP" style="display:none">✓</span>
+          <span class="settings-arrow" id="check-GBP" style="display:none"><i data-lucide="check"></i></span>
         </div>
         <div class="settings-item" onclick="setCurrency('NGN', 'Nigerian Naira')">
           <div class="settings-item-left">
-            <span class="settings-icon">🇳🇬</span>
+            <span class="settings-icon"><i data-lucide="coins" class="icon"></i></span>
             <div class="settings-item-info">
               <h4>NGN</h4>
               <p>Nigerian Naira</p>
             </div>
           </div>
-          <span class="settings-arrow" id="check-NGN" style="display:none">✓</span>
+          <span class="settings-arrow" id="check-NGN" style="display:none"><i data-lucide="check"></i></span>
         </div>
       </div>
     </div>
@@ -1002,7 +1163,7 @@
             <option value="json">JSON</option>
           </select>
         </div>
-        <button type="submit" class="btn btn-primary" style="width: 100%;">📥 Download Export</button>
+        <button type="submit" class="btn btn-primary" style="width: 100%;"><i data-lucide="download" class="icon-inline"></i> Download Export</button>
       </form>
     </div>
   </div>
@@ -1023,6 +1184,8 @@
         // Update profile header
         document.getElementById('headerProfileName').textContent = userData.name || 'User';
         document.getElementById('headerProfileEmail').textContent = userData.email || '';
+        document.getElementById('contentProfileName').textContent = userData.name || 'User';
+        document.getElementById('contentProfileEmail').textContent = userData.email || '';
         
         // Load profile picture from database or show initials
         if (userData.profile_picture) {
@@ -1043,6 +1206,11 @@
         document.getElementById('editName').value = userData.name || '';
         document.getElementById('editEmail').value = userData.email || '';
         document.getElementById('editPhone').value = userData.phone || '';
+
+        if (typeof updateCurrencyDisplay === 'function') {
+          currentCurrency = utils.getCurrentCurrency ? utils.getCurrentCurrency() : (localStorage.getItem('currency') || 'GHS');
+          updateCurrencyDisplay();
+        }
       } catch (error) {
         console.error('Failed to load profile:', error);
         utils.showAlert('Failed to load profile', 'error');
@@ -1050,7 +1218,7 @@
     }
 
     function getInitials(name) {
-      if (!name) return '👤';
+      if (!name) return '';
       const parts = name.split(' ');
       if (parts.length >= 2) {
         return parts[0][0].toUpperCase() + parts[1][0].toUpperCase();
@@ -1060,11 +1228,15 @@
 
     function updateAvatarDisplay(imageUrl, initials) {
       const headerAvatar = document.getElementById('headerAvatar');
+      const contentAvatar = document.getElementById('contentProfileAvatar');
       if (imageUrl) {
         headerAvatar.innerHTML = `<img src="${imageUrl}" alt="Profile" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">`;
+        if (contentAvatar) contentAvatar.innerHTML = `<img src="${imageUrl}" alt="Profile">`;
       } else {
         headerAvatar.innerHTML = `<span class="avatar-placeholder">${initials || '<i data-lucide="user"></i>'}</span>`;
+        if (contentAvatar) contentAvatar.innerHTML = initials ? `<span>${initials}</span>` : '<i data-lucide="user"></i>';
         lucide.createIcons({ node: headerAvatar });
+        if (contentAvatar) lucide.createIcons({ node: contentAvatar });
       }
     }
 
@@ -1199,7 +1371,7 @@
           const response = await api.updateProfile({ profile_picture: null });
           
           localStorage.removeItem('profilePicture');
-          const initials = userData ? getInitials(userData.name) : '👤';
+          const initials = userData ? getInitials(userData.name) : '';
           updateAvatarDisplay(null, initials);
           updateEditModalAvatar(null, initials);
           
@@ -1217,7 +1389,7 @@
           utils.hideLoading();
           console.error('Remove avatar error:', error);
           localStorage.removeItem('profilePicture');
-          const initials = userData ? getInitials(userData.name) : '👤';
+          const initials = userData ? getInitials(userData.name) : '';
           updateAvatarDisplay(null, initials);
           updateEditModalAvatar(null, initials);
           utils.showAlert('Profile picture removed locally', 'warning');
@@ -1232,7 +1404,8 @@
       if (imageUrl) {
         preview.innerHTML = `<img src="${imageUrl}" alt="Profile">`;
       } else {
-        preview.innerHTML = `<span>${initials || '👤'}</span>`;
+        preview.innerHTML = initials ? `<span>${initials}</span>` : '<i data-lucide="user"></i>';
+        if (typeof lucide !== 'undefined') lucide.createIcons({ node: preview });
       }
     }
 
@@ -1252,40 +1425,13 @@
       // Update edit modal avatar preview when opening
       if (modalId === 'editProfileModal') {
         const savedPicture = localStorage.getItem('profilePicture');
-        const initials = userData ? getInitials(userData.name) : '👤';
+        const initials = userData ? getInitials(userData.name) : '';
         updateEditModalAvatar(savedPicture, initials);
       }
     }
 
     function closeModal(modalId) {
       document.getElementById(modalId).classList.remove('active');
-    }
-
-    async function handleChangePassword(event) {
-      event.preventDefault();
-      
-      const currentPassword = document.getElementById('currentPassword').value;
-      const newPassword = document.getElementById('newPassword').value;
-      const confirmPassword = document.getElementById('confirmPassword').value;
-
-      if (newPassword !== confirmPassword) {
-        utils.showAlert('New passwords do not match', 'error');
-        return;
-      }
-
-      if (newPassword.length < 8) {
-        utils.showAlert('Password must be at least 8 characters', 'error');
-        return;
-      }
-
-      try {
-        await api.changePassword({ currentPassword, newPassword });
-        utils.showAlert('Password updated successfully! 🎉', 'success');
-        closeModal('passwordModal');
-        document.getElementById('passwordForm').reset();
-      } catch (error) {
-        utils.showAlert(error.message || 'Failed to change password', 'error');
-      }
     }
 
     async function handleEditProfile(event) {
@@ -1297,7 +1443,7 @@
 
       try {
         await api.updateProfile({ name, email, phone });
-        utils.showAlert('Profile updated successfully! 🎉', 'success');
+        utils.showAlert('Profile updated successfully!', 'success');
         closeModal('editProfileModal');
         await loadProfile(); // Reload profile data
       } catch (error) {
@@ -1328,14 +1474,18 @@
       const isDark = theme === 'dark';
       document.documentElement.setAttribute('data-theme', isDark ? 'dark' : 'light');
       localStorage.setItem('kudisave_theme', isDark ? 'dark' : 'light');
+      localStorage.setItem('theme', isDark ? 'dark' : 'light');
+      const themeMeta = document.querySelector('meta[name="theme-color"]');
+      if (themeMeta) themeMeta.setAttribute('content', isDark ? '#0f172a' : '#033036');
       document.getElementById('themeIcon').innerHTML = isDark
         ? '<i data-lucide="moon" class="icon"></i>'
         : '<i data-lucide="sun" class="icon"></i>';
-      document.getElementById('themeText').textContent = isDark ? 'Dark Mode' : 'Light Mode';
+      document.getElementById('themeText').textContent = isDark ? 'Dark mode is active' : 'Light mode is active';
       const themeToggle = document.getElementById('themeToggle');
       if (themeToggle) themeToggle.checked = isDark;
       const themeIcon = document.getElementById('themeIcon');
       if (themeIcon) lucide.createIcons({ node: themeIcon });
+      if (typeof lucide !== 'undefined') lucide.createIcons();
     }
 
     // Override toggleTheme to also update display
@@ -1347,70 +1497,11 @@
       updateThemeDisplay(nextTheme);
     };
 
-    // Low Data Mode Functions
-    function initLowDataMode() {
-      const isEnabled = localStorage.getItem('kudisave_low_data_mode') === 'true';
-      const toggle = document.getElementById('lowDataToggle');
-      if (toggle) toggle.checked = isEnabled;
-      updateLowDataDisplay(isEnabled);
-      
-      // Apply low data mode styles if enabled
-      if (isEnabled) {
-        document.documentElement.classList.add('low-data-mode');
-      }
-    }
-
-    function toggleLowDataMode() {
-      const toggle = document.getElementById('lowDataToggle');
-      const isEnabled = toggle ? toggle.checked : localStorage.getItem('kudisave_low_data_mode') !== 'true';
-      
-      localStorage.setItem('kudisave_low_data_mode', isEnabled);
-      if (toggle) toggle.checked = isEnabled;
-      updateLowDataDisplay(isEnabled);
-      
-      // Apply/remove low data mode class
-      if (isEnabled) {
-        document.documentElement.classList.add('low-data-mode');
-        utils.showAlert('Low Data Mode enabled - Data will be cached locally', 'success');
-      } else {
-        document.documentElement.classList.remove('low-data-mode');
-        utils.showAlert('Low Data Mode disabled', 'info');
-      }
-      
-      lucide.createIcons({ node: document.getElementById('dataSaverIcon') });
-    }
-
-    function updateLowDataDisplay(isEnabled) {
-      const icon = document.getElementById('dataSaverIcon');
-      const text = document.getElementById('dataSaverText');
-      if (icon) {
-        icon.innerHTML = isEnabled 
-          ? '<i data-lucide="wifi-off" class="icon" style="color: var(--primary-color)"></i>' 
-          : '<i data-lucide="wifi" class="icon"></i>';
-      }
-      if (text) {
-        text.textContent = isEnabled 
-          ? 'Enabled - Using cached data' 
-          : 'Cache data & reduce network usage';
-      }
-      const dsIcon = document.getElementById('dataSaverIcon');
-      if (dsIcon) lucide.createIcons({ node: dsIcon });
-    }
-
     // Currency Functions
-    let currentCurrency = localStorage.getItem('currency') || 'GHS';
+    let currentCurrency = utils.getCurrentCurrency ? utils.getCurrentCurrency() : (localStorage.getItem('currency') || 'GHS');
 
     async function loadCurrencySettings() {
-      try {
-        const response = await api.get('/currency/settings');
-        if (response.success && response.data.default_currency) {
-          currentCurrency = response.data.default_currency;
-          localStorage.setItem('currency', currentCurrency);
-          updateCurrencyDisplay();
-        }
-      } catch (error) {
-        console.log('Using local currency setting');
-      }
+      currentCurrency = utils.getCurrentCurrency ? utils.getCurrentCurrency() : (localStorage.getItem('currency') || 'GHS');
       updateCurrencyDisplay();
     }
 
@@ -1423,6 +1514,9 @@
         'NGN': 'Nigerian Naira'
       };
       document.getElementById('currencyText').textContent = `${currentCurrency} (${currencies[currentCurrency] || currentCurrency})`;
+      document.querySelectorAll('.currency-prefix').forEach(el => {
+        el.textContent = utils.getCurrencySymbol ? utils.getCurrencySymbol(currentCurrency) : currentCurrency;
+      });
       
       // Update checkmarks in modal
       ['GHS', 'USD', 'EUR', 'GBP', 'NGN'].forEach(code => {
@@ -1433,9 +1527,8 @@
 
     async function setCurrency(code, name) {
       currentCurrency = code;
-      localStorage.setItem('currency', code);
-      // Update in-memory preferences so all pages reflect change immediately
-      if (typeof setUserPreference === 'function') setUserPreference('currency', code);
+      if (utils.setCurrency) await utils.setCurrency(code);
+      else localStorage.setItem('currency', code);
       updateCurrencyDisplay();
       closeModal('currencyModal');
       utils.showAlert(`Currency changed to ${name}`, 'success');
@@ -1452,7 +1545,7 @@
         });
         if (response.success) {
           document.getElementById('backupStatus').textContent = 'Last backup: Just now';
-          utils.showAlert('Backup created successfully! 🎉', 'success');
+          utils.showAlert('Backup created successfully!', 'success');
         }
       } catch (error) {
         document.getElementById('backupStatus').textContent = 'Backup failed';
@@ -1469,15 +1562,16 @@
           container.innerHTML = response.data.map(backup => `
             <div class="settings-item" onclick="restoreBackup(${backup.id})">
               <div class="settings-item-left">
-                <span class="settings-icon">📁</span>
+                <span class="settings-icon"><i data-lucide="folder-clock" class="icon"></i></span>
                 <div class="settings-item-info">
                   <h4>${backup.backup_name}</h4>
-                  <p>${new Date(backup.created_at).toLocaleDateString()} • ${formatFileSize(backup.file_size)}</p>
+                  <p>${new Date(backup.created_at).toLocaleDateString()} &bull; ${formatFileSize(backup.file_size)}</p>
                 </div>
               </div>
-              <span class="settings-arrow">›</span>
+              <span class="settings-arrow"><i data-lucide="chevron-right"></i></span>
             </div>
           `).join('');
+          if (typeof lucide !== 'undefined') lucide.createIcons({ node: container });
         } else {
           container.innerHTML = '<p style="color: var(--text-secondary); text-align: center; padding: 20px;">No backups found</p>';
         }
@@ -1814,7 +1908,7 @@
       const reason = urlParams.get('reason');
       
       if (gmailStatus === 'success') {
-        utils.showAlert('Gmail connected successfully! 🎉', 'success');
+        utils.showAlert('Gmail connected successfully!', 'success');
         // Clean URL
         window.history.replaceState({}, document.title, window.location.pathname);
         // Update status
@@ -1837,7 +1931,6 @@
       lucide.createIcons();
       updateThemeDisplay();
       loadNotificationSettings();
-      initLowDataMode();
       
       // Load API data in parallel
       Promise.all([

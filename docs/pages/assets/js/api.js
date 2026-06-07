@@ -232,6 +232,7 @@ class APIService {
       const profile = result.data;
       userPreferences.theme = profile.theme || 'light';
       userPreferences.currency = profile.currency || 'GHS';
+      localStorage.setItem('currency', userPreferences.currency);
       userPreferences.profile_picture = profile.profile_picture;
       userPreferences.low_data_mode = profile.low_data_mode || false;
       userPreferences.last_visited_page = profile.last_visited_page || 'pages/dashboard.html';

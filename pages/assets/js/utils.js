@@ -1,4 +1,4 @@
-// KudiSave - Utility Functions
+ï»¿// KudiSave - Utility Functions
 
 // Theme Management
 const THEME_STORAGE_KEY = 'kudisave_theme';
@@ -60,11 +60,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // Currency configuration
 const CURRENCY_CONFIG = {
-  'GHS': { symbol: 'GHGé¦', name: 'Ghana Cedi', locale: 'en-GH' },
+  'GHS': { symbol: 'GH\u20b5', name: 'Ghana Cedi', locale: 'en-GH' },
   'USD': { symbol: '$', name: 'US Dollar', locale: 'en-US' },
-  'EUR': { symbol: 'Gé¼', name: 'Euro', locale: 'de-DE' },
-  'GBP': { symbol: '-ú', name: 'British Pound', locale: 'en-GB' },
-  'NGN': { symbol: 'Géª', name: 'Nigerian Naira', locale: 'en-NG' },
+  'EUR': { symbol: '\u20ac', name: 'Euro', locale: 'de-DE' },
+  'GBP': { symbol: '\u00a3', name: 'British Pound', locale: 'en-GB' },
+  'NGN': { symbol: '\u20a6', name: 'Nigerian Naira', locale: 'en-NG' },
   'KES': { symbol: 'KSh', name: 'Kenyan Shilling', locale: 'en-KE' },
   'ZAR': { symbol: 'R', name: 'South African Rand', locale: 'en-ZA' },
   'XOF': { symbol: 'CFA', name: 'West African CFA', locale: 'fr-SN' }
@@ -80,9 +80,12 @@ function getCurrentCurrency() {
 
 // Set currency preference
 async function setCurrency(currencyCode) {
+  localStorage.setItem('currency', currencyCode);
   if (typeof setUserPreference === 'function') {
     await setUserPreference('currency', currencyCode);
   }
+  window.dispatchEvent(new CustomEvent('currencychange', { detail: { currency: currencyCode } }));
+  return currencyCode;
 }
 
 // Get currency symbol
@@ -131,8 +134,8 @@ function showAlert(message, type = 'success') {
   }
 
   const icons = {
-    success: 'G£ô',
-    error: 'G£ò',
+    success: 'GÂ£Ã´',
+    error: 'GÂ£Ã²',
     warning: '!',
     info: 'i'
   };
@@ -185,11 +188,11 @@ function showAlert(message, type = 'success') {
 
 function getAlertIcon(type) {
   const icons = {
-    success: 'G£à',
-    error: 'G¥î',
-    warning: 'GÜán+Å'
+    success: 'GÂ£Ã ',
+    error: 'GÂ¥Ã®',
+    warning: 'GÃœÃ¡n+Ã…'
   };
-  return icons[type] || '=ƒÆí';
+  return icons[type] || '=Æ’Ã†Ã­';
 }
 
 // Show loading overlay
@@ -307,18 +310,18 @@ const INCOME_SOURCES = [
 // Get category icon
 function getCategoryIcon(category) {
   const icons = {
-    'Food / Chop Bar': '=ƒì¢',
-    'Transport (Trotro / Bolt)': '=ƒÜî',
-    'Data / Airtime': '=ƒô¦',
-    'Rent / Hostel': '=ƒÅá',
-    'Utilities': '=ƒÆí',
-    'Church / Donations': 'G¢¬',
-    'Betting / Gaming': '=ƒÄ¦',
-    'Entertainment': '=ƒÄ¼',
-    'Shopping': '=ƒ¢ìn+Å',
-    'Miscellaneous': '=ƒôª'
+    'Food / Chop Bar': '=Æ’Ã¬Â¢',
+    'Transport (Trotro / Bolt)': '=Æ’ÃœÃ®',
+    'Data / Airtime': '=Æ’Ã´Â¦',
+    'Rent / Hostel': '=Æ’Ã…Ã¡',
+    'Utilities': '=Æ’Ã†Ã­',
+    'Church / Donations': 'GÂ¢Â¬',
+    'Betting / Gaming': '=Æ’Ã„Â¦',
+    'Entertainment': '=Æ’Ã„Â¼',
+    'Shopping': '=Æ’Â¢Ã¬n+Ã…',
+    'Miscellaneous': '=Æ’Ã´Âª'
   };
-  return icons[category] || '=ƒÆ¦';
+  return icons[category] || '=Æ’Ã†Â¦';
 }
 
 function getCategoryIconName(category) {
@@ -345,13 +348,13 @@ function getCategoryIconName(category) {
 // Get motivational message based on budget usage
 function getMotivationalMessage(budgetUsage) {
   if (budgetUsage <= 50) {
-    return "Chale, you dey do well! =ƒÆ¬";
+    return "Chale, you dey do well! =Æ’Ã†Â¬";
   } else if (budgetUsage <= 75) {
-    return "You dey on point! Keep pushing =ƒÜÇ";
+    return "You dey on point! Keep pushing =Æ’ÃœÃ‡";
   } else if (budgetUsage <= 90) {
-    return "Small small ooo, you go reach =ƒÿà";
+    return "Small small ooo, you go reach =Æ’Ã¿Ã ";
   } else {
-    return "Masa, check your spending waa =ƒñö";
+    return "Masa, check your spending waa =Æ’Ã±Ã¶";
   }
 }
 
@@ -364,14 +367,14 @@ function calculateProgress(current, target) {
 // Get badge emoji
 function getBadgeEmoji(badgeName) {
   const emojis = {
-    'Data King/Queen': '=ƒææ',
-    'Chop Saver': '=ƒì+n+Å',
-    'Budget Boss': '=ƒÆ+',
-    'Consistency Champ': '=ƒöÑ',
-    'Goal Getter': '=ƒÄ»',
-    'Transport Wise': '=ƒÜù'
+    'Data King/Queen': '=Æ’Ã¦Ã¦',
+    'Chop Saver': '=Æ’Ã¬+n+Ã…',
+    'Budget Boss': '=Æ’Ã†+',
+    'Consistency Champ': '=Æ’Ã¶Ã‘',
+    'Goal Getter': '=Æ’Ã„Â»',
+    'Transport Wise': '=Æ’ÃœÃ¹'
   };
-  return emojis[badgeName] || '=ƒÅå';
+  return emojis[badgeName] || '=Æ’Ã…Ã¥';
 }
 
 // Get tier color
@@ -470,7 +473,7 @@ function getDateRange(period) {
 }
 
 // ================================
-// FUN & LIVELY UTILITIES =ƒÄë
+// FUN & LIVELY UTILITIES =Æ’Ã„Ã«
 // ================================
 
 // Confetti celebration
@@ -512,7 +515,7 @@ function showConfetti(particleCount = 50) {
 }
 
 // Fun toast notification with emoji
-function showFunToast(message, emoji = '=ƒÄë', duration = 3000) {
+function showFunToast(message, emoji = '=Æ’Ã„Ã«', duration = 3000) {
   // Remove existing toasts
   const existing = document.querySelector('.fun-toast');
   if (existing) existing.remove();
@@ -570,7 +573,7 @@ function showFunToast(message, emoji = '=ƒÄë', duration = 3000) {
 // Celebration with sound
 function celebrate(title = 'Great Job!', type = 'success') {
   showConfetti(60);
-  showFunToast(title, type === 'success' ? '=ƒÄë' : '=ƒÅå', 4000);
+  showFunToast(title, type === 'success' ? '=Æ’Ã„Ã«' : '=Æ’Ã…Ã¥', 4000);
   
   // Play celebration sound
   try {
@@ -678,14 +681,14 @@ function pulseSuccess(element) {
 // Get random encouraging message
 function getRandomEncouragement() {
   const messages = [
-    { text: "You're doing great! =ƒÆ¬", emoji: "=ƒÆ¬" },
-    { text: "Keep up the good work! =ƒîƒ", emoji: "=ƒîƒ" },
-    { text: "Awesome progress! =ƒÜÇ", emoji: "=ƒÜÇ" },
-    { text: "You're on fire! =ƒöÑ", emoji: "=ƒöÑ" },
-    { text: "Financial ninja! =ƒÑ+", emoji: "=ƒÑ+" },
-    { text: "Money master! =ƒÆ¦", emoji: "=ƒÆ¦" },
-    { text: "Saving superstar! G¡É", emoji: "G¡É" },
-    { text: "Budget boss! =ƒææ", emoji: "=ƒææ" }
+    { text: "You're doing great! =Æ’Ã†Â¬", emoji: "=Æ’Ã†Â¬" },
+    { text: "Keep up the good work! =Æ’Ã®Æ’", emoji: "=Æ’Ã®Æ’" },
+    { text: "Awesome progress! =Æ’ÃœÃ‡", emoji: "=Æ’ÃœÃ‡" },
+    { text: "You're on fire! =Æ’Ã¶Ã‘", emoji: "=Æ’Ã¶Ã‘" },
+    { text: "Financial ninja! =Æ’Ã‘+", emoji: "=Æ’Ã‘+" },
+    { text: "Money master! =Æ’Ã†Â¦", emoji: "=Æ’Ã†Â¦" },
+    { text: "Saving superstar! GÂ¡Ã‰", emoji: "GÂ¡Ã‰" },
+    { text: "Budget boss! =Æ’Ã¦Ã¦", emoji: "=Æ’Ã¦Ã¦" }
   ];
   return messages[Math.floor(Math.random() * messages.length)];
 }
@@ -695,6 +698,7 @@ window.utils = {
   formatCurrency,
   formatCurrencyAmount,
   getCurrentCurrency,
+  setCurrency,
   getCurrencySymbol,
   CURRENCY_CONFIG,
   formatDate,

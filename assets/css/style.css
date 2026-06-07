@@ -3822,59 +3822,6 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
   }
 }
 
-/* ============================================
-   LOW DATA MODE STYLES
-   Reduces animations and visual effects to save battery and data
-   ============================================ */
-
-/* Disable all animations in low data mode */
-.low-data-mode *,
-.low-data-mode *::before,
-.low-data-mode *::after {
-  animation-duration: 0.01ms !important;
-  animation-iteration-count: 1 !important;
-  transition-duration: 0.1s !important;
-}
-
-/* Remove shimmer effects */
-.low-data-mode .progress-fill::before,
-.low-data-mode .xp-fill::before,
-.low-data-mode .budget-fill::before {
-  display: none !important;
-}
-
-/* Simplify gradients */
-.low-data-mode .greeting-banner,
-.low-data-mode .balance-card,
-.low-data-mode .card-header,
-.low-data-mode .btn-primary {
-  background-image: none !important;
-  background-color: var(--primary-color) !important;
-}
-
-/* Hide decorative elements */
-.low-data-mode .greeting-banner::before,
-.low-data-mode .greeting-banner::after,
-.low-data-mode .ghana-flag::before,
-.low-data-mode .ghana-flag::after {
-  display: none !important;
-}
-
-/* Disable hover effects */
-.low-data-mode .card:hover,
-.low-data-mode .btn:hover,
-.low-data-mode .transaction-item:hover {
-  transform: none !important;
-  box-shadow: var(--shadow) !important;
-}
-
-/* Simplify shadows */
-.low-data-mode .card,
-.low-data-mode .modal-content,
-.low-data-mode .bottom-nav {
-  box-shadow: 0 1px 2px rgba(0,0,0,0.1) !important;
-}
-
 /* Floating Tap Bar */
 @media (max-width: 767px) {
   :root {
