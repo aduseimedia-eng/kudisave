@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en" data-theme="light">
 <head>
   <meta charset="UTF-8">
@@ -235,6 +235,87 @@
       height: 17px;
       color: var(--primary-color);
       stroke-width: 2.4;
+    }
+
+    .challenge-summary-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 18px;
+      padding: 16px;
+      box-shadow: 0 10px 26px rgba(15, 23, 42, 0.06);
+      margin-bottom: 18px;
+    }
+
+    .challenge-summary-top {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+
+    .challenge-summary-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 15px;
+      background: var(--primary-gradient, linear-gradient(135deg, #033036, #0b737d));
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 12px 24px rgba(3, 48, 54, 0.18);
+      flex-shrink: 0;
+    }
+
+    .challenge-summary-icon i {
+      width: 22px;
+      height: 22px;
+    }
+
+    .challenge-summary-title {
+      font-size: 18px;
+      font-weight: 850;
+      color: var(--text-primary);
+      line-height: 1.15;
+    }
+
+    .challenge-summary-subtitle {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-top: 4px;
+      line-height: 1.35;
+    }
+
+    .challenge-summary-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 8px;
+    }
+
+    .challenge-summary-stat {
+      min-height: 70px;
+      border-radius: 14px;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      text-align: center;
+    }
+
+    .challenge-summary-stat strong {
+      font-size: 18px;
+      color: var(--text-primary);
+      line-height: 1;
+    }
+
+    .challenge-summary-stat span {
+      font-size: 10px;
+      color: var(--text-muted);
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.35px;
     }
 
     /* Challenge Cards */
@@ -483,15 +564,15 @@
       background: var(--card-bg);
       border-radius: 14px;
       padding: 16px;
-      text-align: center;
+      text-align: left;
       border: 1px solid var(--border-color);
       cursor: pointer;
       transition: all 0.3s ease;
-      min-height: 120px;
+      min-height: 176px;
       display: flex;
       flex-direction: column;
-      align-items: center;
-      justify-content: center;
+      align-items: flex-start;
+      justify-content: flex-start;
     }
 
     .available-card:hover {
@@ -518,10 +599,22 @@
     }
 
     .available-name {
-      font-weight: 600;
+      font-weight: 800;
       color: var(--text-primary);
-      font-size: 12px;
+      font-size: 13px;
       margin-bottom: 4px;
+      line-height: 1.25;
+    }
+
+    .available-desc {
+      font-size: 12px;
+      color: var(--text-muted);
+      line-height: 1.35;
+      margin: 4px 0 10px;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
     }
 
     .available-xp {
@@ -529,6 +622,29 @@
       color: var(--primary-color);
       font-weight: 600;
       margin-bottom: 8px;
+    }
+
+    .available-meta {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: auto;
+      width: 100%;
+    }
+
+    .available-days {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 11px;
+      color: var(--text-muted);
+      font-weight: 700;
+    }
+
+    .available-days i {
+      width: 12px;
+      height: 12px;
     }
 
     /* Empty State */
@@ -766,6 +882,8 @@
     .mtn-header-shimmer,
     .header-particles,
     .mtn-info-section,
+    .mtn-challenge-section,
+    .mtn-stats-row,
     .header-balance,
     .mtn-header-curve {
       display: none !important;
@@ -819,9 +937,18 @@
     }
     .mtn-header-spacer {
       display: block !important;
-      height: calc(78px + env(safe-area-inset-top, 0px)) !important;
+      height: calc(70px + env(safe-area-inset-top, 0px)) !important;
       min-height: 0 !important;
       width: 100% !important;
+    }
+
+    @media (max-width: 380px) {
+      .challenge-summary-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+      .available-grid {
+        grid-template-columns: 1fr;
+      }
     }
   </style>
 </head>
@@ -842,7 +969,7 @@
       <div class="mtn-challenge-info">
         <div class="mtn-challenge-title">Challenges</div>
         <div class="mtn-challenge-xp">
-          <i data-lucide="zap"></i> <span id="totalXP">0</span> XP Earned
+          <i data-lucide="zap"></i> <span>0</span> XP Earned
         </div>
       </div>
     </div>
@@ -850,15 +977,15 @@
     <!-- Stats Row -->
     <div class="mtn-stats-row">
       <div class="mtn-stat">
-        <div class="mtn-stat-value" id="completedCount">0</div>
+        <div class="mtn-stat-value">0</div>
         <div class="mtn-stat-label">Completed</div>
       </div>
       <div class="mtn-stat">
-        <div class="mtn-stat-value" id="activeCount">0</div>
+        <div class="mtn-stat-value">0</div>
         <div class="mtn-stat-label">Active</div>
       </div>
       <div class="mtn-stat">
-        <div class="mtn-stat-value" id="availableCount">0</div>
+        <div class="mtn-stat-value">0</div>
         <div class="mtn-stat-label">Available</div>
       </div>
     </div>
@@ -871,6 +998,34 @@
 
   <!-- Main Content -->
   <main class="main-content">
+    <section class="challenge-summary-card">
+      <div class="challenge-summary-top">
+        <div class="challenge-summary-icon"><i data-lucide="trophy"></i></div>
+        <div>
+          <div class="challenge-summary-title">Challenge Progress</div>
+          <div class="challenge-summary-subtitle">Build better money habits with focused goals and XP rewards.</div>
+        </div>
+      </div>
+      <div class="challenge-summary-grid">
+        <div class="challenge-summary-stat">
+          <strong id="totalXP">0</strong>
+          <span>XP Earned</span>
+        </div>
+        <div class="challenge-summary-stat">
+          <strong id="completedCount">0</strong>
+          <span>Completed</span>
+        </div>
+        <div class="challenge-summary-stat">
+          <strong id="activeCount">0</strong>
+          <span>Active</span>
+        </div>
+        <div class="challenge-summary-stat">
+          <strong id="availableCount">0</strong>
+          <span>Available</span>
+        </div>
+      </div>
+    </section>
+
     <!-- Active Challenges Section -->
     <div class="section-title"><i data-lucide="flame"></i> Active Challenges</div>
     <div class="active-challenges" id="activeChallenges">
@@ -908,7 +1063,7 @@
       <div class="challenge-meta" style="justify-content: center; margin-bottom: 16px;">
         <span class="difficulty-badge medium" id="modalDifficulty">Medium</span>
         <span class="meta-item" id="modalDuration"><i data-lucide="calendar-days"></i> 30 days</span>
-        <span class="meta-item" id="modalTarget"><i data-lucide="target"></i> Target: ₵500</span>
+        <span class="meta-item" id="modalTarget"><i data-lucide="target"></i> Target: GH&#8373;500</span>
       </div>
       
       <div class="challenge-actions">
@@ -957,7 +1112,7 @@
         </div>
         <div class="form-row">
           <div class="form-group">
-            <label class="form-label">Target Value (₵)</label>
+            <label class="form-label">Target Value (GH&#8373;)</label>
             <input type="number" class="form-input" id="challengeTarget" placeholder="500" min="1">
           </div>
           <div class="form-group">
@@ -1060,81 +1215,63 @@
 
     async function loadChallenges() {
       try {
-        console.log('📋 Loading challenges from API...');
-        console.log('API URL:', window.KUDISAVE_API_URL);
-        
-        // Load available challenges (public endpoint)
-        let availRes, activeRes = null, statsRes = null;
-        let isAuthenticated = !!localStorage.getItem('token');
+        let availRes;
+        let activeRes = null;
+        let statsRes = null;
+        const isAuthenticated = !!localStorage.getItem('token');
         
         try {
           availRes = await api.get('/challenges');
-          console.log('✅ Available challenges response:', availRes);
         } catch (e) {
-          console.error('❌ Failed to load available challenges:', e.message);
           availRes = { success: false, message: e.message };
         }
         
-        // Load user-specific data only if authenticated
         if (isAuthenticated) {
           try {
             activeRes = await api.get('/challenges/active');
-            console.log('✅ Active challenges response:', activeRes);
           } catch (e) {
-            console.error('⚠️  Could not load active challenges:', e.message);
             activeRes = { success: false };
           }
           
           try {
             statsRes = await api.get('/challenges/stats');
-            console.log('✅ Stats response:', statsRes);
           } catch (e) {
-            console.error('⚠️  Could not load challenge stats:', e.message);
             statsRes = { success: false };
           }
-        } else {
-          console.log('ℹ️  User not authenticated - skipping active challenges and stats');
         }
 
-        // Handle API response format - might be nested
         challenges = availRes && availRes.success ? availRes.data : (Array.isArray(availRes) ? availRes : []);
         activeChallenges = activeRes && activeRes.success ? activeRes.data : (Array.isArray(activeRes) ? activeRes : []);
 
-        console.log('✅ Challenges loaded:', challenges.length, 'Active:', activeChallenges.length);
-        console.log('Raw challenges array:', challenges);
-        console.log('First challenge:', challenges[0]);
+        const active = activeChallenges.filter(c => c.status === 'active');
+        const activeIds = activeChallenges.map(ac => ac.challenge_id);
+        const available = challenges.filter(c => !activeIds.includes(c.id));
 
         if (statsRes && statsRes.success) {
           const s = statsRes.data;
           document.getElementById('completedCount').textContent = s.completed_count || 0;
-          document.getElementById('activeCount').textContent = s.active_count || 0;
+          document.getElementById('activeCount').textContent = s.active_count || active.length;
           document.getElementById('totalXP').textContent = s.total_xp_from_challenges || 0;
-        } else if (!isAuthenticated) {
-          // Show message if not authenticated
-          console.log('ℹ️  Stats unavailable - user not logged in');
+        } else {
+          document.getElementById('completedCount').textContent = activeChallenges.filter(c => c.status === 'completed').length;
+          document.getElementById('activeCount').textContent = active.length;
         }
 
-        const activeIds = activeChallenges.map(ac => ac.challenge_id);
-        document.getElementById('availableCount').textContent =
-          challenges.filter(c => !activeIds.includes(c.id)).length;
+        document.getElementById('availableCount').textContent = available.length;
 
         renderActiveChallenges();
         renderAvailableChallenges();
       } catch (e) {
-        console.error('Error loading challenges:', e);
         showToast('Could not load challenges: ' + (e.message || 'Unknown error'), 'error');
       }
     }
-
     function renderActiveChallenges() {
       const container = document.getElementById('activeChallenges');
       if (!container) {
-        console.error('❌ Active challenges container not found!');
         return;
       }
 
       const active = activeChallenges.filter(c => c.status === 'active');
-      console.log('Rendering active challenges:', active.length);
 
       if (active.length === 0) {
         container.innerHTML = `
@@ -1187,55 +1324,38 @@
 
     function renderAvailableChallenges() {
       const container = document.getElementById('availableChallenges');
-      if (!container) {
-        console.error('❌ Available challenges container not found!');
+      if (!container) return;
+
+      const activeIds = activeChallenges.map(ac => ac.challenge_id);
+      const available = challenges.filter(c => !activeIds.includes(c.id));
+
+      if (!available.length) {
+        container.innerHTML = `
+          <div class="empty-state" style="grid-column:1/-1;">
+            <i data-lucide="sparkles" style="width:48px;height:48px"></i>
+            <p>No available challenges right now.</p>
+          </div>`;
+        lucide.createIcons({ node: container });
         return;
       }
 
-      console.log('🎬 START renderAvailableChallenges');
-      console.log('Total challenges loaded:', challenges.length);
-      console.log('📋 Challenge count:', challenges ? challenges.length : 0);
-      console.log('📄 HTML before render:', container.innerHTML);
-
-      if (!challenges || challenges.length === 0) {
-        console.log('⚠️ No challenges data - showing empty state');
-        container.innerHTML = `<div class="empty-state"><p>No challenges available</p></div>`;
-        return;
-      }
-
-      // Build HTML for each challenge
-      let html = '';
-      challenges.forEach((c, index) => {
+      container.innerHTML = available.map(c => {
         const icon = challengeIconHtml(c.challenge_type);
-        const difficultyColor = {
-          easy: '#10b981',
-          medium: '#f59e0b',
-          hard: '#ef4444',
-          legendary: '#8b5cf6'
-        }[c.difficulty] || '#6b7280';
-        
-        console.log(`  Challenge ${index + 1}:`, c.title, '| Type:', c.challenge_type, '| Icon:', icon);
-        
-        html += `<div class="available-card" onclick="showChallengeDetail('${c.id}')">
+        const difficulty = c.difficulty || 'easy';
+        const days = c.target_days ? `<span class="available-days"><i data-lucide="calendar-days"></i>${c.target_days}d</span>` : '';
+        return `<button type="button" class="available-card" onclick="showChallengeDetail('${c.id}')">
           <div class="available-icon">${icon}</div>
           <div class="available-name">${escapeHtml(c.title)}</div>
-          <div class="available-desc" style="font-size: 12px; color: #6b7280; margin: 6px 0; line-height: 1.3;">${escapeHtml(c.description || '')}</div>
-          <div class="available-xp">+${c.xp_reward} XP</div>
-          <div style="display: flex; align-items: center; gap: 8px; margin-top: 8px; width: 100%;">
-            <span class="difficulty-badge" style="background: ${difficultyColor}22; color: ${difficultyColor}; padding: 4px 8px; border-radius: 6px; font-size: 11px; font-weight: 600;">${c.difficulty}</span>
-            ${c.target_days ? `<span style="font-size: 11px; color: #9ca3af;">${c.target_days}d</span>` : ''}
+          <div class="available-desc">${escapeHtml(c.description || 'Start this challenge to build a stronger saving habit.')}</div>
+          <div class="available-xp">+${c.xp_reward || 0} XP</div>
+          <div class="available-meta">
+            <span class="difficulty-badge ${difficulty}">${difficulty}</span>
+            ${days}
           </div>
-        </div>`;
-      });
-
-      console.log('📝 Generated HTML length:', html.length);
-      container.innerHTML = html;
-      console.log('📄 HTML after render:', container.innerHTML.substring(0, 100) + '...');
+        </button>`;
+      }).join('');
       lucide.createIcons({ node: container });
-      console.log('✅ Rendered', challenges.length, 'challenges to DOM');
-      console.log('✅ Container now has', container.children.length, 'children');
     }
-
     function showChallengeDetail(id) {
       selectedChallenge = challenges.find(c => c.id === id);
       if (!selectedChallenge) return;
