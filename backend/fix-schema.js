@@ -33,16 +33,17 @@ async function fix() {
       console.log('Inserting savings challenge seed data...');
       await client.query(`
         INSERT INTO savings_challenges (title, description, challenge_type, target_amount, target_days, xp_reward, difficulty) VALUES
-          ('No-Spend Weekend', 'Spend nothing on Saturday and Sunday', 'no_spend', NULL, 2, 50, 'easy'),
-          ('Save ₵50 This Week', 'Save at least ₵50 by the end of the week', 'save_amount', 50, 7, 75, 'easy'),
-          ('Save ₵200 This Month', 'Save at least ₵200 this month', 'save_amount', 200, 30, 150, 'medium'),
-          ('Cut Transport Costs', 'Reduce transport spending by 30%', 'reduce_category', NULL, 7, 100, 'medium'),
-          ('7-Day Streak', 'Log expenses for 7 consecutive days', 'streak', NULL, 7, 100, 'easy'),
-          ('No Betting Week', 'No betting/gaming expenses for a week', 'no_spend', NULL, 7, 150, 'hard'),
-          ('Frugal Foodie', 'Keep food expenses under ₵100 for a week', 'save_amount', 100, 7, 100, 'medium'),
-          ('Data Detox', 'Reduce data/airtime spending by 50%', 'reduce_category', NULL, 7, 120, 'hard'),
-          ('30-Day Saver', 'Save something every day for 30 days', 'streak', NULL, 30, 300, 'extreme'),
-          ('Budget Master', 'Stay under budget for 4 weeks', 'custom', NULL, 28, 250, 'hard')
+          ('No-Spend Weekend', 'Avoid non-essential spending from Saturday morning through Sunday night.', 'no_spend', NULL, 2, 60, 'easy'),
+          ('Save GH\u20b550 This Week', 'Move GH\u20b550 into savings before the week ends.', 'save_amount', 50, 7, 80, 'easy'),
+          ('Bill-Ready Week', 'Set aside GH\u20b5100 toward upcoming bills before their due dates.', 'save_amount', 100, 7, 100, 'easy'),
+          ('Subscription Sweep', 'Review your subscriptions and cancel or pause one plan you do not use.', 'custom', NULL, 3, 90, 'easy'),
+          ('Lunchbox Week', 'Prepare meals or snacks and keep food spending under GH\u20b5120 for five days.', 'reduce_category', 120, 5, 110, 'medium'),
+          ('Transport Trim', 'Reduce trotro, fuel, taxi, or ride-hailing spending by 25% for one week.', 'reduce_category', NULL, 7, 120, 'medium'),
+          ('Data Detox', 'Keep airtime and mobile data spending under GH\u20b540 for seven days.', 'reduce_category', 40, 7, 120, 'medium'),
+          ('Rent Buffer Builder', 'Save GH\u20b5250 toward rent, hostel, or home costs before month-end.', 'save_amount', 250, 30, 170, 'medium'),
+          ('Emergency Starter Fund', 'Build a GH\u20b5500 cushion for surprise expenses over the next 45 days.', 'save_amount', 500, 45, 240, 'hard'),
+          ('No Betting Week', 'Avoid betting, gaming, and impulse entertainment expenses for seven days.', 'no_spend', NULL, 7, 180, 'hard'),
+          ('30-Day Money Streak', 'Log your spending or savings activity every day for 30 days.', 'streak', NULL, 30, 320, 'extreme')
       `);
       console.log('✅ Savings challenges seeded');
     } else {

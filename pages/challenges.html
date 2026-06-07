@@ -1167,6 +1167,167 @@
       return `<i data-lucide="${icon}"></i>`;
     }
 
+    const defaultChallenges = [
+      {
+        id: 'real-no-spend-weekend',
+        title: 'No-Spend Weekend',
+        description: 'Avoid non-essential spending from Saturday morning through Sunday night.',
+        challenge_type: 'no_spend',
+        target_amount: null,
+        target_days: 2,
+        xp_reward: 60,
+        difficulty: 'easy',
+        is_default: true
+      },
+      {
+        id: 'real-save-50-week',
+        title: 'Save GH₵50 This Week',
+        description: 'Move GH₵50 into savings before the week ends.',
+        challenge_type: 'save_amount',
+        target_amount: 50,
+        target_days: 7,
+        xp_reward: 80,
+        difficulty: 'easy',
+        is_default: true
+      },
+      {
+        id: 'real-bill-ready-week',
+        title: 'Bill-Ready Week',
+        description: 'Set aside GH₵100 toward upcoming bills before their due dates.',
+        challenge_type: 'save_amount',
+        target_amount: 100,
+        target_days: 7,
+        xp_reward: 100,
+        difficulty: 'easy',
+        is_default: true
+      },
+      {
+        id: 'real-subscription-sweep',
+        title: 'Subscription Sweep',
+        description: 'Review your subscriptions and cancel or pause one plan you do not use.',
+        challenge_type: 'custom',
+        target_amount: null,
+        target_days: 3,
+        xp_reward: 90,
+        difficulty: 'easy',
+        is_default: true
+      },
+      {
+        id: 'real-lunchbox-week',
+        title: 'Lunchbox Week',
+        description: 'Prepare meals or snacks and keep food spending under GH₵120 for five days.',
+        challenge_type: 'reduce_category',
+        target_amount: 120,
+        target_days: 5,
+        xp_reward: 110,
+        difficulty: 'medium',
+        is_default: true
+      },
+      {
+        id: 'real-transport-trim',
+        title: 'Transport Trim',
+        description: 'Reduce trotro, fuel, taxi, or ride-hailing spending by 25% for one week.',
+        challenge_type: 'reduce_category',
+        target_amount: null,
+        target_days: 7,
+        xp_reward: 120,
+        difficulty: 'medium',
+        is_default: true
+      },
+      {
+        id: 'real-data-detox',
+        title: 'Data Detox',
+        description: 'Keep airtime and mobile data spending under GH₵40 for seven days.',
+        challenge_type: 'reduce_category',
+        target_amount: 40,
+        target_days: 7,
+        xp_reward: 120,
+        difficulty: 'medium',
+        is_default: true
+      },
+      {
+        id: 'real-rent-buffer',
+        title: 'Rent Buffer Builder',
+        description: 'Save GH₵250 toward rent, hostel, or home costs before month-end.',
+        challenge_type: 'save_amount',
+        target_amount: 250,
+        target_days: 30,
+        xp_reward: 170,
+        difficulty: 'medium',
+        is_default: true
+      },
+      {
+        id: 'real-emergency-starter',
+        title: 'Emergency Starter Fund',
+        description: 'Build a GH₵500 cushion for surprise expenses over the next 45 days.',
+        challenge_type: 'save_amount',
+        target_amount: 500,
+        target_days: 45,
+        xp_reward: 240,
+        difficulty: 'hard',
+        is_default: true
+      },
+      {
+        id: 'real-no-betting-week',
+        title: 'No Betting Week',
+        description: 'Avoid betting, gaming, and impulse entertainment expenses for seven days.',
+        challenge_type: 'no_spend',
+        target_amount: null,
+        target_days: 7,
+        xp_reward: 180,
+        difficulty: 'hard',
+        is_default: true
+      },
+      {
+        id: 'real-money-streak-30',
+        title: '30-Day Money Streak',
+        description: 'Log your spending or savings activity every day for 30 days.',
+        challenge_type: 'streak',
+        target_amount: null,
+        target_days: 30,
+        xp_reward: 320,
+        difficulty: 'extreme',
+        is_default: true
+      }
+    ];
+
+    function normalizeChallengeList(list) {
+      return (Array.isArray(list) ? list : []).map((challenge, index) => ({
+        id: challenge.id || `challenge-${index}`,
+        title: challenge.title || 'Money Challenge',
+        description: challenge.description || 'Start this challenge to build a stronger saving habit.',
+        challenge_type: challenge.challenge_type || challenge.type || 'custom',
+        target_amount: challenge.target_amount ?? null,
+        target_days: challenge.target_days ?? 7,
+        xp_reward: challenge.xp_reward ?? 100,
+        difficulty: challenge.difficulty || 'medium',
+        is_default: Boolean(challenge.is_default)
+      }));
+    }
+
+    function challengeKey(title = '') {
+      return title
+        .toLowerCase()
+        .replace(/gh₵|₵/g, '')
+        .replace(/[^a-z0-9]+/g, ' ')
+        .trim();
+    }
+
+    function mergeChallengeCatalog(list) {
+      const catalog = new Map();
+      normalizeChallengeList(list).forEach(challenge => {
+        catalog.set(challengeKey(challenge.title), challenge);
+      });
+
+      defaultChallenges.forEach(challenge => {
+        const key = challengeKey(challenge.title);
+        const existing = catalog.get(key);
+        catalog.set(key, existing ? { ...challenge, id: existing.id, is_default: false } : challenge);
+      });
+
+      return Array.from(catalog.values());
+    }
+
     let challenges = [];      // available from DB
     let activeChallenges = []; // user's active from DB
     let selectedChallenge = null;
@@ -1240,7 +1401,8 @@
           }
         }
 
-        challenges = availRes && availRes.success ? availRes.data : (Array.isArray(availRes) ? availRes : []);
+        const loadedChallenges = availRes && availRes.success ? availRes.data : (Array.isArray(availRes) ? availRes : []);
+        challenges = normalizeChallengeList(loadedChallenges.length ? mergeChallengeCatalog(loadedChallenges) : defaultChallenges);
         activeChallenges = activeRes && activeRes.success ? activeRes.data : (Array.isArray(activeRes) ? activeRes : []);
 
         const active = activeChallenges.filter(c => c.status === 'active');
@@ -1362,7 +1524,7 @@
 
       const sc = selectedChallenge;
       const target = sc.target_amount || sc.target_days || 0;
-      const prefix = sc.challenge_type === 'save_amount' ? utils.getCurrencySymbol() : '';
+      const targetLabel = sc.target_amount ? utils.formatCurrency(sc.target_amount) : `${target} days`;
       document.getElementById('modalIcon').innerHTML = challengeIconHtml(sc.challenge_type);
       document.getElementById('modalTitle').textContent = sc.title;
       document.getElementById('modalDesc').textContent = sc.description || '';
@@ -1370,10 +1532,31 @@
       document.getElementById('modalDifficulty').textContent = sc.difficulty;
       document.getElementById('modalDifficulty').className = `difficulty-badge ${sc.difficulty}`;
       document.getElementById('modalDuration').innerHTML = `<i data-lucide="calendar-days"></i> ${sc.target_days || 30} days`;
-      document.getElementById('modalTarget').innerHTML = `<i data-lucide="target"></i> Target: ${prefix}${target}`;
+      document.getElementById('modalTarget').innerHTML = `<i data-lucide="target"></i> Target: ${targetLabel}`;
       document.getElementById('challengeModal').classList.add('active');
       document.body.style.overflow = 'hidden';
       lucide.createIcons({ node: document.getElementById('challengeModal') });
+    }
+
+    async function ensureChallengeExists(challenge) {
+      if (!challenge.is_default) return challenge.id;
+
+      const payload = {
+        title: challenge.title,
+        description: challenge.description,
+        challenge_type: challenge.challenge_type,
+        target_amount: challenge.target_amount,
+        target_days: challenge.target_days,
+        xp_reward: challenge.xp_reward,
+        difficulty: challenge.difficulty
+      };
+      const res = await api.post('/challenges', payload);
+      if (!res.success || !res.data || !res.data.id) {
+        throw new Error(res.message || 'Could not create challenge');
+      }
+
+      selectedChallenge = normalizeChallengeList([{ ...res.data, is_default: false }])[0];
+      return selectedChallenge.id;
     }
 
     async function joinChallenge() {
@@ -1382,7 +1565,8 @@
       btn.disabled = true;
       btn.textContent = 'Joining...';
       try {
-        const res = await api.post(`/challenges/${selectedChallenge.id}/join`, {});
+        const challengeId = await ensureChallengeExists(selectedChallenge);
+        const res = await api.post(`/challenges/${challengeId}/join`, {});
         if (res.success) {
           closeModal('challengeModal');
           showToast('Challenge started! Good luck!');
