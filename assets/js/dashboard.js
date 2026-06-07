@@ -432,13 +432,68 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 });
 
-function populateSelectOptions() {
-  const categorySelect = document.getElementById('expenseCategory');
-  categorySelect.innerHTML = utils.EXPENSE_CATEGORIES.map(cat => 
-    `<option value="${cat}">${utils.getCategoryIcon(cat)} ${cat}</option>`
-  ).join('');
+function getDashboardCategoryIconInfo(category) {
+  const clsMap = {
+    'Food / Chop Bar': 'food',
+    'Transport (Trotro / Bolt)': 'transport',
+    'Data / Airtime': 'data',
+    'Entertainment': 'entertainment',
+    'Shopping': 'shopping',
+    'Bills & Utilities': 'bills',
+    'Bills': 'bills',
+    'Utilities': 'bills',
+    'Health': 'health',
+    'Education': 'education',
+    'Rent / Hostel': 'home',
+    'Church / Donations': 'donation',
+    'Betting / Gaming': 'gaming',
+    'Miscellaneous': 'other',
+    'Other': 'other'
+  };
+  return {
+    icon: utils.getCategoryIconName(category),
+    cls: clsMap[category] || 'other'
+  };
+}
 
+function populateSelectOptions() {
+  setDashboardCategory(utils.EXPENSE_CATEGORIES[0] || 'Other');
   setDashboardPaymentMethod(getDashboardPaymentMethods()[0]);
+}
+
+function setDashboardCategory(category) {
+  const input = document.getElementById('expenseCategory');
+  const label = document.getElementById('categoryText');
+  const iconWrap = document.getElementById('categoryIconWrap');
+  if (!input || !label || !iconWrap) return;
+  const icon = getDashboardCategoryIconInfo(category);
+  input.value = category;
+  label.textContent = category;
+  iconWrap.className = `picker-field-icon ${icon.cls}`;
+  iconWrap.innerHTML = `<i data-lucide="${icon.icon}"></i>`;
+  if (typeof lucide !== 'undefined') lucide.createIcons({ node: iconWrap });
+}
+
+function openDashboardCategoryModal() {
+  const selected = document.getElementById('expenseCategory').value;
+  const container = document.getElementById('categoryOptions');
+  container.innerHTML = utils.EXPENSE_CATEGORIES.map(category => {
+    const icon = getDashboardCategoryIconInfo(category);
+    const active = category === selected ? ' active' : '';
+    return `<button type="button" class="picker-option category-option ${icon.cls}${active}" data-category="${escapeDashboardHtml(category)}">
+      <span class="picker-option-main"><span class="picker-field-icon ${icon.cls}"><i data-lucide="${icon.icon}"></i></span><span>${escapeDashboardHtml(category)}</span></span>
+      <span class="picker-option-mark"></span>
+    </button>`;
+  }).join('');
+  container.querySelectorAll('.category-option').forEach(btn => {
+    btn.addEventListener('click', function() {
+      setDashboardCategory(this.dataset.category);
+      closePickerModal('categoryModal');
+    });
+  });
+  document.getElementById('categoryModal').classList.add('active');
+  document.body.style.overflow = 'hidden';
+  if (typeof lucide !== 'undefined') lucide.createIcons({ node: document.getElementById('categoryModal') });
 }
 
 function setDashboardPaymentMethod(method) {
