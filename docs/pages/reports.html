@@ -16,6 +16,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../assets/css/style.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
   <script src="https://unpkg.com/lucide@latest"></script>
   <style>
     .period-tabs {
@@ -228,6 +229,23 @@
       animation: slideUp 0.4s ease-out both;
     }
 
+    .category-list.analytics-card {
+      display: grid;
+      gap: 14px;
+    }
+
+    .category-chart-shell {
+      position: relative;
+      height: 230px;
+      min-height: 230px;
+      width: 100%;
+    }
+
+    .category-breakdown-list {
+      display: grid;
+      gap: 2px;
+    }
+
     .category-item {
       display: flex;
       align-items: center;
@@ -298,6 +316,28 @@
       padding: 16px;
       margin-bottom: 16px;
       animation: slideUp 0.4s ease-out both;
+    }
+
+    .chart-canvas-wrap {
+      position: relative;
+      width: 100%;
+      height: 230px;
+      min-height: 230px;
+    }
+
+    .chart-canvas-wrap.compact {
+      height: 210px;
+      min-height: 210px;
+    }
+
+    .chart-empty {
+      min-height: 180px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 13px;
     }
 
     .chart-bars {
@@ -837,6 +877,7 @@
       padding: 10px 12px;
       border-radius: 10px;
       border-left: 3px solid transparent;
+      min-height: 118px;
     }
     .ri-card.positive {
       background: rgba(11, 115, 125, 0.08);
@@ -867,6 +908,79 @@
       border-radius: 6px;
     }
     .ri-tip::before { content: 'Tip: '; font-weight: 600; }
+
+    .insights-slider {
+      display: flex;
+      gap: 12px;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      scroll-padding: 0 2px;
+      padding: 2px 2px 8px;
+      margin-bottom: 8px;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+    }
+
+    .insights-slider::-webkit-scrollbar {
+      display: none;
+    }
+
+    .insight-slide {
+      flex: 0 0 min(88%, 360px);
+      scroll-snap-align: start;
+    }
+
+    .insight-slide .ri-card {
+      height: 100%;
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      box-shadow: 0 8px 22px rgba(17,24,39,0.045);
+    }
+
+    .insights-dots {
+      display: flex;
+      justify-content: center;
+      gap: 6px;
+      margin: 0 0 16px;
+    }
+
+    .insight-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--border-color);
+      transition: width 0.2s ease, background 0.2s ease;
+    }
+
+    .insight-dot.active {
+      width: 18px;
+      border-radius: 999px;
+      background: var(--primary-light);
+    }
+
+    .overview-card::before,
+    .overview-card::after,
+    .health-score-container::before,
+    .health-score-container::after,
+    .category-list::before,
+    .category-list::after,
+    .daily-chart::before,
+    .daily-chart::after,
+    .top-expenses::before,
+    .top-expenses::after,
+    .comparison-card::before,
+    .comparison-card::after,
+    .compare-column::before,
+    .compare-column::after,
+    .compare-chart-container::before,
+    .compare-chart-container::after,
+    .compare-summary::before,
+    .compare-summary::after,
+    .period-selector::before,
+    .period-selector::after {
+      content: none !important;
+      display: none !important;
+    }
 
     /* Compact page header - matches the Transactions header */
     .mtn-header {
@@ -1109,12 +1223,15 @@
       </div>
       <span id="reportInsightCount" style="font-size:10px;color:var(--text-muted);background:var(--bg-secondary);padding:2px 8px;border-radius:10px;"></span>
     </div>
-    <div id="reportInsights" style="display:flex;flex-direction:column;gap:8px;margin-bottom:16px;">
-      <div style="text-align:center;padding:16px;color:var(--text-muted);font-size:12px;">
+    <div id="reportInsights" class="insights-slider" aria-label="Smart insights">
+      <div class="insight-slide" style="flex-basis:100%;">
+        <div style="text-align:center;padding:16px;color:var(--text-muted);font-size:12px;background:var(--card-bg);border-radius:14px;">
         <div class="spinner" style="margin:0 auto 8px;width:20px;height:20px;border-width:2px;"></div>
         Analyzing your data...
+        </div>
       </div>
     </div>
+    <div id="reportInsightDots" class="insights-dots" aria-hidden="true"></div>
 
     <!-- Daily/Weekly Spending Chart -->
     <div class="section-header">
@@ -1124,8 +1241,8 @@
       </div>
     </div>
     <div class="daily-chart">
-      <div class="chart-bars" id="spendingChart">
-        <!-- Bars will be inserted here -->
+      <div class="chart-canvas-wrap" id="spendingChartWrap">
+        <canvas id="spendingChart"></canvas>
       </div>
     </div>
 
@@ -1136,8 +1253,13 @@
         Spending by Category
       </div>
     </div>
-    <div class="category-list" id="categoryBreakdown">
-      <!-- Categories will be inserted here -->
+    <div class="category-list analytics-card" id="categoryBreakdown">
+      <div class="category-chart-shell" id="categoryChartWrap">
+        <canvas id="categoryChart"></canvas>
+      </div>
+      <div class="category-breakdown-list" id="categoryBreakdownList">
+        <!-- Categories will be inserted here -->
+      </div>
     </div>
 
     <!-- Bills & Subscriptions Payments -->
@@ -1266,8 +1388,8 @@
             <span id="legend2">Period 2</span>
           </div>
         </div>
-        <div class="compare-bars" id="compareChart">
-          <!-- Comparison bars will be inserted here -->
+        <div class="chart-canvas-wrap compact" id="compareChartWrap">
+          <canvas id="compareChart"></canvas>
         </div>
       </div>
 
@@ -1315,6 +1437,52 @@
       period1: { income: 0, expenses: 0, savings: 0, transactions: 0 },
       period2: { income: 0, expenses: 0, savings: 0, transactions: 0 }
     };
+
+    const chartState = {
+      spending: null,
+      category: null,
+      comparison: null
+    };
+
+    const reportChartColors = ['#0b737d', '#10b981', '#f59e0b', '#6366f1', '#ef4444', '#14b8a6', '#8b5cf6', '#f97316'];
+
+    function getChartTextColor() {
+      return getComputedStyle(document.documentElement).getPropertyValue('--text-secondary').trim() || '#6b7280';
+    }
+
+    function getChartGridColor() {
+      return getComputedStyle(document.documentElement).getPropertyValue('--border-color').trim() || 'rgba(17,24,39,0.08)';
+    }
+
+    function destroyChart(key) {
+      if (chartState[key]) {
+        chartState[key].destroy();
+        chartState[key] = null;
+      }
+    }
+
+    function renderChartEmpty(containerId, icon, message) {
+      const container = document.getElementById(containerId);
+      if (!container) return;
+      container.innerHTML = `
+        <div class="chart-empty">
+          <div>
+            <i data-lucide="${icon}" style="width:34px;height:34px;opacity:0.35;margin-bottom:8px;"></i>
+            <div>${message}</div>
+          </div>
+        </div>
+      `;
+      if (typeof lucide !== 'undefined') lucide.createIcons({ node: container });
+    }
+
+    function ensureCanvas(containerId, canvasId) {
+      const container = document.getElementById(containerId);
+      if (!container) return null;
+      if (!container.querySelector(`#${canvasId}`)) {
+        container.innerHTML = `<canvas id="${canvasId}"></canvas>`;
+      }
+      return document.getElementById(canvasId);
+    }
 
     // Category icons mapping (Lucide icon names)
     const categoryIcons = {
@@ -1511,35 +1679,62 @@
       document.getElementById('legend1').textContent = label1;
       document.getElementById('legend2').textContent = label2;
 
-      const metrics = [
-        { label: 'Income', key: 'income' },
-        { label: 'Expenses', key: 'expenses' },
-        { label: 'Savings', key: 'savings' }
-      ];
+      destroyChart('comparison');
+      const canvas = ensureCanvas('compareChartWrap', 'compareChart');
+      if (!canvas) return;
+      if (typeof Chart === 'undefined') {
+        renderChartEmpty('compareChartWrap', 'bar-chart-3', 'Chart unavailable');
+        return;
+      }
 
-      const maxValue = Math.max(
-        compareData.period1.income, compareData.period1.expenses, Math.abs(compareData.period1.savings),
-        compareData.period2.income, compareData.period2.expenses, Math.abs(compareData.period2.savings),
-        1
-      );
-
-      const container = document.getElementById('compareChart');
-      container.innerHTML = metrics.map(metric => {
-        const val1 = metric.key === 'savings' ? Math.abs(compareData.period1[metric.key]) : compareData.period1[metric.key];
-        const val2 = metric.key === 'savings' ? Math.abs(compareData.period2[metric.key]) : compareData.period2[metric.key];
-        const height1 = (val1 / maxValue * 80) + 8;
-        const height2 = (val2 / maxValue * 80) + 8;
-
-        return `
-          <div class="compare-bar-group">
-            <div class="compare-bar-pair">
-              <div class="compare-bar period1" style="height: ${height1}px" title="${label1}: ${utils.formatCurrency(compareData.period1[metric.key])}"></div>
-              <div class="compare-bar period2" style="height: ${height2}px" title="${label2}: ${utils.formatCurrency(compareData.period2[metric.key])}"></div>
-            </div>
-            <div class="compare-bar-label">${metric.label}</div>
-          </div>
-        `;
-      }).join('');
+      chartState.comparison = new Chart(canvas, {
+        type: 'bar',
+        data: {
+          labels: ['Income', 'Expenses', 'Savings'],
+          datasets: [
+            {
+              label: label1,
+              data: [compareData.period1.income, compareData.period1.expenses, compareData.period1.savings],
+              backgroundColor: '#0b737d',
+              borderRadius: 8,
+              maxBarThickness: 28
+            },
+            {
+              label: label2,
+              data: [compareData.period2.income, compareData.period2.expenses, compareData.period2.savings],
+              backgroundColor: '#10b981',
+              borderRadius: 8,
+              maxBarThickness: 28
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              callbacks: {
+                label: context => `${context.dataset.label}: ${utils.formatCurrency(context.parsed.y)}`
+              }
+            }
+          },
+          scales: {
+            x: {
+              grid: { display: false },
+              ticks: { color: getChartTextColor(), font: { weight: 700 } }
+            },
+            y: {
+              beginAtZero: true,
+              grid: { color: getChartGridColor() },
+              ticks: {
+                color: getChartTextColor(),
+                callback: value => utils.formatCurrency(value).replace(/\.00$/, '')
+              }
+            }
+          }
+        }
+      });
     }
 
     function renderComparisonSummary(label1, label2) {
@@ -1776,29 +1971,49 @@
 
     async function loadSmartInsights() {
       const container = document.getElementById('reportInsights');
+      const dots = document.getElementById('reportInsightDots');
       const countEl = document.getElementById('reportInsightCount');
       try {
         const response = await api.get('/comparisons/insights?limit=30&all=true');
         if (response.success && response.data.length > 0) {
           if (countEl) countEl.textContent = response.data.length + ' insights';
           container.innerHTML = response.data.map(insight => `
-            <div class="ri-card ${insight.type || 'info'}">
-              <span class="ri-icon"><i data-lucide="${insight.icon}" style="width:18px;height:18px;"></i></span>
-              <div class="ri-body">
-                <div class="ri-title">${insight.title}</div>
-                <div class="ri-msg">${insight.message}</div>
-                ${insight.tip ? `<div class="ri-tip">${insight.tip}</div>` : ''}
+            <div class="insight-slide">
+              <div class="ri-card ${insight.type || 'info'}">
+                <span class="ri-icon"><i data-lucide="${insight.icon || 'lightbulb'}" style="width:18px;height:18px;"></i></span>
+                <div class="ri-body">
+                  <div class="ri-title">${insight.title}</div>
+                  <div class="ri-msg">${insight.message}</div>
+                  ${insight.tip ? `<div class="ri-tip">${insight.tip}</div>` : ''}
+                </div>
               </div>
             </div>
           `).join('');
+          if (dots) {
+            dots.innerHTML = response.data.map((_, index) => `<span class="insight-dot ${index === 0 ? 'active' : ''}"></span>`).join('');
+            container.onscroll = () => updateInsightDots(container, dots);
+          }
           if (typeof lucide !== 'undefined') lucide.createIcons({ node: container });
         } else {
-          container.innerHTML = '<div style="text-align:center;padding:12px;color:var(--text-muted);font-size:12px;">Log more expenses to unlock insights!</div>';
+          container.innerHTML = '<div class="insight-slide" style="flex-basis:100%;"><div style="text-align:center;padding:12px;color:var(--text-muted);font-size:12px;background:var(--card-bg);border-radius:14px;">Log more expenses to unlock insights!</div></div>';
+          if (dots) dots.innerHTML = '';
           if (countEl) countEl.textContent = '';
         }
       } catch (e) {
-        container.innerHTML = '<div style="text-align:center;padding:12px;color:var(--text-muted);font-size:12px;">Insights unavailable</div>';
+        container.innerHTML = '<div class="insight-slide" style="flex-basis:100%;"><div style="text-align:center;padding:12px;color:var(--text-muted);font-size:12px;background:var(--card-bg);border-radius:14px;">Insights unavailable</div></div>';
+        if (dots) dots.innerHTML = '';
       }
+    }
+
+    function updateInsightDots(container, dots) {
+      const slides = Array.from(container.querySelectorAll('.insight-slide'));
+      const dotItems = Array.from(dots.querySelectorAll('.insight-dot'));
+      if (!slides.length || !dotItems.length) return;
+      const activeIndex = slides.reduce((closest, slide, index) => {
+        const distance = Math.abs(slide.offsetLeft - container.scrollLeft);
+        return distance < closest.distance ? { index, distance } : closest;
+      }, { index: 0, distance: Infinity }).index;
+      dotItems.forEach((dot, index) => dot.classList.toggle('active', index === activeIndex));
     }
 
     function renderBillSubPayments(currentExpenses) {
@@ -1937,38 +2152,120 @@
     }
 
     function renderSpendingChart() {
-      const container = document.getElementById('spendingChart');
-      
+      destroyChart('spending');
+
       if (!reportData.daily || reportData.daily.length === 0 || reportData.daily.every(d => d.amount === 0)) {
-        container.innerHTML = '<div class="empty-state" style="text-align:center;color:rgba(255,255,255,0.6);padding:24px;"><i data-lucide="bar-chart-2"></i><p>No spending data for this period</p></div>';
-        if (typeof lucide !== 'undefined') lucide.createIcons({ node: container });
+        renderChartEmpty('spendingChartWrap', 'line-chart', 'No spending data for this period');
         return;
       }
-      
-      const maxAmount = Math.max(...reportData.daily.map(d => d.amount), 1);
 
-      container.innerHTML = reportData.daily.map(day => {
-        const height = (day.amount / maxAmount * 80) + 8;
-        return `
-          <div class="chart-bar-wrapper">
-            <div class="chart-bar ${day.isCurrent ? 'current' : ''}" style="height: ${height}px" title="${utils.formatCurrency(day.amount)}"></div>
-            <div class="chart-label">${day.label}</div>
-          </div>
-        `;
-      }).join('');
+      const canvas = ensureCanvas('spendingChartWrap', 'spendingChart');
+      if (!canvas) return;
+      if (typeof Chart === 'undefined') {
+        renderChartEmpty('spendingChartWrap', 'line-chart', 'Chart unavailable');
+        return;
+      }
+
+      chartState.spending = new Chart(canvas, {
+        type: 'line',
+        data: {
+          labels: reportData.daily.map(day => day.label),
+          datasets: [{
+            label: 'Spending',
+            data: reportData.daily.map(day => day.amount),
+            borderColor: '#0b737d',
+            backgroundColor: 'rgba(11, 115, 125, 0.14)',
+            pointBackgroundColor: reportData.daily.map(day => day.isCurrent ? '#f59e0b' : '#0b737d'),
+            pointBorderColor: '#ffffff',
+            pointBorderWidth: 2,
+            pointRadius: 4,
+            pointHoverRadius: 6,
+            tension: 0.38,
+            fill: true
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              callbacks: {
+                label: context => utils.formatCurrency(context.parsed.y)
+              }
+            }
+          },
+          scales: {
+            x: {
+              grid: { display: false },
+              ticks: { color: getChartTextColor(), font: { weight: 700 } }
+            },
+            y: {
+              beginAtZero: true,
+              grid: { color: getChartGridColor() },
+              ticks: {
+                color: getChartTextColor(),
+                callback: value => utils.formatCurrency(value).replace(/\.00$/, '')
+              }
+            }
+          }
+        }
+      });
     }
 
     function renderCategories() {
-      const container = document.getElementById('categoryBreakdown');
+      const container = document.getElementById('categoryBreakdownList');
+      destroyChart('category');
       
       if (reportData.categories.length === 0) {
-        container.innerHTML = `
-          <div class="empty-state">
-            <i data-lucide="pie-chart"></i>
-            <p>No expenses recorded</p>
-          </div>
-        `;
+        renderChartEmpty('categoryChartWrap', 'pie-chart', 'No expense categories yet');
+        if (container) container.innerHTML = '';
         return;
+      }
+
+      const canvas = ensureCanvas('categoryChartWrap', 'categoryChart');
+      if (canvas && typeof Chart === 'undefined') {
+        renderChartEmpty('categoryChartWrap', 'pie-chart', 'Chart unavailable');
+      } else if (canvas) {
+        chartState.category = new Chart(canvas, {
+          type: 'doughnut',
+          data: {
+            labels: reportData.categories.map(cat => cat.name),
+            datasets: [{
+              data: reportData.categories.map(cat => cat.amount),
+              backgroundColor: reportData.categories.map((_, index) => reportChartColors[index % reportChartColors.length]),
+              borderColor: getComputedStyle(document.documentElement).getPropertyValue('--card-bg').trim() || '#ffffff',
+              borderWidth: 4,
+              hoverOffset: 8
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            cutout: '66%',
+            plugins: {
+              legend: {
+                position: 'bottom',
+                labels: {
+                  boxWidth: 10,
+                  boxHeight: 10,
+                  color: getChartTextColor(),
+                  font: { size: 11, weight: 700 },
+                  usePointStyle: true
+                }
+              },
+              tooltip: {
+                callbacks: {
+                  label: context => {
+                    const value = context.parsed || 0;
+                    const total = reportData.categories.reduce((sum, cat) => sum + cat.amount, 0) || 1;
+                    return `${context.label}: ${utils.formatCurrency(value)} (${(value / total * 100).toFixed(1)}%)`;
+                  }
+                }
+              }
+            }
+          }
+        });
       }
 
       container.innerHTML = reportData.categories.map(cat => `
