@@ -151,8 +151,8 @@
       grid-template-columns: auto 1fr auto;
       align-items: center;
       gap: 14px;
-      padding: 16px;
-      margin-bottom: 16px;
+      padding: 14px;
+      margin-bottom: 12px;
       background: var(--bg-card);
       border: 1px solid var(--border-color);
       border-radius: 18px;
@@ -237,11 +237,16 @@
       height: 18px;
     }
 
+    .settings-account-edit:hover {
+      background: rgba(11, 115, 125, 0.12);
+      transform: translateY(-1px);
+    }
+
     .settings-trust-grid {
       display: grid;
       grid-template-columns: repeat(3, minmax(0, 1fr));
       gap: 8px;
-      margin-bottom: 18px;
+      margin-bottom: 16px;
     }
 
     .settings-trust-item {
@@ -269,6 +274,29 @@
       line-height: 1.2;
       font-weight: 700;
       color: var(--text-secondary);
+    }
+
+    .settings-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 18px;
+      overflow: hidden;
+      box-shadow: 0 10px 26px rgba(15, 23, 42, 0.05);
+    }
+
+    .settings-card .settings-item,
+    .settings-card .notification-item {
+      border: 0;
+      border-radius: 0;
+      margin-bottom: 0;
+      box-shadow: none;
+      background: transparent;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .settings-card .settings-item:last-child,
+    .settings-card .notification-item:last-child {
+      border-bottom: 0;
     }
 
     .settings-section {
@@ -347,6 +375,25 @@
       line-height: 1.35;
     }
 
+    .settings-value-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 7px 10px;
+      border-radius: 999px;
+      background: rgba(11, 115, 125, 0.1);
+      color: var(--primary-color);
+      font-size: 12px;
+      font-weight: 800;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    .settings-value-pill i {
+      width: 14px;
+      height: 14px;
+    }
+
     .settings-arrow {
       width: 18px;
       height: 18px;
@@ -415,9 +462,46 @@
 
     [data-theme="dark"] .settings-account-card,
     [data-theme="dark"] .settings-trust-item,
+    [data-theme="dark"] .settings-card,
     [data-theme="dark"] .settings-item,
     [data-theme="dark"] .notification-item {
       box-shadow: none;
+    }
+
+    .theme-segment {
+      display: inline-flex;
+      align-items: center;
+      padding: 3px;
+      gap: 3px;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: 999px;
+      flex-shrink: 0;
+    }
+
+    .theme-segment button {
+      width: 34px;
+      height: 30px;
+      border: 0;
+      border-radius: 999px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-muted);
+      background: transparent;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .theme-segment button.active {
+      color: #ffffff;
+      background: var(--primary-color);
+      box-shadow: 0 8px 16px rgba(3,48,54,0.18);
+    }
+
+    .theme-segment button i {
+      width: 16px;
+      height: 16px;
     }
 
     /* Toggle Switch Styles */
@@ -559,6 +643,206 @@
       border-bottom: 1px solid var(--border-color);
     }
 
+    .settings-modal .modal-content {
+      border-radius: 24px;
+      padding: 0;
+      overflow: hidden;
+      max-height: 88vh;
+    }
+
+    .settings-modal .modal-header {
+      padding: 18px 18px 14px;
+      border-bottom: 1px solid var(--border-color);
+      background: var(--bg-card);
+    }
+
+    .settings-modal-body {
+      padding: 16px;
+      overflow-y: auto;
+      max-height: calc(88vh - 74px);
+    }
+
+    .modal-kicker {
+      font-size: 12px;
+      color: var(--text-secondary);
+      margin: -4px 0 14px;
+      line-height: 1.45;
+    }
+
+    .modal-close-soft {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: var(--bg-secondary);
+      color: var(--text-primary);
+      border: 1px solid var(--border-color);
+      box-shadow: none;
+    }
+
+    .modal-close-soft:hover {
+      background: rgba(239, 68, 68, 0.1);
+      color: #ef4444;
+    }
+
+    .currency-list,
+    .picker-list {
+      display: grid;
+      gap: 9px;
+    }
+
+    .currency-option,
+    .picker-option {
+      width: 100%;
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      align-items: center;
+      gap: 12px;
+      padding: 13px;
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      background: var(--bg-card);
+      color: inherit;
+      text-align: left;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .currency-option:hover,
+    .picker-option:hover,
+    .currency-option.active,
+    .picker-option.active {
+      border-color: rgba(11, 115, 125, 0.35);
+      background: rgba(11, 115, 125, 0.07);
+    }
+
+    .currency-symbol {
+      width: 42px;
+      height: 42px;
+      border-radius: 14px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(145deg, rgba(11,115,125,0.13), rgba(252,209,22,0.18));
+      color: var(--primary-color);
+      font-size: 14px;
+      font-weight: 900;
+      letter-spacing: 0;
+    }
+
+    .picker-option-icon {
+      width: 42px;
+      height: 42px;
+      border-radius: 14px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(11, 115, 125, 0.1);
+      color: var(--primary-color);
+    }
+
+    .picker-option-icon i,
+    .currency-check i {
+      width: 18px;
+      height: 18px;
+    }
+
+    .currency-copy,
+    .picker-option-copy {
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+
+    .currency-code,
+    .picker-option-title {
+      font-size: 14px;
+      font-weight: 850;
+      color: var(--text-primary);
+    }
+
+    .currency-name,
+    .picker-option-subtitle {
+      font-size: 12px;
+      color: var(--text-secondary);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .currency-check,
+    .picker-option-check {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      color: transparent;
+      background: transparent;
+      flex-shrink: 0;
+    }
+
+    .currency-option.active .currency-check,
+    .picker-option.active .picker-option-check {
+      color: #ffffff;
+      background: var(--primary-color);
+    }
+
+    .field-trigger {
+      width: 100%;
+      min-height: 52px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 12px 14px;
+      border: 1px solid var(--border-color);
+      border-radius: 14px;
+      background: var(--bg-secondary);
+      color: var(--text-primary);
+      text-align: left;
+      cursor: pointer;
+    }
+
+    .field-trigger span {
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .field-trigger i {
+      width: 18px;
+      height: 18px;
+      color: var(--text-muted);
+      flex-shrink: 0;
+    }
+
+    .export-date-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    @media (max-width: 380px) {
+      .settings-account-card {
+        grid-template-columns: auto 1fr;
+      }
+
+      .settings-account-edit {
+        grid-column: 1 / -1;
+        width: 100%;
+        border-radius: 14px;
+      }
+
+      .export-date-row {
+        grid-template-columns: 1fr;
+      }
+    }
+
     .gmail-connect-prompt {
       text-align: center;
       padding: 16px;
@@ -588,7 +872,7 @@
 
     /* ===== MTN-Style Header ===== */
     body { padding-top: 0 !important; }
-    .mtn-header { background: linear-gradient(160deg, var(--primary-color) 0%, #064a52 40%, #033036 80%, #021f23 100%); position: fixed; top: 0; left: 0; right: 0; z-index: 100; padding-top: env(safe-area-inset-top, 0px); padding-left: env(safe-area-inset-left, 0px); padding-right: env(safe-area-inset-right, 0px); overflow: hidden;
+    .mtn-header { background: linear-gradient(160deg, var(--primary-color) 0%, #064a52 40%, #033036 80%, #021f23 100%); position: fixed; top: 0; left: 0; right: 0; z-index: 100; padding-top: env(safe-area-inset-top, 0px); padding-left: env(safe-area-inset-left, 0px); padding-right: env(safe-area-inset-right, 0px); overflow: hidden; }
     .mtn-header::before { content: ''; position: absolute; top: -50%; right: -20%; width: 260px; height: 260px; background: radial-gradient(circle, rgba(255,255,255,0.08) 0%, transparent 70%); border-radius: 50%; }
     .mtn-header::after { content: ''; position: absolute; bottom: -40%; left: -15%; width: 200px; height: 200px; background: radial-gradient(circle, rgba(255,255,255,0.05) 0%, transparent 70%); border-radius: 50%; }
     .mtn-topbar { display: flex; justify-content: space-between; align-items: center; padding: 12px 16px 0 16px; position: relative; z-index: 1; }
@@ -752,7 +1036,7 @@
     <!-- Profile Information -->
     <div class="settings-section">
       <div class="settings-section-title">Profile Information</div>
-      <div class="card">
+      <div class="settings-card">
         <div class="profile-info-grid">
           <div class="profile-info-item">
             <span class="profile-info-label">Full Name</span>
@@ -773,116 +1057,124 @@
     <!-- Account Settings -->
     <div class="settings-section">
       <div class="settings-section-title">Account Settings</div>
-      
-      <div class="settings-item" onclick="openModal('editProfileModal')">
-        <div class="settings-item-left">
-          <span class="settings-icon"><i data-lucide="pencil" class="icon"></i></span>
-          <div class="settings-item-info">
-            <h4>Edit Profile</h4>
-            <p>Update your personal information</p>
+      <div class="settings-card">
+        <div class="settings-item" onclick="openModal('editProfileModal')">
+          <div class="settings-item-left">
+            <span class="settings-icon"><i data-lucide="pencil" class="icon"></i></span>
+            <div class="settings-item-info">
+              <h4>Edit Profile</h4>
+              <p>Update your personal information</p>
+            </div>
           </div>
+          <span class="settings-arrow"><i data-lucide="chevron-right"></i></span>
         </div>
-        <span class="settings-arrow"><i data-lucide="chevron-right"></i></span>
       </div>
     </div>
 
     <!-- Preferences -->
     <div class="settings-section">
       <div class="settings-section-title">Preferences</div>
-      
-      <div class="settings-item" onclick="toggleTheme()">
-        <div class="settings-item-left">
-          <span class="settings-icon" id="themeIcon"><i data-lucide="sun" class="icon"></i></span>
-          <div class="settings-item-info">
-            <h4>Theme</h4>
-            <p id="themeText">Light Mode</p>
+      <div class="settings-card">
+        <div class="settings-item">
+          <div class="settings-item-left">
+            <span class="settings-icon" id="themeIcon"><i data-lucide="sun" class="icon"></i></span>
+            <div class="settings-item-info">
+              <h4>Appearance</h4>
+              <p id="themeText">Light mode is active</p>
+            </div>
+          </div>
+          <div class="theme-segment" aria-label="Theme mode">
+            <button type="button" id="lightThemeBtn" onclick="setSettingsTheme('light')" aria-label="Light mode" title="Light mode">
+              <i data-lucide="sun"></i>
+            </button>
+            <button type="button" id="darkThemeBtn" onclick="setSettingsTheme('dark')" aria-label="Dark mode" title="Dark mode">
+              <i data-lucide="moon"></i>
+            </button>
           </div>
         </div>
-        <label class="toggle-switch" onclick="event.stopPropagation()">
-          <input type="checkbox" id="themeToggle" onchange="toggleTheme(this.checked ? 'dark' : 'light')">
-          <span class="toggle-slider"></span>
-        </label>
-      </div>
 
-      <div class="settings-item" onclick="openModal('currencyModal')">
-        <div class="settings-item-left">
-          <span class="settings-icon"><i data-lucide="coins" class="icon"></i></span>
-          <div class="settings-item-info">
-            <h4>Currency</h4>
-            <p id="currencyText">GHS (Ghana Cedi)</p>
+        <div class="settings-item" onclick="openModal('currencyModal')">
+          <div class="settings-item-left">
+            <span class="settings-icon"><i data-lucide="coins" class="icon"></i></span>
+            <div class="settings-item-info">
+              <h4>App Currency</h4>
+              <p id="currencyText">GHS (Ghana Cedi)</p>
+            </div>
           </div>
+          <span class="settings-value-pill" id="currencyPill"><i data-lucide="badge-cent"></i> GHS</span>
         </div>
-        <span class="settings-arrow"><i data-lucide="chevron-right"></i></span>
       </div>
-
     </div>
 
     <!-- Email Notifications -->
     <div class="settings-section">
       <div class="settings-section-title">Email Notifications</div>
-      
-      <div class="settings-item" style="opacity: 0.6; cursor: not-allowed;">
-        <div class="settings-item-left">
-          <span class="settings-icon"><i data-lucide="mail" class="icon"></i></span>
-          <div class="settings-item-info">
-            <h4>Gmail Notifications <span style="color: #f59e0b; font-size: 11px; font-weight: 700; margin-left: 8px;">COMING SOON</span></h4>
-            <p id="notifStatusText">Manage email alerts</p>
+      <div class="settings-card">
+        <div class="settings-item" onclick="openModal('notificationsModal')">
+          <div class="settings-item-left">
+            <span class="settings-icon"><i data-lucide="mail" class="icon"></i></span>
+            <div class="settings-item-info">
+              <h4>Email Alerts</h4>
+              <p id="notifStatusText">Manage summaries, bill alerts, and challenge updates</p>
+            </div>
           </div>
+          <span class="settings-arrow"><i data-lucide="chevron-right"></i></span>
         </div>
-        <span class="settings-arrow"><i data-lucide="chevron-right"></i></span>
       </div>
     </div>
 
     <!-- Data & Backup -->
     <div class="settings-section">
       <div class="settings-section-title">Data & Backup</div>
-      
-      <div class="settings-item" onclick="openModal('exportModal')">
-        <div class="settings-item-left">
-          <span class="settings-icon"><i data-lucide="upload" class="icon"></i></span>
-          <div class="settings-item-info">
-            <h4>Export Reports</h4>
-            <p>Download as PDF or CSV</p>
+      <div class="settings-card">
+        <div class="settings-item" onclick="openModal('exportModal')">
+          <div class="settings-item-left">
+            <span class="settings-icon"><i data-lucide="download" class="icon"></i></span>
+            <div class="settings-item-info">
+              <h4>Export Data</h4>
+              <p>Download your records as CSV or JSON</p>
+            </div>
           </div>
+          <span class="settings-arrow"><i data-lucide="chevron-right"></i></span>
         </div>
-        <span class="settings-arrow"><i data-lucide="chevron-right"></i></span>
       </div>
     </div>
 
     <!-- App Info -->
     <div class="settings-section">
       <div class="settings-section-title">About</div>
-      
-      <div class="settings-item">
-        <div class="settings-item-left">
-          <span class="settings-icon"><i data-lucide="smartphone" class="icon"></i></span>
-          <div class="settings-item-info">
-            <h4>App Version</h4>
-            <p>KudiSave v1.0</p>
+      <div class="settings-card">
+        <div class="settings-item">
+          <div class="settings-item-left">
+            <span class="settings-icon"><i data-lucide="smartphone" class="icon"></i></span>
+            <div class="settings-item-info">
+              <h4>App Version</h4>
+              <p>KudiSave v1.0</p>
+            </div>
           </div>
         </div>
-      </div>
 
-      <div class="settings-item" onclick="window.location.href='terms.html'" style="cursor:pointer;">
-        <div class="settings-item-left">
-          <span class="settings-icon"><i data-lucide="file-text" class="icon"></i></span>
-          <div class="settings-item-info">
-            <h4>Terms of Service</h4>
-            <p>Read our terms and conditions</p>
+        <div class="settings-item" onclick="window.location.href='terms.html'" style="cursor:pointer;">
+          <div class="settings-item-left">
+            <span class="settings-icon"><i data-lucide="file-text" class="icon"></i></span>
+            <div class="settings-item-info">
+              <h4>Terms of Service</h4>
+              <p>Read our terms and conditions</p>
+            </div>
           </div>
+          <span class="settings-arrow"><i data-lucide="chevron-right"></i></span>
         </div>
-        <span class="settings-arrow"><i data-lucide="chevron-right"></i></span>
-      </div>
 
-      <div class="settings-item" onclick="window.location.href='privacy.html'" style="cursor:pointer;">
-        <div class="settings-item-left">
-          <span class="settings-icon"><i data-lucide="shield" class="icon"></i></span>
-          <div class="settings-item-info">
-            <h4>Privacy Policy</h4>
-            <p>Learn how we protect your data</p>
+        <div class="settings-item" onclick="window.location.href='privacy.html'" style="cursor:pointer;">
+          <div class="settings-item-left">
+            <span class="settings-icon"><i data-lucide="shield" class="icon"></i></span>
+            <div class="settings-item-info">
+              <h4>Privacy Policy</h4>
+              <p>Learn how we protect your data</p>
+            </div>
           </div>
+          <span class="settings-arrow"><i data-lucide="chevron-right"></i></span>
         </div>
-        <span class="settings-arrow"><i data-lucide="chevron-right"></i></span>
       </div>
     </div>
 
@@ -903,13 +1195,13 @@
   </div>
 
   <!-- Email Notifications Modal -->
-  <div id="notificationsModal" class="modal">
+  <div id="notificationsModal" class="modal settings-modal">
     <div class="modal-content">
       <div class="modal-header">
         <h2 class="modal-title">Email Notifications</h2>
-        <button class="close-btn" onclick="closeModal('notificationsModal')" aria-label="Close" title="Close" type="button"><i data-lucide="x"></i></button>
+        <button class="close-btn modal-close-soft" onclick="closeModal('notificationsModal')" aria-label="Close" title="Close" type="button"><i data-lucide="x"></i></button>
       </div>
-      
+      <div class="settings-modal-body">
       <!-- Gmail Connection Section -->
       <div id="gmailConnectionSection" class="gmail-connection-section">
         <div id="gmailNotConnected" style="display: block;">
@@ -1028,17 +1320,18 @@
           <i data-lucide="send" class="icon-inline"></i> Send Test Email
         </button>
       </div>
+      </div>
     </div>
   </div>
 
   <!-- Edit Profile Modal -->
-  <div id="editProfileModal" class="modal">
+  <div id="editProfileModal" class="modal settings-modal">
     <div class="modal-content">
       <div class="modal-header">
         <h2 class="modal-title">Edit Profile</h2>
-        <button class="close-btn" onclick="closeModal('editProfileModal')" aria-label="Close" title="Close" type="button"><i data-lucide="x"></i></button>
+        <button class="close-btn modal-close-soft" onclick="closeModal('editProfileModal')" aria-label="Close" title="Close" type="button"><i data-lucide="x"></i></button>
       </div>
-      
+      <div class="settings-modal-body">
       <!-- Avatar Edit Section -->
       <div class="avatar-edit-section">
         <input type="file" id="editAvatarInput" accept="image/*" onchange="handleEditAvatarUpload(event)">
@@ -1069,82 +1362,40 @@
 
         <button type="submit" class="btn btn-primary" style="width: 100%;">Save Changes</button>
       </form>
+      </div>
     </div>
   </div>
 
   <!-- Currency Modal -->
-  <div id="currencyModal" class="modal">
+  <div id="currencyModal" class="modal settings-modal">
     <div class="modal-content">
       <div class="modal-header">
         <h2 class="modal-title">Select Currency</h2>
-        <button class="close-btn" onclick="closeModal('currencyModal')" aria-label="Close" title="Close" type="button"><i data-lucide="x"></i></button>
+        <button class="close-btn modal-close-soft" onclick="closeModal('currencyModal')" aria-label="Close" title="Close" type="button"><i data-lucide="x"></i></button>
       </div>
-      <div id="currencyList" style="max-height: 300px; overflow-y: auto;">
-        <div class="settings-item" onclick="setCurrency('GHS', 'Ghana Cedi')">
-          <div class="settings-item-left">
-            <span class="settings-icon"><i data-lucide="circle-dollar-sign" class="icon"></i></span>
-            <div class="settings-item-info">
-              <h4>GHS</h4>
-              <p>Ghana Cedi</p>
-            </div>
-          </div>
-          <span class="settings-arrow" id="check-GHS"><i data-lucide="check"></i></span>
-        </div>
-        <div class="settings-item" onclick="setCurrency('USD', 'US Dollar')">
-          <div class="settings-item-left">
-            <span class="settings-icon"><i data-lucide="banknote" class="icon"></i></span>
-            <div class="settings-item-info">
-              <h4>USD</h4>
-              <p>US Dollar</p>
-            </div>
-          </div>
-          <span class="settings-arrow" id="check-USD" style="display:none"><i data-lucide="check"></i></span>
-        </div>
-        <div class="settings-item" onclick="setCurrency('EUR', 'Euro')">
-          <div class="settings-item-left">
-            <span class="settings-icon"><i data-lucide="landmark" class="icon"></i></span>
-            <div class="settings-item-info">
-              <h4>EUR</h4>
-              <p>Euro</p>
-            </div>
-          </div>
-          <span class="settings-arrow" id="check-EUR" style="display:none"><i data-lucide="check"></i></span>
-        </div>
-        <div class="settings-item" onclick="setCurrency('GBP', 'British Pound')">
-          <div class="settings-item-left">
-            <span class="settings-icon"><i data-lucide="pound-sterling" class="icon"></i></span>
-            <div class="settings-item-info">
-              <h4>GBP</h4>
-              <p>British Pound</p>
-            </div>
-          </div>
-          <span class="settings-arrow" id="check-GBP" style="display:none"><i data-lucide="check"></i></span>
-        </div>
-        <div class="settings-item" onclick="setCurrency('NGN', 'Nigerian Naira')">
-          <div class="settings-item-left">
-            <span class="settings-icon"><i data-lucide="coins" class="icon"></i></span>
-            <div class="settings-item-info">
-              <h4>NGN</h4>
-              <p>Nigerian Naira</p>
-            </div>
-          </div>
-          <span class="settings-arrow" id="check-NGN" style="display:none"><i data-lucide="check"></i></span>
-        </div>
+      <div class="settings-modal-body">
+        <p class="modal-kicker">This changes the currency used across the app for balances, forms, reports, and summaries.</p>
+        <div id="currencyList" class="currency-list"></div>
       </div>
     </div>
   </div>
 
   <!-- Export Modal -->
-  <div id="exportModal" class="modal">
+  <div id="exportModal" class="modal settings-modal">
     <div class="modal-content">
       <div class="modal-header">
         <h2 class="modal-title">Export Reports</h2>
-        <button class="close-btn" onclick="closeModal('exportModal')" aria-label="Close" title="Close" type="button"><i data-lucide="x"></i></button>
+        <button class="close-btn modal-close-soft" onclick="closeModal('exportModal')" aria-label="Close" title="Close" type="button"><i data-lucide="x"></i></button>
       </div>
+      <div class="settings-modal-body">
       <form onsubmit="exportData(event)">
         <div class="form-group">
           <label class="form-label">Report Type</label>
-          <select class="form-input" id="exportType">
+          <button type="button" class="field-trigger" onclick="openPicker('exportTypePicker')">
+            <span id="exportTypeLabel">Expenses</span>
+            <i data-lucide="chevron-down"></i>
+          </button>
+          <select class="form-input" id="exportType" style="display:none">
             <option value="expenses">Expenses</option>
             <option value="income">Income</option>
             <option value="summary">Monthly Summary</option>
@@ -1154,20 +1405,49 @@
         </div>
         <div class="form-group">
           <label class="form-label">Date Range</label>
-          <div style="display: flex; gap: 10px;">
+          <div class="export-date-row">
             <input type="date" class="form-input" id="exportStartDate">
             <input type="date" class="form-input" id="exportEndDate">
           </div>
         </div>
         <div class="form-group">
           <label class="form-label">Format</label>
-          <select class="form-input" id="exportFormat">
+          <button type="button" class="field-trigger" onclick="openPicker('exportFormatPicker')">
+            <span id="exportFormatLabel">CSV (Excel compatible)</span>
+            <i data-lucide="chevron-down"></i>
+          </button>
+          <select class="form-input" id="exportFormat" style="display:none">
             <option value="csv">CSV (Excel compatible)</option>
             <option value="json">JSON</option>
           </select>
         </div>
         <button type="submit" class="btn btn-primary" style="width: 100%;"><i data-lucide="download" class="icon-inline"></i> Download Export</button>
       </form>
+      </div>
+    </div>
+  </div>
+
+  <div id="exportTypePicker" class="modal settings-modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 class="modal-title">Report Type</h2>
+        <button class="close-btn modal-close-soft" onclick="closeModal('exportTypePicker')" aria-label="Close" title="Close" type="button"><i data-lucide="x"></i></button>
+      </div>
+      <div class="settings-modal-body">
+        <div class="picker-list" id="exportTypeOptions"></div>
+      </div>
+    </div>
+  </div>
+
+  <div id="exportFormatPicker" class="modal settings-modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 class="modal-title">Export Format</h2>
+        <button class="close-btn modal-close-soft" onclick="closeModal('exportFormatPicker')" aria-label="Close" title="Close" type="button"><i data-lucide="x"></i></button>
+      </div>
+      <div class="settings-modal-body">
+        <div class="picker-list" id="exportFormatOptions"></div>
+      </div>
     </div>
   </div>
 
@@ -1285,7 +1565,7 @@
             }));
             
             utils.hideLoading();
-            utils.showAlert('Profile picture saved to database! 📸', 'success');
+            utils.showAlert('Profile picture saved successfully', 'success');
           } else {
             throw new Error(response.message || 'Failed to save profile picture');
           }
@@ -1349,7 +1629,7 @@
             }));
             
             utils.hideLoading();
-            utils.showAlert('Profile picture saved to database! 📸', 'success');
+            utils.showAlert('Profile picture saved successfully', 'success');
           } else {
             throw new Error(response.message || 'Failed to save');
           }
@@ -1486,9 +1766,20 @@
       document.getElementById('themeText').textContent = isDark ? 'Dark mode is active' : 'Light mode is active';
       const themeToggle = document.getElementById('themeToggle');
       if (themeToggle) themeToggle.checked = isDark;
+      document.getElementById('lightThemeBtn')?.classList.toggle('active', !isDark);
+      document.getElementById('darkThemeBtn')?.classList.toggle('active', isDark);
       const themeIcon = document.getElementById('themeIcon');
       if (themeIcon) lucide.createIcons({ node: themeIcon });
       if (typeof lucide !== 'undefined') lucide.createIcons();
+    }
+
+    async function setSettingsTheme(theme) {
+      const nextTheme = theme === 'dark' ? 'dark' : 'light';
+      if (typeof window.toggleTheme === 'function') {
+        await window.toggleTheme(nextTheme);
+      } else {
+        updateThemeDisplay(nextTheme);
+      }
     }
 
     // Override toggleTheme to also update display
@@ -1502,41 +1793,122 @@
 
     // Currency Functions
     let currentCurrency = utils.getCurrentCurrency ? utils.getCurrentCurrency() : (localStorage.getItem('currency') || 'GHS');
+    const settingCurrencies = [
+      { code: 'GHS', name: 'Ghana Cedi', symbol: 'GH\u20b5' },
+      { code: 'USD', name: 'US Dollar', symbol: '$' },
+      { code: 'EUR', name: 'Euro', symbol: '\u20ac' },
+      { code: 'GBP', name: 'British Pound', symbol: '\u00a3' },
+      { code: 'NGN', name: 'Nigerian Naira', symbol: '\u20a6' },
+      { code: 'KES', name: 'Kenyan Shilling', symbol: 'KSh' },
+      { code: 'ZAR', name: 'South African Rand', symbol: 'R' },
+      { code: 'XOF', name: 'West African CFA', symbol: 'CFA' }
+    ];
 
     async function loadCurrencySettings() {
       currentCurrency = utils.getCurrentCurrency ? utils.getCurrentCurrency() : (localStorage.getItem('currency') || 'GHS');
+      renderCurrencyOptions();
       updateCurrencyDisplay();
     }
 
     function updateCurrencyDisplay() {
-      const currencies = {
-        'GHS': 'Ghana Cedi',
-        'USD': 'US Dollar',
-        'EUR': 'Euro',
-        'GBP': 'British Pound',
-        'NGN': 'Nigerian Naira'
-      };
-      document.getElementById('currencyText').textContent = `${currentCurrency} (${currencies[currentCurrency] || currentCurrency})`;
+      const currency = settingCurrencies.find(item => item.code === currentCurrency) || settingCurrencies[0];
+      document.getElementById('currencyText').textContent = `${currency.code} (${currency.name})`;
+      const currencyPill = document.getElementById('currencyPill');
+      if (currencyPill) currencyPill.innerHTML = `<i data-lucide="badge-cent"></i> ${currency.code}`;
       document.querySelectorAll('.currency-prefix').forEach(el => {
         el.textContent = utils.getCurrencySymbol ? utils.getCurrencySymbol(currentCurrency) : currentCurrency;
       });
       
-      // Update checkmarks in modal
-      ['GHS', 'USD', 'EUR', 'GBP', 'NGN'].forEach(code => {
-        const check = document.getElementById(`check-${code}`);
-        if (check) check.style.display = code === currentCurrency ? 'block' : 'none';
+      document.querySelectorAll('.currency-option').forEach(option => {
+        option.classList.toggle('active', option.dataset.currency === currentCurrency);
       });
+      if (typeof lucide !== 'undefined') lucide.createIcons();
+    }
+
+    function renderCurrencyOptions() {
+      const container = document.getElementById('currencyList');
+      if (!container) return;
+      container.innerHTML = settingCurrencies.map(currency => `
+        <button type="button" class="currency-option${currency.code === currentCurrency ? ' active' : ''}" data-currency="${currency.code}" onclick="setCurrency('${currency.code}', '${currency.name}')">
+          <span class="currency-symbol">${currency.symbol}</span>
+          <span class="currency-copy">
+            <span class="currency-code">${currency.code}</span>
+            <span class="currency-name">${currency.name}</span>
+          </span>
+          <span class="currency-check"><i data-lucide="check"></i></span>
+        </button>
+      `).join('');
+      if (typeof lucide !== 'undefined') lucide.createIcons({ node: container });
     }
 
     async function setCurrency(code, name) {
       currentCurrency = code;
       if (utils.setCurrency) await utils.setCurrency(code);
       else localStorage.setItem('currency', code);
+      if (typeof setUserPreference === 'function') {
+        await setUserPreference('currency', code);
+      }
       updateCurrencyDisplay();
       closeModal('currencyModal');
       utils.showAlert(`Currency changed to ${name}`, 'success');
       // Persist to server in background
       try { await api.put('/currency/settings', { default_currency: code }); } catch (e) {}
+    }
+
+    const exportPickers = {
+      exportType: [
+        { value: 'expenses', label: 'Expenses', subtitle: 'All expense records', icon: 'receipt' },
+        { value: 'income', label: 'Income', subtitle: 'Income entries and sources', icon: 'wallet-cards' },
+        { value: 'summary', label: 'Monthly Summary', subtitle: 'Totals and quick overview', icon: 'chart-column' },
+        { value: 'budgets', label: 'Budget Performance', subtitle: 'Budget progress and limits', icon: 'gauge' },
+        { value: 'goals', label: 'Savings Goals', subtitle: 'Goal progress and targets', icon: 'target' }
+      ],
+      exportFormat: [
+        { value: 'csv', label: 'CSV (Excel compatible)', subtitle: 'Best for spreadsheets', icon: 'table' },
+        { value: 'json', label: 'JSON', subtitle: 'Best for backups or developers', icon: 'braces' }
+      ]
+    };
+
+    function renderPickerOptions(fieldId) {
+      const container = document.getElementById(`${fieldId}Options`);
+      const field = document.getElementById(fieldId);
+      if (!container || !field) return;
+      container.innerHTML = exportPickers[fieldId].map(option => `
+        <button type="button" class="picker-option${field.value === option.value ? ' active' : ''}" onclick="selectPickerValue('${fieldId}', '${option.value}')">
+          <span class="picker-option-icon"><i data-lucide="${option.icon}"></i></span>
+          <span class="picker-option-copy">
+            <span class="picker-option-title">${option.label}</span>
+            <span class="picker-option-subtitle">${option.subtitle}</span>
+          </span>
+          <span class="picker-option-check"><i data-lucide="check"></i></span>
+        </button>
+      `).join('');
+      if (typeof lucide !== 'undefined') lucide.createIcons({ node: container });
+    }
+
+    function updateExportPickerLabels() {
+      Object.keys(exportPickers).forEach(fieldId => {
+        const field = document.getElementById(fieldId);
+        const label = document.getElementById(`${fieldId}Label`);
+        if (!field || !label) return;
+        const option = exportPickers[fieldId].find(item => item.value === field.value);
+        if (option) label.textContent = option.label;
+        renderPickerOptions(fieldId);
+      });
+    }
+
+    function openPicker(modalId) {
+      const fieldId = modalId.replace('Picker', '');
+      renderPickerOptions(fieldId);
+      openModal(modalId);
+    }
+
+    function selectPickerValue(fieldId, value) {
+      const field = document.getElementById(fieldId);
+      if (!field) return;
+      field.value = value;
+      updateExportPickerLabels();
+      closeModal(`${fieldId}Picker`);
     }
 
     // Backup Functions
@@ -1721,6 +2093,8 @@
     window.openModal = function(modalId) {
       originalOpenModal(modalId);
       if (modalId === 'exportModal') setDefaultExportDates();
+      if (modalId === 'currencyModal') renderCurrencyOptions();
+      if (modalId === 'exportModal') updateExportPickerLabels();
     };
 
     // Email Notification Settings
@@ -1795,7 +2169,7 @@
         try {
           const response = await api.post('/gmail/test');
           if (response.success) {
-            utils.showAlert('Test email sent from your Gmail! Check your inbox 📧', 'success');
+              utils.showAlert('Test email sent from your Gmail. Check your inbox.', 'success');
           } else {
             throw new Error(response.message);
           }
@@ -1812,7 +2186,7 @@
           });
           
           if (response.success) {
-            utils.showAlert('Test email sent! Check your inbox 📧', 'success');
+            utils.showAlert('Test email sent. Check your inbox.', 'success');
           } else {
             throw new Error(response.message || 'Failed to send test email');
           }
@@ -1934,6 +2308,7 @@
       lucide.createIcons();
       updateThemeDisplay();
       loadNotificationSettings();
+      updateExportPickerLabels();
       
       // Load API data in parallel
       Promise.all([
