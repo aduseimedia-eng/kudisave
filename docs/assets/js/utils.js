@@ -58,6 +58,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initTheme();
   initPopupCloseButtons();
   initBottomTapBar();
+  initDesktopAppNav();
 });
 
 function initPopupCloseButtons(root = document) {
@@ -144,6 +145,140 @@ function initBottomTapBar() {
   }
 
   if (typeof lucide !== 'undefined') lucide.createIcons({ node: nav });
+}
+
+function initDesktopAppNav() {
+  if (document.querySelector('.desktop-app-nav')) return;
+
+  const page = (window.location.pathname.split('/').pop() || 'dashboard.html').toLowerCase();
+  const enabledPages = new Set([
+    'dashboard.html',
+    'expenses.html',
+    'bills.html',
+    'subscriptions.html',
+    'reports.html',
+    'settings.html',
+    'tools.html',
+    'challenges.html',
+    'goals.html',
+    'achievements.html'
+  ]);
+
+  if (!enabledPages.has(page)) return;
+
+  document.body.classList.add('has-desktop-nav');
+  ensureDesktopNavStyles();
+
+  const groups = [
+    {
+      label: 'Main',
+      items: [
+        { href: 'dashboard.html', label: 'Dashboard', icon: 'layout-dashboard', match: ['dashboard.html'] },
+        { href: 'expenses.html', label: 'Transactions', icon: 'list', match: ['expenses.html'] },
+        { href: 'reports.html', label: 'Reports', icon: 'bar-chart-3', match: ['reports.html'] }
+      ]
+    },
+    {
+      label: 'Money',
+      items: [
+        { href: 'bills.html', label: 'Bills Due', icon: 'calendar-check', match: ['bills.html'] },
+        { href: 'subscriptions.html', label: 'Subscriptions', icon: 'repeat', match: ['subscriptions.html'] },
+        { href: 'goals.html', label: 'Goals', icon: 'target', match: ['goals.html'] }
+      ]
+    },
+    {
+      label: 'Progress',
+      items: [
+        { href: 'challenges.html', label: 'Challenges', icon: 'swords', match: ['challenges.html'] },
+        { href: 'achievements.html', label: 'Achievements', icon: 'trophy', match: ['achievements.html'] },
+        { href: 'tools.html', label: 'Shortcuts', icon: 'grid-3x3', match: ['tools.html'] }
+      ]
+    }
+  ];
+
+  const nav = document.createElement('aside');
+  nav.className = 'desktop-app-nav';
+  nav.setAttribute('aria-label', 'Desktop navigation');
+  nav.innerHTML = `
+    <a class="desktop-nav-brand" href="dashboard.html" aria-label="KudiSave dashboard">
+      <span class="desktop-nav-logo"><i data-lucide="wallet"></i></span>
+      <span>
+        <strong>KudiSave</strong>
+        <small>Money dashboard</small>
+      </span>
+    </a>
+    <div class="desktop-nav-cta">
+      <button type="button" onclick="openDesktopQuickAdd()">
+        <i data-lucide="plus"></i>
+        <span>Add Transaction</span>
+      </button>
+    </div>
+    <div class="desktop-nav-groups">
+      ${groups.map(group => `
+        <div class="desktop-nav-group">
+          <div class="desktop-nav-label">${group.label}</div>
+          ${group.items.map(item => {
+            const active = item.match.includes(page) ? ' active' : '';
+            return `<a class="desktop-nav-link${active}" href="${item.href}">
+              <i data-lucide="${item.icon}"></i>
+              <span>${item.label}</span>
+            </a>`;
+          }).join('')}
+        </div>
+      `).join('')}
+    </div>
+    <a class="desktop-nav-link desktop-nav-settings${page === 'settings.html' ? ' active' : ''}" href="settings.html">
+      <i data-lucide="settings"></i>
+      <span>Settings</span>
+    </a>
+  `;
+
+  document.body.appendChild(nav);
+  if (typeof lucide !== 'undefined') lucide.createIcons({ node: nav });
+}
+
+function ensureDesktopNavStyles() {
+  if (document.getElementById('desktop-app-nav-runtime-styles')) return;
+  const style = document.createElement('style');
+  style.id = 'desktop-app-nav-runtime-styles';
+  style.textContent = `
+    @media (min-width: 768px) {
+      body.has-desktop-nav { padding-left: var(--desktop-nav-width, 248px) !important; }
+      body.has-desktop-nav .mtn-header,
+      body.has-desktop-nav .header {
+        left: var(--desktop-nav-width, 248px) !important;
+        width: auto !important;
+      }
+      body.has-desktop-nav .mtn-topbar,
+      body.has-desktop-nav .mtn-info-section,
+      body.has-desktop-nav .header-balance {
+        width: min(1180px, calc(100vw - var(--desktop-nav-width, 248px) - 64px)) !important;
+      }
+      body.has-desktop-nav .container,
+      body.has-desktop-nav .main-content,
+      body.has-desktop-nav main.main-content,
+      body.has-desktop-nav .main-container,
+      body.has-desktop-nav .tools-content {
+        width: min(1180px, calc(100vw - var(--desktop-nav-width, 248px) - 64px)) !important;
+        max-width: 1180px !important;
+        margin-left: auto !important;
+        margin-right: auto !important;
+      }
+    }
+  `;
+  document.head.appendChild(style);
+}
+
+function openDesktopQuickAdd() {
+  if (typeof openAddModal === 'function') {
+    openAddModal();
+    return;
+  }
+  if (typeof openExpenseModal === 'function') {
+    openExpenseModal();
+    return;
+  }
+  window.location.href = 'expenses.html';
 }
 
 // Currency configuration

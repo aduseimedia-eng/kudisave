@@ -530,11 +530,66 @@
       transition: all 0.2s;
       border: none;
       text-align: center;
+      min-height: 44px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
     }
 
     .btn-primary {
       background: var(--primary-color);
       color: white;
+    }
+
+    .challenge-btn:disabled {
+      cursor: wait;
+      opacity: 0.88;
+      transform: none;
+    }
+
+    .challenge-btn-spinner {
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      border: 2px solid rgba(255,255,255,0.35);
+      border-top-color: #ffffff;
+      display: none;
+      animation: buttonSpin 0.8s linear infinite;
+      flex-shrink: 0;
+    }
+
+    .challenge-btn.loading .challenge-btn-spinner {
+      display: inline-block;
+    }
+
+    .challenge-start-status {
+      display: none;
+      align-items: center;
+      justify-content: center;
+      gap: 9px;
+      margin: 0 0 14px;
+      padding: 11px 12px;
+      border-radius: 14px;
+      background: rgba(11, 115, 125, 0.08);
+      color: var(--primary-color);
+      font-size: 12px;
+      font-weight: 750;
+      border: 1px solid rgba(11, 115, 125, 0.12);
+    }
+
+    .challenge-start-status.active {
+      display: flex;
+    }
+
+    .challenge-start-status i {
+      width: 16px;
+      height: 16px;
+      animation: buttonSpin 0.9s linear infinite;
+    }
+
+    @keyframes buttonSpin {
+      to { transform: rotate(360deg); }
     }
 
     .btn-secondary {
@@ -1065,10 +1120,18 @@
         <span class="meta-item" id="modalDuration"><i data-lucide="calendar-days"></i> 30 days</span>
         <span class="meta-item" id="modalTarget"><i data-lucide="target"></i> Target: GH&#8373;500</span>
       </div>
+
+      <div class="challenge-start-status" id="challengeStartStatus">
+        <i data-lucide="loader-circle"></i>
+        <span>Setting up your challenge...</span>
+      </div>
       
       <div class="challenge-actions">
         <button class="challenge-btn btn-secondary" onclick="closeModal('challengeModal')">Cancel</button>
-        <button class="challenge-btn btn-primary" id="joinBtn" onclick="joinChallenge()">Start Challenge</button>
+        <button class="challenge-btn btn-primary" id="joinBtn" onclick="joinChallenge()">
+          <span class="challenge-btn-spinner" aria-hidden="true"></span>
+          <span class="challenge-btn-label">Start Challenge</span>
+        </button>
       </div>
     </div>
   </div>
@@ -1568,9 +1631,7 @@
 
     async function joinChallenge() {
       if (!selectedChallenge) return;
-      const btn = document.getElementById('joinBtn');
-      btn.disabled = true;
-      btn.textContent = 'Joining...';
+      setJoinLoading(true);
       try {
         const challengeId = await ensureChallengeExists(selectedChallenge);
         const res = await api.post(`/challenges/${challengeId}/join`, {});
@@ -1584,9 +1645,21 @@
       } catch (e) {
         showToast('Could not join challenge', 'error');
       } finally {
-        btn.disabled = false;
-        btn.textContent = 'Start Challenge';
+        setJoinLoading(false);
       }
+    }
+
+    function setJoinLoading(isLoading) {
+      const btn = document.getElementById('joinBtn');
+      const label = btn ? btn.querySelector('.challenge-btn-label') : null;
+      const status = document.getElementById('challengeStartStatus');
+      if (!btn) return;
+      btn.disabled = isLoading;
+      btn.classList.toggle('loading', isLoading);
+      btn.setAttribute('aria-busy', isLoading ? 'true' : 'false');
+      if (label) label.textContent = isLoading ? 'Starting...' : 'Start Challenge';
+      if (status) status.classList.toggle('active', isLoading);
+      if (isLoading && typeof lucide !== 'undefined' && status) lucide.createIcons({ node: status });
     }
 
     function openProgressModal(userChallengeId, title) {
@@ -1678,6 +1751,7 @@
     function closeModal(id) {
       document.getElementById(id).classList.remove('active');
       document.body.style.overflow = '';
+      if (id === 'challengeModal') setJoinLoading(false);
       selectedChallenge = null;
     }
 

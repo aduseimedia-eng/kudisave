@@ -648,7 +648,7 @@ body {
   color: #033036;
   font-size: 17px;
   font-weight: 850;
-  letter-spacing: -0.2px;
+  letter-spacing: 0;
   line-height: 1.15;
 }
 
@@ -656,7 +656,7 @@ body {
   color: #6b7280;
   font-size: 11px;
   font-weight: 700;
-  letter-spacing: 0.8px;
+  letter-spacing: 0;
   text-transform: uppercase;
 }
 
@@ -832,7 +832,7 @@ body {
   font-size: 15px;
   font-weight: 800;
   color: #ffffff;
-  letter-spacing: -0.3px;
+  letter-spacing: 0;
 }
 
 .menu-stat-label {
@@ -840,7 +840,7 @@ body {
   font-weight: 600;
   color: rgba(255,255,255,0.5);
   text-transform: uppercase;
-  letter-spacing: 0.5px;
+  letter-spacing: 0;
   margin-top: 2px;
 }
 
@@ -848,7 +848,7 @@ body {
 .menu-section-label {
   font-size: 10px;
   font-weight: 800;
-  letter-spacing: 1px;
+  letter-spacing: 0;
   text-transform: uppercase;
   color: #94a3b8;
   padding: 16px 20px 7px;
@@ -870,7 +870,7 @@ body {
   text-decoration: none;
   font-size: 14px;
   font-weight: 700;
-  letter-spacing: -0.1px;
+  letter-spacing: 0;
   transition: all 0.2s ease;
   position: relative;
   margin: 3px 12px;
@@ -1372,7 +1372,7 @@ body {
   font-size: 14px;
   font-weight: 600;
   color: var(--text-primary);
-  letter-spacing: -0.2px;
+  letter-spacing: 0;
 }
 
 .card-icon {
@@ -1405,7 +1405,7 @@ body {
   justify-content: center;
   min-height: 44px;
   touch-action: manipulation;
-  letter-spacing: -0.1px;
+  letter-spacing: 0;
 }
 
 .btn:active {
@@ -1951,7 +1951,7 @@ div[style*="background: var(--primary-color)"] {
   font-size: 18px;
   font-weight: 700;
   color: var(--text-primary);
-  letter-spacing: -0.3px;
+  letter-spacing: 0;
 }
 
 .close-btn {
@@ -4397,9 +4397,14 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
    a stretched phone layout.
    ============================================ */
 
-@media (min-width: 900px) {
+.desktop-app-nav {
+  display: none;
+}
+
+@media (min-width: 768px) {
   :root {
     --bottom-nav-height: 0px;
+    --desktop-nav-width: 248px;
   }
 
   html {
@@ -4420,11 +4425,162 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
     display: none !important;
   }
 
+  body.has-desktop-nav {
+    padding-left: var(--desktop-nav-width) !important;
+  }
+
+  body.has-desktop-nav .mtn-header,
+  body.has-desktop-nav .header {
+    left: var(--desktop-nav-width) !important;
+  }
+
+  .desktop-app-nav {
+    position: fixed;
+    inset: 0 auto 0 0;
+    z-index: 999;
+    width: var(--desktop-nav-width);
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    padding: 22px 18px;
+    background: rgba(255, 255, 255, 0.92);
+    border-right: 1px solid rgba(17, 24, 39, 0.08);
+    box-shadow: 16px 0 42px rgba(15, 23, 42, 0.06);
+    backdrop-filter: blur(22px);
+    -webkit-backdrop-filter: blur(22px);
+  }
+
+  [data-theme="dark"] .desktop-app-nav {
+    background: rgba(15, 23, 42, 0.92);
+    border-right-color: rgba(255, 255, 255, 0.08);
+    box-shadow: none;
+  }
+
+  .desktop-nav-brand {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 12px;
+    align-items: center;
+    color: var(--text-primary);
+    text-decoration: none;
+    padding: 8px 6px 10px;
+  }
+
+  .desktop-nav-logo {
+    width: 46px;
+    height: 46px;
+    border-radius: 16px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: #ffffff;
+    background: var(--primary-gradient);
+    box-shadow: 0 12px 24px rgba(3, 48, 54, 0.2);
+  }
+
+  .desktop-nav-logo i {
+    width: 22px;
+    height: 22px;
+  }
+
+  .desktop-nav-brand strong {
+    display: block;
+    font-size: 17px;
+    font-weight: 900;
+    line-height: 1.05;
+    letter-spacing: 0;
+  }
+
+  .desktop-nav-brand small {
+    display: block;
+    margin-top: 3px;
+    font-size: 11px;
+    color: var(--text-muted);
+    font-weight: 700;
+  }
+
+  .desktop-nav-cta button {
+    width: 100%;
+    min-height: 46px;
+    border: 0;
+    border-radius: 15px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 9px;
+    color: #ffffff;
+    background: var(--primary-color);
+    font-size: 13px;
+    font-weight: 850;
+    cursor: pointer;
+    box-shadow: 0 14px 26px rgba(3, 48, 54, 0.18);
+  }
+
+  .desktop-nav-cta i {
+    width: 17px;
+    height: 17px;
+  }
+
+  .desktop-nav-groups {
+    display: grid;
+    gap: 18px;
+    overflow-y: auto;
+    padding-right: 2px;
+  }
+
+  .desktop-nav-group {
+    display: grid;
+    gap: 5px;
+  }
+
+  .desktop-nav-label {
+    padding: 0 10px 3px;
+    font-size: 10px;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 0;
+    color: var(--text-muted);
+  }
+
+  .desktop-nav-link {
+    min-height: 42px;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 0 11px;
+    color: var(--text-secondary);
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 800;
+    transition: all 0.18s ease;
+  }
+
+  .desktop-nav-link i {
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
+  }
+
+  .desktop-nav-link:hover {
+    color: var(--primary-color);
+    background: rgba(11, 115, 125, 0.08);
+  }
+
+  .desktop-nav-link.active {
+    color: var(--primary-color);
+    background: rgba(11, 115, 125, 0.12);
+  }
+
+  .desktop-nav-settings {
+    margin-top: auto;
+  }
+
   .container,
   .main-content,
   main.main-content,
   .main-container {
-    width: min(1180px, calc(100vw - 64px)) !important;
+    width: min(1180px, calc(100vw - var(--desktop-nav-width) - 64px)) !important;
     max-width: 1180px !important;
     margin-left: auto !important;
     margin-right: auto !important;
@@ -4436,7 +4592,7 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
   .mtn-topbar,
   .mtn-info-section,
   .header-balance {
-    width: min(1180px, calc(100vw - 64px));
+    width: min(1180px, calc(100vw - var(--desktop-nav-width) - 64px));
     max-width: 1180px;
     margin-left: auto;
     margin-right: auto;
@@ -4502,7 +4658,7 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
   .mtn-topbar,
   .mtn-info-section,
   .header-balance {
-    width: min(1240px, calc(100vw - 96px)) !important;
+    width: min(1240px, calc(100vw - var(--desktop-nav-width) - 96px)) !important;
     max-width: 1240px !important;
   }
 

@@ -56,7 +56,230 @@ function updateThemeIcon(theme) {
 // Initialize theme on page load
 document.addEventListener('DOMContentLoaded', () => {
   initTheme();
+  initPopupCloseButtons();
+  initBottomTapBar();
+  initDesktopAppNav();
 });
+
+function initPopupCloseButtons(root = document) {
+  const buttons = root.querySelectorAll('.close-btn, .currency-close-btn');
+  buttons.forEach(btn => {
+    if (!btn.querySelector('[data-lucide="x"]')) {
+      btn.innerHTML = '<i data-lucide="x"></i>';
+    }
+    if (!btn.getAttribute('aria-label')) btn.setAttribute('aria-label', 'Close');
+    if (!btn.getAttribute('title')) btn.setAttribute('title', 'Close');
+    if (!btn.getAttribute('type')) btn.setAttribute('type', 'button');
+  });
+  if (typeof lucide !== 'undefined') lucide.createIcons({ node: root });
+}
+
+function initBottomTapBar() {
+  const existingNav = document.querySelector('.bottom-nav');
+  if (existingNav) {
+    existingNav.querySelectorAll('.bottom-nav-item').forEach(item => {
+      const label = item.querySelector('span:last-child');
+      if (label && label.textContent.trim() === 'Bills') {
+        item.setAttribute('href', 'reports.html');
+        item.setAttribute('aria-label', 'Reports');
+        const icon = item.querySelector('[data-lucide]');
+        if (icon) icon.setAttribute('data-lucide', 'bar-chart-3');
+        label.textContent = 'Reports';
+      }
+    });
+    if (typeof lucide !== 'undefined') lucide.createIcons({ node: existingNav });
+    return;
+  }
+
+  const page = (window.location.pathname.split('/').pop() || 'dashboard.html').toLowerCase();
+  const enabledPages = new Set([
+    'dashboard.html',
+    'expenses.html',
+    'bills.html',
+    'subscriptions.html',
+    'reports.html',
+    'settings.html',
+    'tools.html',
+    'challenges.html',
+    'goals.html',
+    'achievements.html'
+  ]);
+
+  if (!enabledPages.has(page)) return;
+
+  const items = [
+    { href: 'dashboard.html', label: 'Home', icon: 'house', match: ['dashboard.html'] },
+    { href: 'expenses.html', label: 'List', icon: 'list', match: ['expenses.html', 'reports.html'] },
+    { href: 'expenses.html', label: 'Add', icon: 'plus', center: true, action: 'add-expense' },
+    { href: 'reports.html', label: 'Reports', icon: 'bar-chart-3', match: ['reports.html'] },
+    { href: 'settings.html', label: 'Settings', icon: 'settings', match: ['settings.html', 'challenges.html', 'goals.html', 'achievements.html'] }
+  ];
+
+  const nav = document.createElement('nav');
+  nav.className = 'bottom-nav';
+  nav.setAttribute('aria-label', 'Primary navigation');
+  nav.innerHTML = items.map(item => {
+    const active = item.match && item.match.includes(page) ? ' active' : '';
+    const center = item.center ? ' bottom-nav-center' : '';
+    const action = item.action ? ` data-action="${item.action}"` : '';
+    return `
+      <a class="bottom-nav-item${active}${center}" href="${item.href}"${action} aria-label="${item.label}">
+        <span class="nav-icon"><i data-lucide="${item.icon}"></i></span>
+        <span>${item.label}</span>
+      </a>`;
+  }).join('');
+
+  document.body.appendChild(nav);
+
+  const addBtn = nav.querySelector('[data-action="add-expense"]');
+  if (addBtn) {
+    addBtn.addEventListener('click', event => {
+      if (typeof openAddModal === 'function') {
+        event.preventDefault();
+        openAddModal();
+      } else if (typeof openExpenseModal === 'function') {
+        event.preventDefault();
+        openExpenseModal();
+      }
+    });
+  }
+
+  if (typeof lucide !== 'undefined') lucide.createIcons({ node: nav });
+}
+
+function initDesktopAppNav() {
+  if (document.querySelector('.desktop-app-nav')) return;
+
+  const page = (window.location.pathname.split('/').pop() || 'dashboard.html').toLowerCase();
+  const enabledPages = new Set([
+    'dashboard.html',
+    'expenses.html',
+    'bills.html',
+    'subscriptions.html',
+    'reports.html',
+    'settings.html',
+    'tools.html',
+    'challenges.html',
+    'goals.html',
+    'achievements.html'
+  ]);
+
+  if (!enabledPages.has(page)) return;
+
+  document.body.classList.add('has-desktop-nav');
+  ensureDesktopNavStyles();
+
+  const groups = [
+    {
+      label: 'Main',
+      items: [
+        { href: 'dashboard.html', label: 'Dashboard', icon: 'layout-dashboard', match: ['dashboard.html'] },
+        { href: 'expenses.html', label: 'Transactions', icon: 'list', match: ['expenses.html'] },
+        { href: 'reports.html', label: 'Reports', icon: 'bar-chart-3', match: ['reports.html'] }
+      ]
+    },
+    {
+      label: 'Money',
+      items: [
+        { href: 'bills.html', label: 'Bills Due', icon: 'calendar-check', match: ['bills.html'] },
+        { href: 'subscriptions.html', label: 'Subscriptions', icon: 'repeat', match: ['subscriptions.html'] },
+        { href: 'goals.html', label: 'Goals', icon: 'target', match: ['goals.html'] }
+      ]
+    },
+    {
+      label: 'Progress',
+      items: [
+        { href: 'challenges.html', label: 'Challenges', icon: 'swords', match: ['challenges.html'] },
+        { href: 'achievements.html', label: 'Achievements', icon: 'trophy', match: ['achievements.html'] },
+        { href: 'tools.html', label: 'Shortcuts', icon: 'grid-3x3', match: ['tools.html'] }
+      ]
+    }
+  ];
+
+  const nav = document.createElement('aside');
+  nav.className = 'desktop-app-nav';
+  nav.setAttribute('aria-label', 'Desktop navigation');
+  nav.innerHTML = `
+    <a class="desktop-nav-brand" href="dashboard.html" aria-label="KudiSave dashboard">
+      <span class="desktop-nav-logo"><i data-lucide="wallet"></i></span>
+      <span>
+        <strong>KudiSave</strong>
+        <small>Money dashboard</small>
+      </span>
+    </a>
+    <div class="desktop-nav-cta">
+      <button type="button" onclick="openDesktopQuickAdd()">
+        <i data-lucide="plus"></i>
+        <span>Add Transaction</span>
+      </button>
+    </div>
+    <div class="desktop-nav-groups">
+      ${groups.map(group => `
+        <div class="desktop-nav-group">
+          <div class="desktop-nav-label">${group.label}</div>
+          ${group.items.map(item => {
+            const active = item.match.includes(page) ? ' active' : '';
+            return `<a class="desktop-nav-link${active}" href="${item.href}">
+              <i data-lucide="${item.icon}"></i>
+              <span>${item.label}</span>
+            </a>`;
+          }).join('')}
+        </div>
+      `).join('')}
+    </div>
+    <a class="desktop-nav-link desktop-nav-settings${page === 'settings.html' ? ' active' : ''}" href="settings.html">
+      <i data-lucide="settings"></i>
+      <span>Settings</span>
+    </a>
+  `;
+
+  document.body.appendChild(nav);
+  if (typeof lucide !== 'undefined') lucide.createIcons({ node: nav });
+}
+
+function ensureDesktopNavStyles() {
+  if (document.getElementById('desktop-app-nav-runtime-styles')) return;
+  const style = document.createElement('style');
+  style.id = 'desktop-app-nav-runtime-styles';
+  style.textContent = `
+    @media (min-width: 768px) {
+      body.has-desktop-nav { padding-left: var(--desktop-nav-width, 248px) !important; }
+      body.has-desktop-nav .mtn-header,
+      body.has-desktop-nav .header {
+        left: var(--desktop-nav-width, 248px) !important;
+        width: auto !important;
+      }
+      body.has-desktop-nav .mtn-topbar,
+      body.has-desktop-nav .mtn-info-section,
+      body.has-desktop-nav .header-balance {
+        width: min(1180px, calc(100vw - var(--desktop-nav-width, 248px) - 64px)) !important;
+      }
+      body.has-desktop-nav .container,
+      body.has-desktop-nav .main-content,
+      body.has-desktop-nav main.main-content,
+      body.has-desktop-nav .main-container,
+      body.has-desktop-nav .tools-content {
+        width: min(1180px, calc(100vw - var(--desktop-nav-width, 248px) - 64px)) !important;
+        max-width: 1180px !important;
+        margin-left: auto !important;
+        margin-right: auto !important;
+      }
+    }
+  `;
+  document.head.appendChild(style);
+}
+
+function openDesktopQuickAdd() {
+  if (typeof openAddModal === 'function') {
+    openAddModal();
+    return;
+  }
+  if (typeof openExpenseModal === 'function') {
+    openExpenseModal();
+    return;
+  }
+  window.location.href = 'expenses.html';
+}
 
 // Currency configuration
 const CURRENCY_CONFIG = {
@@ -134,8 +357,8 @@ function showAlert(message, type = 'success') {
   }
 
   const icons = {
-    success: 'G£ô',
-    error: 'G£ò',
+    success: 'âœ“',
+    error: 'âœ•',
     warning: '!',
     info: 'i'
   };
@@ -188,11 +411,11 @@ function showAlert(message, type = 'success') {
 
 function getAlertIcon(type) {
   const icons = {
-    success: 'G£à',
-    error: 'G¥î',
-    warning: 'GÜán+Å'
+    success: 'âœ…',
+    error: 'âŒ',
+    warning: 'âš ï¸'
   };
-  return icons[type] || '=ƒÆí';
+  return icons[type] || 'ðŸ’¡';
 }
 
 // Show loading overlay
@@ -310,18 +533,18 @@ const INCOME_SOURCES = [
 // Get category icon
 function getCategoryIcon(category) {
   const icons = {
-    'Food / Chop Bar': '=ƒì¢',
-    'Transport (Trotro / Bolt)': '=ƒÜî',
-    'Data / Airtime': '=ƒô¦',
-    'Rent / Hostel': '=ƒÅá',
-    'Utilities': '=ƒÆí',
-    'Church / Donations': 'G¢¬',
-    'Betting / Gaming': '=ƒÄ¦',
-    'Entertainment': '=ƒÄ¼',
-    'Shopping': '=ƒ¢ìn+Å',
-    'Miscellaneous': '=ƒôª'
+    'Food / Chop Bar': 'ðŸ›',
+    'Transport (Trotro / Bolt)': 'ðŸšŒ',
+    'Data / Airtime': 'ðŸ“±',
+    'Rent / Hostel': 'ðŸ ',
+    'Utilities': 'ðŸ’¡',
+    'Church / Donations': 'â›ª',
+    'Betting / Gaming': 'ðŸŽ²',
+    'Entertainment': 'ðŸŽ¬',
+    'Shopping': 'ðŸ›ï¸',
+    'Miscellaneous': 'ðŸ“¦'
   };
-  return icons[category] || '=ƒÆ¦';
+  return icons[category] || 'ðŸ’°';
 }
 
 function getCategoryIconName(category) {
@@ -348,13 +571,13 @@ function getCategoryIconName(category) {
 // Get motivational message based on budget usage
 function getMotivationalMessage(budgetUsage) {
   if (budgetUsage <= 50) {
-    return "Chale, you dey do well! =ƒÆ¬";
+    return "Chale, you dey do well! ðŸ’ª";
   } else if (budgetUsage <= 75) {
-    return "You dey on point! Keep pushing =ƒÜÇ";
+    return "You dey on point! Keep pushing ðŸš€";
   } else if (budgetUsage <= 90) {
-    return "Small small ooo, you go reach =ƒÿà";
+    return "Small small ooo, you go reach ðŸ˜…";
   } else {
-    return "Masa, check your spending waa =ƒñö";
+    return "Masa, check your spending waa ðŸ¤”";
   }
 }
 
@@ -367,14 +590,14 @@ function calculateProgress(current, target) {
 // Get badge emoji
 function getBadgeEmoji(badgeName) {
   const emojis = {
-    'Data King/Queen': '=ƒææ',
-    'Chop Saver': '=ƒì+n+Å',
-    'Budget Boss': '=ƒÆ+',
-    'Consistency Champ': '=ƒöÑ',
-    'Goal Getter': '=ƒÄ»',
-    'Transport Wise': '=ƒÜù'
+    'Data King/Queen': 'ðŸ‘‘',
+    'Chop Saver': 'ðŸ½ï¸',
+    'Budget Boss': 'ðŸ’¼',
+    'Consistency Champ': 'ðŸ”¥',
+    'Goal Getter': 'ðŸŽ¯',
+    'Transport Wise': 'ðŸš—'
   };
-  return emojis[badgeName] || '=ƒÅå';
+  return emojis[badgeName] || 'ðŸ†';
 }
 
 // Get tier color
@@ -473,7 +696,7 @@ function getDateRange(period) {
 }
 
 // ================================
-// FUN & LIVELY UTILITIES =ƒÄë
+// FUN & LIVELY UTILITIES ðŸŽ‰
 // ================================
 
 // Confetti celebration
@@ -515,7 +738,7 @@ function showConfetti(particleCount = 50) {
 }
 
 // Fun toast notification with emoji
-function showFunToast(message, emoji = '=ƒÄë', duration = 3000) {
+function showFunToast(message, emoji = 'ðŸŽ‰', duration = 3000) {
   // Remove existing toasts
   const existing = document.querySelector('.fun-toast');
   if (existing) existing.remove();
@@ -573,7 +796,7 @@ function showFunToast(message, emoji = '=ƒÄë', duration = 3000) {
 // Celebration with sound
 function celebrate(title = 'Great Job!', type = 'success') {
   showConfetti(60);
-  showFunToast(title, type === 'success' ? '=ƒÄë' : '=ƒÅå', 4000);
+  showFunToast(title, type === 'success' ? 'ðŸŽ‰' : 'ðŸ†', 4000);
   
   // Play celebration sound
   try {
@@ -681,20 +904,21 @@ function pulseSuccess(element) {
 // Get random encouraging message
 function getRandomEncouragement() {
   const messages = [
-    { text: "You're doing great! =ƒÆ¬", emoji: "=ƒÆ¬" },
-    { text: "Keep up the good work! =ƒîƒ", emoji: "=ƒîƒ" },
-    { text: "Awesome progress! =ƒÜÇ", emoji: "=ƒÜÇ" },
-    { text: "You're on fire! =ƒöÑ", emoji: "=ƒöÑ" },
-    { text: "Financial ninja! =ƒÑ+", emoji: "=ƒÑ+" },
-    { text: "Money master! =ƒÆ¦", emoji: "=ƒÆ¦" },
-    { text: "Saving superstar! G¡É", emoji: "G¡É" },
-    { text: "Budget boss! =ƒææ", emoji: "=ƒææ" }
+    { text: "You're doing great! ðŸ’ª", emoji: "ðŸ’ª" },
+    { text: "Keep up the good work! ðŸŒŸ", emoji: "ðŸŒŸ" },
+    { text: "Awesome progress! ðŸš€", emoji: "ðŸš€" },
+    { text: "You're on fire! ðŸ”¥", emoji: "ðŸ”¥" },
+    { text: "Financial ninja! ðŸ¥·", emoji: "ðŸ¥·" },
+    { text: "Money master! ðŸ’°", emoji: "ðŸ’°" },
+    { text: "Saving superstar! â­", emoji: "â­" },
+    { text: "Budget boss! ðŸ‘‘", emoji: "ðŸ‘‘" }
   ];
   return messages[Math.floor(Math.random() * messages.length)];
 }
 
 // Export functions
 window.utils = {
+  initBottomTapBar,
   formatCurrency,
   formatCurrencyAmount,
   getCurrentCurrency,
