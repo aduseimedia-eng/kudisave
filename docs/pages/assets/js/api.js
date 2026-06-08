@@ -582,6 +582,38 @@ class APIService {
     return await this.handleResponse(response);
   }
 
+  // NOTIFICATION ENDPOINTS
+
+  async getNotifications(params = {}) {
+    const query = new URLSearchParams(params).toString();
+    const url = query
+      ? `${API_BASE_URL}/notifications?${query}`
+      : `${API_BASE_URL}/notifications`;
+    const response = await fetch(url, {
+      headers: this.getHeaders()
+    });
+
+    return await this.handleResponse(response);
+  }
+
+  async markNotificationRead(id) {
+    const response = await fetch(`${API_BASE_URL}/notifications/${id}/read`, {
+      method: 'PUT',
+      headers: this.getHeaders()
+    });
+
+    return await this.handleResponse(response);
+  }
+
+  async markAllNotificationsRead() {
+    const response = await fetch(`${API_BASE_URL}/notifications/mark-all-read`, {
+      method: 'PUT',
+      headers: this.getHeaders()
+    });
+
+    return await this.handleResponse(response);
+  }
+
   // Generic HTTP methods for flexible API calls
   async get(endpoint) {
     const response = await fetch(`${API_BASE_URL}${endpoint}`, {

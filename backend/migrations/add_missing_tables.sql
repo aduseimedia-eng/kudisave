@@ -177,6 +177,19 @@ CREATE TRIGGER update_bill_reminders_updated_at BEFORE UPDATE ON bill_reminders
 -- ==========================================
 ALTER TABLE users ADD COLUMN IF NOT EXISTS notification_settings JSONB DEFAULT '{"weekly": true, "bills": true, "goals": true, "challenges": true, "budget": true, "tips": false}';
 
+CREATE TABLE IF NOT EXISTS notifications (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    type VARCHAR(50) NOT NULL,
+    title VARCHAR(100) NOT NULL,
+    message TEXT NOT NULL,
+    is_read BOOLEAN DEFAULT FALSE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE INDEX IF NOT EXISTS idx_notifications_user_id ON notifications(user_id);
+CREATE INDEX IF NOT EXISTS idx_notifications_unread ON notifications(user_id, is_read);
+
 -- ==========================================
 -- COMMENTS
 -- ==========================================
