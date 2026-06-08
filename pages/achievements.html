@@ -479,6 +479,404 @@
       min-height: 0 !important;
       width: 100% !important;
     }
+
+    .main-content {
+      width: min(1120px, calc(100vw - 32px));
+      margin: 0 auto;
+      padding: 12px 0 120px !important;
+    }
+
+    .achievement-overview {
+      background: linear-gradient(160deg, var(--primary-color) 0%, #064a52 58%, #0b737d 100%);
+      border-radius: 24px;
+      padding: 18px;
+      color: #ffffff;
+      box-shadow: 0 18px 44px rgba(3, 48, 54, 0.18);
+      margin-bottom: 16px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .achievement-overview::before {
+      content: '';
+      position: absolute;
+      top: -80px;
+      right: -70px;
+      width: 190px;
+      height: 190px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.08);
+      pointer-events: none;
+    }
+
+    .overview-top {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 14px;
+      align-items: center;
+      position: relative;
+      z-index: 1;
+    }
+
+    .level-emblem {
+      width: 62px;
+      height: 62px;
+      border-radius: 20px;
+      background: rgba(255,255,255,0.14);
+      border: 1px solid rgba(255,255,255,0.18);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 12px 28px rgba(0,0,0,0.16);
+    }
+
+    .level-emblem i {
+      width: 30px;
+      height: 30px;
+    }
+
+    .overview-kicker {
+      font-size: 11px;
+      font-weight: 850;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.68);
+      margin-bottom: 3px;
+    }
+
+    .overview-level-name {
+      font-size: 22px;
+      font-weight: 900;
+      letter-spacing: -0.4px;
+      line-height: 1.1;
+    }
+
+    .overview-xp-text {
+      font-size: 12px;
+      font-weight: 700;
+      color: rgba(255,255,255,0.72);
+      margin-top: 6px;
+    }
+
+    .overview-xp-bar {
+      height: 8px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.16);
+      overflow: hidden;
+      margin-top: 14px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .overview-xp-fill {
+      height: 100%;
+      border-radius: inherit;
+      background: linear-gradient(90deg, #facc15, #34d399);
+      width: 0%;
+      transition: width 0.5s ease;
+    }
+
+    .overview-stats {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 8px;
+      margin-top: 16px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .overview-stat {
+      border-radius: 16px;
+      background: rgba(255,255,255,0.12);
+      border: 1px solid rgba(255,255,255,0.12);
+      padding: 11px 8px;
+      text-align: center;
+    }
+
+    .overview-stat-value {
+      font-size: 20px;
+      font-weight: 900;
+      line-height: 1;
+    }
+
+    .overview-stat-label {
+      margin-top: 4px;
+      color: rgba(255,255,255,0.72);
+      font-size: 10px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.35px;
+    }
+
+    .category-tabs {
+      position: sticky;
+      top: calc(68px + env(safe-area-inset-top, 0px));
+      z-index: 15;
+      background: rgba(245, 246, 250, 0.9);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      padding: 10px 0;
+      margin-bottom: 10px;
+      scrollbar-width: none;
+    }
+
+    [data-theme="dark"] .category-tabs {
+      background: rgba(15, 23, 42, 0.86);
+    }
+
+    .category-tabs::-webkit-scrollbar {
+      display: none;
+    }
+
+    .category-tab {
+      border-radius: 999px;
+      border: 1px solid var(--border-color);
+      box-shadow: 0 8px 18px rgba(17,24,39,0.04);
+    }
+
+    .category-tab i {
+      width: 15px;
+      height: 15px;
+    }
+
+    .achievement-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+      padding-bottom: 0;
+    }
+
+    .achievement-card {
+      border-radius: 20px;
+      padding: 14px;
+      box-shadow: 0 10px 26px rgba(15, 23, 42, 0.055);
+    }
+
+    .achievement-card.earned {
+      border-color: rgba(234, 179, 8, 0.4);
+      background: linear-gradient(135deg, rgba(250,204,21,0.12), rgba(3,48,54,0.035));
+      box-shadow: 0 12px 30px rgba(234,179,8,0.12);
+    }
+
+    .achievement-card.locked {
+      opacity: 1;
+    }
+
+    .achievement-card.locked .achievement-info {
+      opacity: 0.72;
+    }
+
+    .achievement-icon {
+      width: 52px;
+      height: 52px;
+      border-radius: 17px;
+      color: var(--primary-color);
+      background: rgba(11, 115, 125, 0.1);
+    }
+
+    .achievement-icon i {
+      width: 24px;
+      height: 24px;
+    }
+
+    .achievement-card.earned .achievement-icon {
+      background: linear-gradient(135deg, #eab308, #facc15);
+      color: #ffffff;
+      animation: none;
+      box-shadow: 0 10px 22px rgba(234,179,8,0.28);
+    }
+
+    .achievement-card.locked .achievement-icon {
+      filter: none;
+      opacity: 1;
+      color: var(--text-muted);
+      background: var(--bg-secondary);
+    }
+
+    .achievement-info {
+      min-width: 0;
+    }
+
+    .achievement-name {
+      font-size: 15px;
+      font-weight: 850;
+      letter-spacing: -0.15px;
+    }
+
+    .achievement-desc {
+      font-size: 12px;
+      line-height: 1.45;
+    }
+
+    .achievement-meta {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 8px;
+      flex-shrink: 0;
+    }
+
+    .achievement-state {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      color: var(--text-muted);
+      font-size: 10px;
+      font-weight: 850;
+      text-transform: uppercase;
+      letter-spacing: 0.35px;
+    }
+
+    .achievement-state i {
+      width: 13px;
+      height: 13px;
+    }
+
+    .achievement-card.earned .achievement-state {
+      color: #ca8a04;
+    }
+
+    .achievement-xp {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      border-radius: 999px;
+      padding: 7px 10px;
+      font-size: 11px;
+      background: rgba(11, 115, 125, 0.1);
+    }
+
+    .achievement-xp i {
+      width: 13px;
+      height: 13px;
+    }
+
+    .achievement-card.earned .achievement-xp {
+      background: rgba(234, 179, 8, 0.15);
+      color: #a16207;
+    }
+
+    .empty-state {
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 22px;
+      padding: 36px 18px;
+    }
+
+    .empty-state i {
+      width: 34px;
+      height: 34px;
+      color: var(--text-muted);
+      margin-bottom: 10px;
+    }
+
+    .achievement-unlock-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 2000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      background: rgba(15, 23, 42, 0.72);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+    }
+
+    .achievement-unlock-card {
+      width: min(340px, 100%);
+      border-radius: 26px;
+      padding: 26px 22px;
+      text-align: center;
+      background: var(--card-bg);
+      color: var(--text-primary);
+      box-shadow: 0 30px 90px rgba(0,0,0,0.25);
+      border: 1px solid var(--border-color);
+    }
+
+    .achievement-unlock-icon {
+      width: 70px;
+      height: 70px;
+      border-radius: 24px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, #eab308, #facc15);
+      color: #ffffff;
+      box-shadow: 0 16px 34px rgba(234,179,8,0.28);
+      margin-bottom: 16px;
+    }
+
+    .achievement-unlock-icon i {
+      width: 34px;
+      height: 34px;
+    }
+
+    .achievement-unlock-kicker {
+      font-size: 11px;
+      font-weight: 900;
+      color: var(--primary-color);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 6px;
+    }
+
+    .achievement-unlock-card h2 {
+      font-size: 20px;
+      font-weight: 900;
+      letter-spacing: -0.3px;
+      margin: 0 0 8px;
+    }
+
+    .achievement-unlock-card p {
+      font-size: 13px;
+      color: var(--text-secondary);
+      line-height: 1.5;
+      margin: 0;
+    }
+
+    .achievement-unlock-xp {
+      display: inline-flex;
+      margin-top: 16px;
+      padding: 8px 14px;
+      border-radius: 999px;
+      background: rgba(234, 179, 8, 0.16);
+      color: #a16207;
+      font-size: 13px;
+      font-weight: 900;
+    }
+
+    @media (min-width: 720px) {
+      .achievement-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (min-width: 1040px) {
+      .main-content {
+        width: min(1120px, calc(100vw - 80px));
+        display: grid;
+        grid-template-columns: 360px minmax(0, 1fr);
+        gap: 18px 22px;
+        align-items: start;
+      }
+
+      .achievement-overview {
+        grid-column: 1;
+        position: sticky;
+        top: calc(92px + env(safe-area-inset-top, 0px));
+        margin-bottom: 0;
+      }
+
+      .category-tabs,
+      .achievement-grid {
+        grid-column: 2;
+      }
+
+      .category-tabs {
+        top: calc(76px + env(safe-area-inset-top, 0px));
+      }
+    }
   </style>
 </head>
 <body>
@@ -492,36 +890,6 @@
       <div class="mtn-topbar-spacer"></div>
     </div>
 
-    <!-- Level & XP Section -->
-    <div class="mtn-level-section">
-      <div class="mtn-level-icon" id="levelBadge">🏆</div>
-      <div class="mtn-level-info">
-        <div class="mtn-level-name" id="levelTitle">Money Master</div>
-        <div class="mtn-xp-text">
-          <span id="currentXP">0</span> / <span id="nextLevelXP">1000</span> XP
-        </div>
-        <div class="mtn-xp-bar">
-          <div class="mtn-xp-fill" id="xpProgressFill" style="width: 0%"></div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Stats Row -->
-    <div class="mtn-stats-row">
-      <div class="mtn-stat">
-        <div class="mtn-stat-value" id="earnedCount">0</div>
-        <div class="mtn-stat-label">Earned</div>
-      </div>
-      <div class="mtn-stat">
-        <div class="mtn-stat-value" id="totalCount">0</div>
-        <div class="mtn-stat-label">Total</div>
-      </div>
-      <div class="mtn-stat">
-        <div class="mtn-stat-value" id="completionRate">0%</div>
-        <div class="mtn-stat-label">Complete</div>
-      </div>
-    </div>
-
     <div class="mtn-header-curve"></div>
   </header>
 
@@ -530,14 +898,44 @@
 
   <!-- Main Content -->
   <main class="main-content">
+    <section class="achievement-overview" aria-label="Achievement progress">
+      <div class="overview-top">
+        <div class="level-emblem" id="levelBadge"><i data-lucide="trophy"></i></div>
+        <div>
+          <div class="overview-kicker">Current level</div>
+          <div class="overview-level-name" id="levelTitle">Beginner</div>
+          <div class="overview-xp-text">
+            <span id="currentXP">0</span> / <span id="nextLevelXP">100</span> XP
+          </div>
+        </div>
+      </div>
+      <div class="overview-xp-bar">
+        <div class="overview-xp-fill" id="xpProgressFill" style="width: 0%"></div>
+      </div>
+      <div class="overview-stats">
+        <div class="overview-stat">
+          <div class="overview-stat-value" id="earnedCount">0</div>
+          <div class="overview-stat-label">Earned</div>
+        </div>
+        <div class="overview-stat">
+          <div class="overview-stat-value" id="totalCount">0</div>
+          <div class="overview-stat-label">Total</div>
+        </div>
+        <div class="overview-stat">
+          <div class="overview-stat-value" id="completionRate">0%</div>
+          <div class="overview-stat-label">Complete</div>
+        </div>
+      </div>
+    </section>
+
     <!-- Category Tabs -->
     <div class="category-tabs">
-      <button class="category-tab active" onclick="filterCategory('all')">All</button>
-      <button class="category-tab" onclick="filterCategory('milestone')">Milestones</button>
-      <button class="category-tab" onclick="filterCategory('savings')">Savings</button>
-      <button class="category-tab" onclick="filterCategory('spending')">Spending</button>
-      <button class="category-tab" onclick="filterCategory('streak')">Streaks</button>
-      <button class="category-tab" onclick="filterCategory('challenge')">Challenges</button>
+      <button class="category-tab active" data-category="all" onclick="filterCategory('all')"><i data-lucide="layout-grid"></i> All</button>
+      <button class="category-tab" data-category="milestone" onclick="filterCategory('milestone')"><i data-lucide="flag"></i> Milestones</button>
+      <button class="category-tab" data-category="savings" onclick="filterCategory('savings')"><i data-lucide="piggy-bank"></i> Savings</button>
+      <button class="category-tab" data-category="spending" onclick="filterCategory('spending')"><i data-lucide="receipt"></i> Spending</button>
+      <button class="category-tab" data-category="streak" onclick="filterCategory('streak')"><i data-lucide="flame"></i> Streaks</button>
+      <button class="category-tab" data-category="challenge" onclick="filterCategory('challenge')"><i data-lucide="swords"></i> Challenges</button>
     </div>
 
     <!-- Achievements Grid -->
@@ -550,80 +948,93 @@
   <script src="../assets/js/api.js"></script>
   <script src="../assets/js/utils.js"></script>
   <script>
-    // Initialize Lucide icons
-    lucide.createIcons();
 
+    lucide.createIcons();
     utils.requireAuth();
 
     function logout() { api.logout(); }
-    
+
     let allAchievements = [];
     let currentCategory = 'all';
 
-    // Achievement icons mapping
     const achievementIcons = {
-      'first_expense': '📝',
-      'expense_master': '💵',
-      'budget_keeper': '📊',
-      'savings_starter': '🌱',
-      'savings_champion': '💰',
-      'goal_setter': '🎯',
-      'goal_crusher': '🏆',
-      'streak_starter': '🔥',
-      'streak_master': '⚡',
-      'challenge_winner': '🥇',
-      'early_bird': '🌅',
-      'night_owl': '🦉',
-      'consistent': '📅',
-      'frugal': '🪙',
-      'investor': '📈',
-      'default': '⭐'
+      first_expense: 'receipt-text',
+      expense_master: 'badge-dollar-sign',
+      budget_keeper: 'chart-no-axes-column',
+      savings_starter: 'sprout',
+      savings_champion: 'piggy-bank',
+      goal_setter: 'target',
+      goal_crusher: 'trophy',
+      streak_starter: 'flame',
+      streak_master: 'zap',
+      challenge_winner: 'medal',
+      early_bird: 'sunrise',
+      night_owl: 'moon-star',
+      consistent: 'calendar-check',
+      frugal: 'coins',
+      investor: 'trending-up',
+      default: 'award'
     };
 
-    // Level definitions
     const levels = [
-      { name: 'Beginner', icon: '🌱', minXP: 0 },
-      { name: 'Saver', icon: '💰', minXP: 100 },
-      { name: 'Budgeter', icon: '📊', minXP: 500 },
-      { name: 'Investor', icon: '📈', minXP: 1000 },
-      { name: 'Expert', icon: '🎓', minXP: 2500 },
-      { name: 'Master', icon: '👑', minXP: 5000 },
-      { name: 'Legend', icon: '🏆', minXP: 10000 }
+      { name: 'Beginner', icon: 'sprout', minXP: 0 },
+      { name: 'Saver', icon: 'piggy-bank', minXP: 100 },
+      { name: 'Budgeter', icon: 'chart-no-axes-column', minXP: 500 },
+      { name: 'Investor', icon: 'trending-up', minXP: 1000 },
+      { name: 'Expert', icon: 'graduation-cap', minXP: 2500 },
+      { name: 'Master', icon: 'crown', minXP: 5000 },
+      { name: 'Legend', icon: 'trophy', minXP: 10000 }
     ];
 
     document.addEventListener('DOMContentLoaded', loadAchievements);
 
     async function loadAchievements() {
       try {
-        const [achievementsRes, statsRes] = await Promise.all([
+        const achievementsGrid = document.getElementById('achievementsGrid');
+        if (achievementsGrid) {
+          achievementsGrid.innerHTML = '<div class="empty-state"><i data-lucide="loader-circle"></i><p>Loading achievements...</p></div>';
+          lucide.createIcons({ node: achievementsGrid });
+        }
+
+        const results = await Promise.allSettled([
           api.get('/achievements'),
           api.get('/achievements/stats')
         ]);
 
-        if (achievementsRes.success) {
-          allAchievements = achievementsRes.data;
-          // normalise field: API returns is_earned, ensure .earned is also set
-          allAchievements.forEach(a => { a.earned = a.earned || a.is_earned; });
-          renderAchievements();
+        const achievementsRes = results[0].status === 'fulfilled' ? results[0].value : null;
+        const statsRes = results[1].status === 'fulfilled' ? results[1].value : null;
+
+        if (achievementsRes && achievementsRes.success) {
+          allAchievements = Array.isArray(achievementsRes.data) ? achievementsRes.data : [];
+          allAchievements.forEach(function(achievement) {
+            achievement.earned = Boolean(achievement.earned || achievement.is_earned);
+          });
+        } else {
+          allAchievements = [];
         }
 
-        if (statsRes.success) {
-          updateStats(statsRes.data);
-          updateLevel(statsRes.data.total_xp || statsRes.data.total_xp_from_achievements || 0);
+        renderAchievements();
+
+        if (statsRes && statsRes.success) {
+          updateStats(statsRes.data || {});
+          updateLevel(Number(statsRes.data.total_xp || statsRes.data.total_xp_from_achievements || 0));
+        } else {
+          updateStats({ earned_count: allAchievements.filter(function(a) { return a.earned; }).length, total_achievements: allAchievements.length });
+          updateLevel(allAchievements.filter(function(a) { return a.earned; }).reduce(function(sum, a) { return sum + Number(a.xp_reward || 0); }, 0));
         }
       } catch (error) {
         console.error('Error loading achievements:', error);
+        renderAchievementsError();
       }
     }
 
     function updateStats(stats) {
-      const earned = stats.earned_count || stats.earned_achievements || 0;
-      const total = stats.total_achievements || 0;
-      
+      const earned = Number(stats.earned_count || stats.earned_achievements || 0);
+      const total = Number(stats.total_achievements || allAchievements.length || 0);
+      const rate = total > 0 ? Math.round((earned / total) * 100) : 0;
       document.getElementById('earnedCount').textContent = earned;
       document.getElementById('totalCount').textContent = total;
-      document.getElementById('completionRate').textContent = 
-        total > 0 ? Math.round((earned / total) * 100) + '%' : '0%';
+      document.getElementById('completionRate').textContent = rate + '%';
     }
 
     function updateLevel(totalXP) {
@@ -638,71 +1049,76 @@
         }
       }
 
-      document.getElementById('levelBadge').textContent = currentLevel.icon;
+      const levelBadge = document.getElementById('levelBadge');
+      levelBadge.innerHTML = '<i data-lucide="' + currentLevel.icon + '"></i>';
       document.getElementById('levelTitle').textContent = currentLevel.name;
-      document.getElementById('currentXP').textContent = totalXP;
-      document.getElementById('nextLevelXP').textContent = nextLevel.minXP;
+      document.getElementById('currentXP').textContent = totalXP.toLocaleString();
+      document.getElementById('nextLevelXP').textContent = nextLevel.minXP.toLocaleString();
 
       const progress = nextLevel.minXP > currentLevel.minXP
         ? ((totalXP - currentLevel.minXP) / (nextLevel.minXP - currentLevel.minXP)) * 100
         : 100;
-      document.getElementById('xpProgressFill').style.width = `${Math.min(100, progress)}%`;
+      document.getElementById('xpProgressFill').style.width = Math.min(100, Math.max(0, progress)) + '%';
+      lucide.createIcons({ node: levelBadge });
     }
 
     function filterCategory(category) {
       currentCategory = category;
-      
-      // Update tab buttons
-      document.querySelectorAll('.category-tab').forEach(tab => {
-        tab.classList.remove('active');
-        if (tab.textContent.toLowerCase().includes(category) || 
-            (category === 'all' && tab.textContent === 'All')) {
-          tab.classList.add('active');
-        }
+      document.querySelectorAll('.category-tab').forEach(function(tab) {
+        tab.classList.toggle('active', tab.dataset.category === category);
       });
-      
       renderAchievements();
     }
 
     function renderAchievements() {
       const container = document.getElementById('achievementsGrid');
-      
-      let filtered = allAchievements;
+      let filtered = allAchievements.slice();
       if (currentCategory !== 'all') {
-        filtered = allAchievements.filter(a => a.category === currentCategory);
+        filtered = filtered.filter(function(achievement) { return achievement.category === currentCategory; });
       }
 
-      // Sort: earned first, then by XP reward
-      filtered.sort((a, b) => {
+      filtered.sort(function(a, b) {
         if (a.earned && !b.earned) return -1;
         if (!a.earned && b.earned) return 1;
-        return b.xp_reward - a.xp_reward;
+        return Number(b.xp_reward || 0) - Number(a.xp_reward || 0);
       });
 
       if (filtered.length === 0) {
-        container.innerHTML = `
-          <div class="empty-state">
-            <p>No achievements in this category yet</p>
-          </div>
-        `;
+        container.innerHTML = '<div class="empty-state"><i data-lucide="award"></i><p>No achievements in this category yet.</p></div>';
+        lucide.createIcons({ node: container });
         return;
       }
 
-      container.innerHTML = filtered.map(achievement => `
-        <div class="achievement-card ${achievement.earned ? 'earned' : 'locked'}">
-          <div class="achievement-icon">${getIcon(achievement)}</div>
-          <div class="achievement-info">
-            <div class="achievement-name">${achievement.is_secret && !achievement.earned ? '???' : escapeHtml(achievement.name)}</div>
-            <div class="achievement-desc">${achievement.is_secret && !achievement.earned ? 'Secret achievement' : escapeHtml(achievement.description)}</div>
-          </div>
-          <span class="achievement-xp">+${achievement.xp_reward} XP</span>
-        </div>
-      `).join('');
+      container.innerHTML = filtered.map(function(achievement) {
+        const isSecret = achievement.is_secret && !achievement.earned;
+        const name = isSecret ? 'Secret achievement' : escapeHtml(achievement.name);
+        const description = isSecret ? 'Keep using KudiSave to reveal this reward.' : escapeHtml(achievement.description);
+        const stateIcon = achievement.earned ? 'check-circle-2' : 'lock';
+        const stateText = achievement.earned ? 'Earned' : 'Locked';
+        return '<div class="achievement-card ' + (achievement.earned ? 'earned' : 'locked') + '">' +
+          '<div class="achievement-icon"><i data-lucide="' + getIcon(achievement) + '"></i></div>' +
+          '<div class="achievement-info">' +
+            '<div class="achievement-name">' + name + '</div>' +
+            '<div class="achievement-desc">' + description + '</div>' +
+          '</div>' +
+          '<div class="achievement-meta">' +
+            '<span class="achievement-state"><i data-lucide="' + stateIcon + '"></i>' + stateText + '</span>' +
+            '<span class="achievement-xp"><i data-lucide="sparkles"></i> +' + Number(achievement.xp_reward || 0) + ' XP</span>' +
+          '</div>' +
+        '</div>';
+      }).join('');
+      lucide.createIcons({ node: container });
+    }
+
+    function renderAchievementsError() {
+      const container = document.getElementById('achievementsGrid');
+      container.innerHTML = '<div class="empty-state"><i data-lucide="circle-alert"></i><p>Achievements could not load right now.</p></div>';
+      lucide.createIcons({ node: container });
     }
 
     function getIcon(achievement) {
-      if (achievement.is_secret && !achievement.earned) return '❓';
-      if (achievement.icon) return achievement.icon;
+      if (achievement.is_secret && !achievement.earned) return 'lock-keyhole';
+      if (achievement.icon && /^[a-z0-9-]+$/i.test(achievement.icon)) return achievement.icon;
       return achievementIcons[achievement.achievement_key] || achievementIcons.default;
     }
 
@@ -712,20 +1128,18 @@
       return div.innerHTML;
     }
 
-    // Check for new achievements periodically (only once on page load)
-    let _achievementCheckDone = false;
+    let achievementCheckDone = false;
     async function checkNewAchievements() {
-      if (_achievementCheckDone) return;
-      _achievementCheckDone = true;
+      if (achievementCheckDone) return;
+      achievementCheckDone = true;
       try {
         const response = await api.post('/achievements/check');
         const newlyEarned = Array.isArray(response.data)
           ? response.data
-          : (response.data && response.data.newly_earned) || [];
+          : (response.data && (response.data.newly_earned || response.data.newlyEarnedAchievements)) || [];
         if (response.success && newlyEarned.length > 0) {
-          // Show only the first unlock overlay to avoid stacking
           showAchievementUnlock(newlyEarned[0]);
-          loadAchievements(); // Reload to update UI
+          loadAchievements();
         }
       } catch (error) {
         console.error('Error checking achievements:', error);
@@ -734,51 +1148,22 @@
 
     function showAchievementUnlock(achievement) {
       const overlay = document.createElement('div');
-      overlay.style.cssText = `
-        position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background: rgba(0,0,0,0.8);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        z-index: 2000;
-        animation: fadeIn 0.3s;
-      `;
-      overlay.innerHTML = `
-        <div style="
-          background: white;
-          border-radius: 20px;
-          padding: 2rem;
-          text-align: center;
-          max-width: 300px;
-          animation: bounceIn 0.5s;
-        ">
-          <div style="font-size: 4rem; margin-bottom: 1rem;">🎉</div>
-          <h2 style="color: var(--primary-green); margin-bottom: 0.5rem;">Achievement Unlocked!</h2>
-          <div style="font-size: 3rem; margin: 1rem 0;">${achievement.icon || '⭐'}</div>
-          <h3 style="margin-bottom: 0.5rem;">${achievement.name}</h3>
-          <p style=\"color: var(--text-secondary); font-size: 0.9rem;\">${achievement.description}</p>
-          <div style="
-            background: var(--primary-green);
-            color: white;
-            padding: 0.5rem 1rem;
-            border-radius: 20px;
-            display: inline-block;
-            margin-top: 1rem;
-          ">+${achievement.xp_reward} XP</div>
-        </div>
-      `;
+      overlay.className = 'achievement-unlock-overlay';
+      overlay.innerHTML = '<div class="achievement-unlock-card">' +
+        '<div class="achievement-unlock-icon"><i data-lucide="party-popper"></i></div>' +
+        '<div class="achievement-unlock-kicker">Achievement unlocked</div>' +
+        '<h2>' + escapeHtml(achievement.name) + '</h2>' +
+        '<p>' + escapeHtml(achievement.description) + '</p>' +
+        '<div class="achievement-unlock-xp">+' + Number(achievement.xp_reward || 0) + ' XP</div>' +
+      '</div>';
       document.body.appendChild(overlay);
-      
-      overlay.addEventListener('click', () => overlay.remove());
-      setTimeout(() => overlay.remove(), 5000);
+      lucide.createIcons({ node: overlay });
+      overlay.addEventListener('click', function() { overlay.remove(); });
+      setTimeout(function() { overlay.remove(); }, 5000);
     }
 
-    // Check achievements on load
     setTimeout(checkNewAchievements, 1000);
+
   </script>
 </body>
 </html>
