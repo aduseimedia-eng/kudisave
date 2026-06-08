@@ -79,62 +79,10 @@
       filter: drop-shadow(0 14px 28px rgba(0, 31, 20, 0.2));
     }
 
-    .splash-title {
-      font-family: 'Cal Sans', sans-serif;
-      font-size: clamp(34px, 9vw, 46px);
-      font-weight: 600;
-      color: #ffffff;
-      margin-bottom: 8px;
-      letter-spacing: 0;
-      line-height: 1;
-    }
-
-    .splash-subtitle {
-      font-size: 14px;
-      color: rgba(255,255,255,0.82);
-      margin-bottom: 24px;
-      font-weight: 600;
-      line-height: 1.5;
-    }
-
-    .splash-loader {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      height: 20px;
-    }
-
-    .splash-dot {
-      width: 7px;
-      height: 7px;
-      border-radius: 999px;
-      background: #ffffff;
-      opacity: 0.35;
-      animation: pulse 1.2s ease-in-out infinite;
-    }
-
-    .splash-dot:nth-child(2) {
-      animation-delay: 0.16s;
-    }
-
-    .splash-dot:nth-child(3) {
-      animation-delay: 0.32s;
-    }
-
-    @keyframes pulse {
-      0%, 100% { transform: scale(0.82); opacity: 0.35; }
-      50% { transform: scale(1); opacity: 1; }
-    }
-
     @media (max-width: 380px) {
       .splash-logo {
         width: min(76vw, 230px);
         margin-bottom: -16px;
-      }
-
-      .splash-subtitle {
-        font-size: 13px;
       }
     }
 
@@ -154,13 +102,6 @@
 <body>
   <div class="splash-container">
     <div class="splash-logo"><img src="../Secondary_Logo.png" alt="KudiSave" class="splash-logo-img"></div>
-    <h1 class="splash-title">KudiSave</h1>
-    <p class="splash-subtitle">Getting things ready</p>
-    <div class="splash-loader">
-      <div class="splash-dot"></div>
-      <div class="splash-dot"></div>
-      <div class="splash-dot"></div>
-    </div>
   </div>
 
   <script>

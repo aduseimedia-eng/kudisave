@@ -13,295 +13,179 @@
   <title>Welcome - KudiSave</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-  <script src="https://unpkg.com/lucide@latest"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
 
-    :root {
-      --primary: #033036;
-      --primary-soft: #0b737d;
-      --accent: #fcd116;
-      --surface: #ffffff;
-      --surface-soft: #f5f8f7;
-      --text: #102427;
-      --muted: #68787b;
-      --border: rgba(3, 48, 54, 0.1);
-      --shadow: 0 22px 60px rgba(3, 48, 54, 0.16);
-    }
-
     body {
+      background: linear-gradient(160deg, #033036 0%, #064a52 46%, #0b737d 100%);
       min-height: 100vh;
       min-height: 100dvh;
       overflow: hidden;
       font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-      color: var(--text);
-      background:
-        linear-gradient(180deg, #f6fbfa 0%, #ecf5f3 48%, #ddebe8 100%);
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+
+    body::before,
+    body::after {
+      content: '';
+      position: fixed;
+      border-radius: 999px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    body::before {
+      width: 320px;
+      height: 320px;
+      top: -100px;
+      right: -120px;
+      background: radial-gradient(circle, rgba(255,255,255,0.12) 0%, transparent 68%);
+    }
+
+    body::after {
+      width: 280px;
+      height: 280px;
+      left: -120px;
+      bottom: 80px;
+      background: radial-gradient(circle, rgba(252,209,22,0.14) 0%, transparent 70%);
+    }
+
+    .bg-overlay {
+      position: fixed;
+      inset: 0;
+      background: linear-gradient(
+        to bottom,
+        rgba(0,0,0,0.02) 0%,
+        rgba(0,0,0,0.06) 34%,
+        rgba(0,0,0,0.22) 64%,
+        rgba(0,0,0,0.52) 100%
+      );
+      z-index: 1;
     }
 
     .onboarding-screen {
-      min-height: 100vh;
-      min-height: 100dvh;
-      display: grid;
-      grid-template-rows: auto 1fr auto;
-      gap: 22px;
-      padding: calc(22px + env(safe-area-inset-top, 0px)) 20px calc(18px + env(safe-area-inset-bottom, 0px));
-      max-width: 1180px;
-      margin: 0 auto;
-    }
-
-    .topbar {
+      flex: 1;
       display: flex;
+      flex-direction: column;
       align-items: center;
-      justify-content: space-between;
-      min-height: 46px;
+      justify-content: flex-end;
+      padding: 40px 24px;
+      padding-top: calc(40px + env(safe-area-inset-top, 0px));
+      padding-bottom: calc(40px + env(safe-area-inset-bottom, 0px));
+      gap: 24px;
+      position: relative;
+      z-index: 2;
     }
 
-    .brand {
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      color: var(--primary);
-      text-decoration: none;
-    }
-
-    .brand-mark {
-      width: 42px;
-      height: 42px;
-      border-radius: 14px;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      color: #ffffff;
-      background: var(--primary);
-      box-shadow: 0 12px 24px rgba(3, 48, 54, 0.18);
-    }
-
-    .brand-mark i {
-      width: 21px;
-      height: 21px;
-    }
-
-    .brand strong {
-      display: block;
-      font-size: 18px;
-      font-weight: 900;
-      line-height: 1;
-      letter-spacing: 0;
-    }
-
-    .brand small {
-      display: block;
-      margin-top: 3px;
-      color: var(--muted);
-      font-size: 11px;
-      font-weight: 700;
-    }
-
-    .skip-btn {
-      border: 1px solid var(--border);
-      background: rgba(255,255,255,0.76);
-      color: var(--primary);
-      min-height: 38px;
-      padding: 0 14px;
-      border-radius: 12px;
-      font-size: 13px;
-      font-weight: 800;
-      cursor: pointer;
-    }
-
-    .content {
-      min-height: 0;
-      display: grid;
-      align-items: center;
-      gap: 22px;
-    }
-
-    .feature-card {
-      background: rgba(255,255,255,0.9);
-      border: 1px solid var(--border);
-      border-radius: 28px;
-      box-shadow: var(--shadow);
-      padding: 24px;
-      display: grid;
-      gap: 18px;
-      min-height: 328px;
-    }
-
-    .feature-icon {
-      width: 64px;
-      height: 64px;
-      border-radius: 22px;
-      display: inline-flex;
+    .text-area {
+      text-align: center;
+      max-width: 340px;
+      min-height: 120px;
+      display: flex;
+      flex-direction: column;
       align-items: center;
       justify-content: center;
-      color: var(--primary);
-      background: #fef6cd;
-      box-shadow: inset 0 0 0 1px rgba(252, 209, 22, 0.42);
-    }
-
-    .feature-icon i {
-      width: 30px;
-      height: 30px;
-    }
-
-    .eyebrow {
-      display: inline-flex;
-      width: fit-content;
-      align-items: center;
-      gap: 7px;
-      min-height: 28px;
-      padding: 0 10px;
-      border-radius: 999px;
-      background: rgba(11, 115, 125, 0.1);
-      color: var(--primary-soft);
-      font-size: 12px;
-      font-weight: 850;
-    }
-
-    .eyebrow i {
-      width: 14px;
-      height: 14px;
+      background: radial-gradient(ellipse at center, rgba(0,0,0,0.32) 0%, rgba(0,0,0,0.14) 54%, transparent 76%);
+      padding: 24px 28px;
+      border-radius: 24px;
     }
 
     .rotating-title {
-      font-size: clamp(32px, 8vw, 58px);
-      line-height: 1.02;
-      font-weight: 900;
-      color: var(--primary);
+      font-size: 28px;
+      font-weight: 800;
+      color: #fff;
+      line-height: 1.2;
       letter-spacing: 0;
-      max-width: 720px;
+      margin-bottom: 12px;
       opacity: 0;
-      transform: translateY(14px);
-      animation: textIn 0.45s ease forwards;
+      transform: translateY(18px);
+      animation: textIn 0.5s ease forwards;
+      text-shadow: 0 2px 12px rgba(0,0,0,0.4);
     }
 
     .rotating-title .highlight {
-      color: var(--primary-soft);
+      color: #fcd116;
     }
 
     .rotating-desc {
-      color: var(--muted);
-      font-size: 16px;
-      line-height: 1.7;
-      font-weight: 600;
-      max-width: 620px;
+      font-size: 15px;
+      font-weight: 400;
+      color: rgba(255,255,255,0.95);
+      line-height: 1.65;
       opacity: 0;
-      transform: translateY(12px);
-      animation: textIn 0.45s 0.12s ease forwards;
+      transform: translateY(14px);
+      animation: textIn 0.5s 0.15s ease forwards;
+      text-shadow: 0 1px 8px rgba(0,0,0,0.35);
     }
 
     @keyframes textIn {
       to { opacity: 1; transform: translateY(0); }
     }
 
-    .feature-card.fade-out .rotating-title,
-    .feature-card.fade-out .rotating-desc,
-    .feature-card.fade-out .feature-icon,
-    .feature-card.fade-out .eyebrow {
-      animation: textOut 0.25s ease forwards;
+    .text-area.fade-out .rotating-title,
+    .text-area.fade-out .rotating-desc {
+      animation: textOut 0.35s ease forwards;
     }
 
     @keyframes textOut {
-      to { opacity: 0; transform: translateY(-10px); }
-    }
-
-    .preview-panel {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 10px;
-    }
-
-    .preview-item {
-      min-height: 94px;
-      padding: 14px;
-      border-radius: 18px;
-      background: rgba(255,255,255,0.78);
-      border: 1px solid var(--border);
-      display: grid;
-      align-content: space-between;
-      gap: 8px;
-    }
-
-    .preview-item i {
-      width: 20px;
-      height: 20px;
-      color: var(--primary-soft);
-    }
-
-    .preview-item strong {
-      display: block;
-      font-size: 18px;
-      color: var(--primary);
-      font-weight: 900;
-      letter-spacing: 0;
-    }
-
-    .preview-item span {
-      color: var(--muted);
-      font-size: 11px;
-      font-weight: 750;
-      line-height: 1.25;
-    }
-
-    .controls {
-      display: grid;
-      gap: 16px;
+      to { opacity: 0; transform: translateY(-14px); }
     }
 
     .progress-dots {
       display: flex;
-      justify-content: center;
       gap: 8px;
     }
 
     .progress-dot {
-      width: 9px;
-      height: 9px;
-      border: 0;
-      border-radius: 999px;
-      background: rgba(3, 48, 54, 0.2);
-      cursor: pointer;
-      transition: all 0.25s ease;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.35);
+      transition: all 0.4s ease;
     }
 
     .progress-dot.active {
-      width: 30px;
-      background: var(--primary);
+      width: 24px;
+      border-radius: 4px;
+      background: #fcd116;
     }
 
     .get-started-btn {
       width: 100%;
-      min-height: 58px;
+      max-width: 340px;
+      padding: 18px 32px;
       border: none;
-      border-radius: 18px;
-      background: var(--primary);
-      color: #ffffff;
-      font-size: 16px;
-      font-weight: 900;
+      border-radius: 16px;
+      background: #ffffff;
+      color: #033036;
+      font-size: 17px;
+      font-weight: 700;
       letter-spacing: 0;
       cursor: pointer;
-      box-shadow: 0 18px 34px rgba(3, 48, 54, 0.25);
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.18);
+      transition: all 0.2s ease;
+      position: relative;
+      overflow: hidden;
     }
 
-    .get-started-btn i {
-      width: 18px;
-      height: 18px;
+    .get-started-btn::after {
+      content: ' ->';
+      font-weight: 400;
+      transition: transform 0.2s ease;
+      display: inline-block;
     }
 
     .get-started-btn:hover {
       transform: translateY(-2px);
-      box-shadow: 0 22px 42px rgba(3, 48, 54, 0.28);
+      box-shadow: 0 8px 32px rgba(0,0,0,0.25);
     }
 
     .get-started-btn:active {
-      transform: scale(0.98);
+      transform: scale(0.97);
+      box-shadow: 0 2px 12px rgba(0,0,0,0.15);
     }
 
     .ghana-colors {
@@ -319,150 +203,53 @@
     .ghana-colors span:nth-child(2) { background: #fcd116; }
     .ghana-colors span:nth-child(3) { background: #033036; }
 
-    @media (max-height: 700px) {
-      .onboarding-screen { gap: 14px; padding-top: calc(16px + env(safe-area-inset-top, 0px)); }
-      .feature-card { min-height: 260px; padding: 20px; gap: 12px; }
-      .rotating-title { font-size: 29px; }
-      .rotating-desc { font-size: 14px; line-height: 1.55; }
-      .preview-item { min-height: 80px; padding: 12px; }
+    @media (max-height: 640px) {
+      .onboarding-screen { gap: 16px; padding: 20px 20px; }
+      .rotating-title { font-size: 24px; }
+      .text-area { min-height: 80px; }
     }
 
-    @media (max-width: 420px) {
-      .preview-panel { grid-template-columns: 1fr; }
-      .preview-item {
-        min-height: 62px;
-        grid-template-columns: auto 1fr;
-        align-items: center;
-        align-content: center;
-      }
-      .preview-item span { display: block; }
-    }
-
-    @media (min-width: 800px) {
-      body { overflow: auto; }
-
-      .onboarding-screen {
-        grid-template-rows: auto 1fr auto;
-        padding-left: 36px;
-        padding-right: 36px;
-      }
-
-      .content {
-        grid-template-columns: minmax(0, 1.12fr) minmax(320px, 0.88fr);
-        gap: 28px;
-      }
-
-      .feature-card {
-        min-height: 520px;
-        padding: 44px;
-        align-content: center;
-      }
-
-      .preview-panel {
-        grid-template-columns: 1fr;
-      }
-
-      .preview-item {
-        min-height: 130px;
-        padding: 22px;
-        border-radius: 22px;
-      }
-
-      .controls {
-        max-width: 420px;
-        margin: 0 auto;
-        width: 100%;
-      }
+    @media (min-width: 600px) {
+      .rotating-title { font-size: 32px; }
+      .rotating-desc { font-size: 16px; }
     }
   </style>
 </head>
 <body>
-  <main class="onboarding-screen">
-    <header class="topbar">
-      <a class="brand" href="../index.html" aria-label="KudiSave home">
-        <span class="brand-mark"><i data-lucide="wallet-cards"></i></span>
-        <span>
-          <strong>KudiSave</strong>
-          <small>Money habits that stick</small>
-        </span>
-      </a>
-      <button class="skip-btn" type="button" onclick="getStarted()">Skip</button>
-    </header>
+  <div class="bg-overlay"></div>
 
-    <section class="content" aria-live="polite">
-      <article class="feature-card" id="featureCard">
-        <div class="feature-icon" id="featureIconWrap">
-          <i id="featureIcon" data-lucide="wallet"></i>
-        </div>
-        <span class="eyebrow">
-          <i data-lucide="sparkles"></i>
-          <span id="slideEyebrow">Smart tracking</span>
-        </span>
-        <h1 class="rotating-title" id="rotatingTitle"></h1>
-        <p class="rotating-desc" id="rotatingDesc"></p>
-      </article>
+  <div class="onboarding-screen">
+    <div class="text-area" id="textArea">
+      <h2 class="rotating-title" id="rotatingTitle"></h2>
+      <p class="rotating-desc" id="rotatingDesc"></p>
+    </div>
 
-      <aside class="preview-panel" aria-label="KudiSave preview">
-        <div class="preview-item">
-          <i data-lucide="receipt-text"></i>
-          <div>
-            <strong>Bills</strong>
-            <span>Know what is due before it surprises you.</span>
-          </div>
-        </div>
-        <div class="preview-item">
-          <i data-lucide="trophy"></i>
-          <div>
-            <strong>Badges</strong>
-            <span>Complete challenges and build level progress.</span>
-          </div>
-        </div>
-        <div class="preview-item">
-          <i data-lucide="chart-no-axes-combined"></i>
-          <div>
-            <strong>Reports</strong>
-            <span>See where your money is going each month.</span>
-          </div>
-        </div>
-      </aside>
-    </section>
+    <div class="progress-dots" id="progressDots">
+      <div class="progress-dot active"></div>
+      <div class="progress-dot"></div>
+      <div class="progress-dot"></div>
+    </div>
 
-    <footer class="controls">
-      <div class="progress-dots" id="progressDots" aria-label="Onboarding slides">
-        <button class="progress-dot active" type="button" aria-label="Show slide 1" onclick="goToSlide(0)"></button>
-        <button class="progress-dot" type="button" aria-label="Show slide 2" onclick="goToSlide(1)"></button>
-        <button class="progress-dot" type="button" aria-label="Show slide 3" onclick="goToSlide(2)"></button>
-      </div>
-      <button class="get-started-btn" type="button" onclick="getStarted()">
-        Get Started
-        <i data-lucide="arrow-right"></i>
-      </button>
-    </footer>
-  </main>
+    <button class="get-started-btn" onclick="getStarted()">Get Started</button>
+  </div>
 
-  <div class="ghana-colors" aria-hidden="true">
+  <div class="ghana-colors">
     <span></span><span></span><span></span>
   </div>
 
   <script>
     const slides = [
       {
-        icon: 'wallet',
-        eyebrow: 'Smart tracking',
-        title: 'Track your <span class="highlight">money</span> without stress',
-        desc: 'Record income, expenses, bills, and subscriptions in one clean place so you always know what is happening.'
+        title: 'Track Your <span class="highlight">Finances</span>',
+        desc: 'Easily track all your income and expenses in one place. Know exactly where your money goes.'
       },
       {
-        icon: 'target',
-        eyebrow: 'Goals and challenges',
-        title: 'Turn saving into a <span class="highlight">daily habit</span>',
-        desc: 'Start real challenges, earn badges when you complete them, and grow your level progress as you stay consistent.'
+        title: 'Set Goals & <span class="highlight">Achieve More</span>',
+        desc: 'Create savings goals for what matters most, from bills and school fees to your next big plan.'
       },
       {
-        icon: 'chart-no-axes-combined',
-        eyebrow: 'Real reports',
-        title: 'Understand your <span class="highlight">spending patterns</span>',
-        desc: 'Use reports, insights, and category breakdowns to make better decisions before the month gets away from you.'
+        title: 'Build Better <span class="highlight">Money Habits</span>',
+        desc: 'Earn badges, level up your streak, and get beautiful reports on your financial journey!'
       }
     ];
 
@@ -471,49 +258,36 @@
 
     const titleEl = document.getElementById('rotatingTitle');
     const descEl  = document.getElementById('rotatingDesc');
-    const card = document.getElementById('featureCard');
+    const textArea = document.getElementById('textArea');
     const dots = document.querySelectorAll('.progress-dot');
-    const iconEl = document.getElementById('featureIcon');
-    const eyebrowEl = document.getElementById('slideEyebrow');
 
-    function renderSlide(index, animate = true) {
-      const slide = slides[index];
-      const update = () => {
-        current = index;
-        iconEl.setAttribute('data-lucide', slide.icon);
-        eyebrowEl.textContent = slide.eyebrow;
-        titleEl.innerHTML = slide.title;
-        descEl.textContent = slide.desc;
-        dots.forEach((dot, dotIndex) => dot.classList.toggle('active', dotIndex === index));
-        if (typeof lucide !== 'undefined') lucide.createIcons();
+    function showSlide(index) {
+      textArea.classList.add('fade-out');
 
-        card.classList.remove('fade-out');
+      setTimeout(() => {
+        titleEl.innerHTML = slides[index].title;
+        descEl.textContent = slides[index].desc;
+        dots.forEach((d, i) => d.classList.toggle('active', i === index));
+
+        textArea.classList.remove('fade-out');
         titleEl.style.animation = 'none';
         descEl.style.animation = 'none';
         void titleEl.offsetWidth;
-        titleEl.style.animation = 'textIn 0.45s ease forwards';
-        descEl.style.animation = 'textIn 0.45s 0.12s ease forwards';
-      };
-
-      if (!animate) {
-        update();
-        return;
-      }
-
-      card.classList.add('fade-out');
-      setTimeout(update, 240);
-    }
-
-    function goToSlide(index) {
-      clearInterval(interval);
-      renderSlide(index);
-      startRotation();
+        titleEl.style.animation = 'textIn 0.5s ease forwards';
+        descEl.style.animation = 'textIn 0.5s 0.15s ease forwards';
+      }, 350);
     }
 
     function startRotation() {
+      titleEl.innerHTML = slides[0].title;
+      descEl.textContent = slides[0].desc;
+      titleEl.style.animation = 'textIn 0.5s ease forwards';
+      descEl.style.animation = 'textIn 0.5s 0.15s ease forwards';
+
       interval = setInterval(() => {
-        renderSlide((current + 1) % slides.length);
-      }, 4200);
+        current = (current + 1) % slides.length;
+        showSlide(current);
+      }, 3500);
     }
 
     function getStarted() {
@@ -522,7 +296,6 @@
       window.location.href = 'splash.html';
     }
 
-    renderSlide(0, false);
     startRotation();
   </script>
 </body>
