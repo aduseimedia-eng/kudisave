@@ -59,7 +59,264 @@ document.addEventListener('DOMContentLoaded', () => {
   initPopupCloseButtons();
   initBottomTapBar();
   initDesktopAppNav();
+  initPwaInstallPrompt();
 });
+
+let deferredInstallPrompt = null;
+
+function initPwaInstallPrompt() {
+  registerServiceWorker();
+  ensurePwaInstallStyles();
+
+  if (isAppInstalled()) return;
+
+  window.addEventListener('beforeinstallprompt', event => {
+    event.preventDefault();
+    deferredInstallPrompt = event;
+    showPwaInstallPrompt('install');
+  });
+
+  window.addEventListener('appinstalled', () => {
+    deferredInstallPrompt = null;
+    localStorage.setItem('kudisave_app_installed', 'true');
+    hidePwaInstallPrompt();
+    if (typeof showToast === 'function') {
+      showToast('KudiSave has been added to your home screen.');
+    }
+  });
+
+  setTimeout(() => {
+    if (!deferredInstallPrompt && isIosSafari() && !isInstallPromptDismissed()) {
+      showPwaInstallPrompt('ios');
+    }
+  }, 1400);
+}
+
+function registerServiceWorker() {
+  if (!('serviceWorker' in navigator)) return;
+
+  const workerPath = getAppBasePath() + 'service-worker.js';
+  navigator.serviceWorker.register(workerPath).catch(error => {
+    console.warn('Service worker registration failed:', error);
+  });
+}
+
+function getAppBasePath() {
+  const pathname = window.location.pathname.toLowerCase();
+  return pathname.includes('/pages/') ? '../' : '';
+}
+
+function isAppInstalled() {
+  return window.matchMedia('(display-mode: standalone)').matches ||
+    window.navigator.standalone === true ||
+    localStorage.getItem('kudisave_app_installed') === 'true';
+}
+
+function isIosSafari() {
+  const ua = window.navigator.userAgent.toLowerCase();
+  const isIos = /iphone|ipad|ipod/.test(ua) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+  const isSafari = /safari/.test(ua) && !/crios|fxios|edgios/.test(ua);
+  return isIos && isSafari;
+}
+
+function isInstallPromptDismissed() {
+  const dismissedAt = parseInt(localStorage.getItem('kudisave_install_dismissed_at') || '0', 10);
+  if (!dismissedAt) return false;
+  const sevenDays = 7 * 24 * 60 * 60 * 1000;
+  return Date.now() - dismissedAt < sevenDays;
+}
+
+function showPwaInstallPrompt(mode = 'install') {
+  if (document.querySelector('.pwa-install-card') || isAppInstalled() || isInstallPromptDismissed()) return;
+
+  const isIosMode = mode === 'ios';
+  const card = document.createElement('div');
+  card.className = 'pwa-install-card';
+  card.setAttribute('role', 'dialog');
+  card.setAttribute('aria-live', 'polite');
+  card.innerHTML = `
+    <button class="pwa-install-close" type="button" aria-label="Close install prompt">
+      <i data-lucide="x"></i>
+    </button>
+    <div class="pwa-install-icon">
+      <i data-lucide="${isIosMode ? 'share' : 'download'}"></i>
+    </div>
+    <div class="pwa-install-copy">
+      <strong>Add KudiSave to your home screen</strong>
+      <span>${isIosMode ? 'On iPhone, tap Share, then Add to Home Screen.' : 'Install it like an app. No Play Store or App Store needed.'}</span>
+    </div>
+    <button class="pwa-install-action" type="button">
+      ${isIosMode ? 'Show Me How' : 'Add App'}
+    </button>
+  `;
+
+  document.body.appendChild(card);
+  if (typeof lucide !== 'undefined') lucide.createIcons({ node: card });
+
+  let iosHelpShown = false;
+  card.querySelector('.pwa-install-close').addEventListener('click', () => {
+    localStorage.setItem('kudisave_install_dismissed_at', String(Date.now()));
+    hidePwaInstallPrompt();
+  });
+
+  card.querySelector('.pwa-install-action').addEventListener('click', async () => {
+    if (isIosMode) {
+      if (iosHelpShown) {
+        localStorage.setItem('kudisave_install_dismissed_at', String(Date.now()));
+        hidePwaInstallPrompt();
+        return;
+      }
+      iosHelpShown = true;
+      card.classList.add('show-ios-help');
+      card.querySelector('.pwa-install-copy span').textContent = 'Tap the browser Share button, choose Add to Home Screen, then tap Add.';
+      card.querySelector('.pwa-install-action').textContent = 'Got it';
+      return;
+    }
+
+    if (!deferredInstallPrompt) return;
+    deferredInstallPrompt.prompt();
+    const choice = await deferredInstallPrompt.userChoice;
+    deferredInstallPrompt = null;
+    if (choice.outcome === 'accepted') {
+      localStorage.setItem('kudisave_app_installed', 'true');
+      hidePwaInstallPrompt();
+    } else {
+      localStorage.setItem('kudisave_install_dismissed_at', String(Date.now()));
+    }
+  });
+}
+
+function hidePwaInstallPrompt() {
+  document.querySelector('.pwa-install-card')?.remove();
+}
+
+function ensurePwaInstallStyles() {
+  if (document.getElementById('pwa-install-styles')) return;
+
+  const style = document.createElement('style');
+  style.id = 'pwa-install-styles';
+  style.textContent = `
+    .pwa-install-card {
+      position: fixed;
+      left: 16px;
+      right: 16px;
+      bottom: calc(var(--bottom-nav-height, 0px) + 16px + env(safe-area-inset-bottom, 0px));
+      z-index: 1200;
+      max-width: 430px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 44px 1fr;
+      gap: 12px;
+      align-items: center;
+      padding: 14px;
+      border-radius: 20px;
+      background: rgba(255,255,255,0.96);
+      border: 1px solid rgba(3, 48, 54, 0.1);
+      box-shadow: 0 20px 50px rgba(3, 48, 54, 0.18);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      color: var(--text-primary, #033036);
+    }
+
+    .pwa-install-close {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      width: 30px;
+      height: 30px;
+      border: 0;
+      border-radius: 999px;
+      background: rgba(3, 48, 54, 0.08);
+      color: #033036;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+
+    .pwa-install-close i {
+      width: 16px;
+      height: 16px;
+    }
+
+    .pwa-install-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 16px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      color: #ffffff;
+      background: var(--primary-color, #033036);
+    }
+
+    .pwa-install-icon i {
+      width: 22px;
+      height: 22px;
+    }
+
+    .pwa-install-copy {
+      min-width: 0;
+      padding-right: 28px;
+    }
+
+    .pwa-install-copy strong {
+      display: block;
+      font-size: 14px;
+      line-height: 1.2;
+      font-weight: 900;
+      letter-spacing: 0;
+    }
+
+    .pwa-install-copy span {
+      display: block;
+      margin-top: 4px;
+      color: var(--text-muted, #66777a);
+      font-size: 12px;
+      line-height: 1.45;
+      font-weight: 650;
+    }
+
+    .pwa-install-action {
+      grid-column: 1 / -1;
+      min-height: 42px;
+      border: 0;
+      border-radius: 14px;
+      background: var(--primary-color, #033036);
+      color: #ffffff;
+      font-size: 13px;
+      font-weight: 900;
+      letter-spacing: 0;
+      cursor: pointer;
+    }
+
+    [data-theme="dark"] .pwa-install-card {
+      background: rgba(15, 23, 42, 0.96);
+      border-color: rgba(255,255,255,0.1);
+      color: #ffffff;
+    }
+
+    [data-theme="dark"] .pwa-install-close {
+      color: #ffffff;
+      background: rgba(255,255,255,0.1);
+    }
+
+    @media (min-width: 768px) {
+      .pwa-install-card {
+        left: auto;
+        right: 24px;
+        bottom: 24px;
+        width: 390px;
+        margin: 0;
+      }
+
+      body.has-desktop-nav .pwa-install-card {
+        left: auto;
+      }
+    }
+  `;
+  document.head.appendChild(style);
+}
 
 function initPopupCloseButtons(root = document) {
   const buttons = root.querySelectorAll('.close-btn, .currency-close-btn');
