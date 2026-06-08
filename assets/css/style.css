@@ -4390,3 +4390,131 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
 }
 
 /* Cache bust: 2026-03-02 12:35:42 */
+
+/* ============================================
+   DESKTOP APP SHELL POLISH
+   Keeps the mobile app feel, but prevents wide screens from looking like
+   a stretched phone layout.
+   ============================================ */
+
+@media (min-width: 900px) {
+  :root {
+    --bottom-nav-height: 0px;
+  }
+
+  html {
+    font-size: 14px;
+  }
+
+  body {
+    padding-bottom: 40px !important;
+    background:
+      linear-gradient(180deg, rgba(3, 48, 54, 0.035), transparent 280px),
+      var(--bg-primary) !important;
+  }
+
+  .bottom-nav,
+  .mobile-menu,
+  .mobile-menu-overlay,
+  .hamburger {
+    display: none !important;
+  }
+
+  .container,
+  .main-content,
+  main.main-content,
+  .main-container {
+    width: min(1180px, calc(100vw - 64px)) !important;
+    max-width: 1180px !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+    padding-bottom: 56px !important;
+  }
+
+  .mtn-topbar,
+  .mtn-info-section,
+  .header-balance {
+    width: min(1180px, calc(100vw - 64px));
+    max-width: 1180px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .mtn-header-spacer {
+    max-height: 220px;
+  }
+
+  .card,
+  .stat-card,
+  .modern-stat-card,
+  .goal-card,
+  .bill-card,
+  .achievement-card,
+  .challenge-card {
+    border-radius: 18px;
+  }
+
+  .stats-grid,
+  .overview-cards,
+  .dashboard-cards,
+  .badges-grid {
+    gap: 18px;
+  }
+
+  .quick-actions {
+    grid-template-columns: repeat(auto-fit, minmax(132px, 1fr));
+  }
+
+  .modal.active {
+    align-items: center !important;
+    justify-content: center !important;
+    padding: 32px;
+  }
+
+  .modal-content,
+  .modal-sheet,
+  .picker-sheet,
+  .currency-modal-content {
+    width: min(620px, calc(100vw - 64px)) !important;
+    max-width: 620px !important;
+    border-radius: 24px !important;
+    margin: auto !important;
+  }
+
+  .picker-modal.active {
+    align-items: center !important;
+  }
+
+  .table-container,
+  .compare-summary,
+  .chart-container {
+    max-width: 100%;
+  }
+}
+
+@media (min-width: 1200px) {
+  .container,
+  .main-content,
+  main.main-content,
+  .main-container,
+  .mtn-topbar,
+  .mtn-info-section,
+  .header-balance {
+    width: min(1240px, calc(100vw - 96px)) !important;
+    max-width: 1240px !important;
+  }
+
+  .stats-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .expense-list,
+  .bills-list,
+  .transaction-list,
+  .goals-container,
+  .challenges-container {
+    gap: 20px;
+  }
+}

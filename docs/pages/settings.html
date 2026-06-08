@@ -843,6 +843,105 @@
       }
     }
 
+    @media (min-width: 900px) {
+      body > .container {
+        width: min(1120px, calc(100vw - 72px)) !important;
+        max-width: 1120px !important;
+        display: grid;
+        grid-template-columns: minmax(320px, 390px) minmax(0, 1fr);
+        gap: 16px 20px;
+        align-items: start;
+        padding-top: 22px !important;
+        padding-bottom: 64px !important;
+      }
+
+      #avatarInput {
+        display: none !important;
+      }
+
+      .settings-account-card {
+        grid-column: 1;
+        grid-row: 1;
+        position: sticky;
+        top: calc(88px + env(safe-area-inset-top, 0px));
+      }
+
+      .settings-trust-grid {
+        grid-column: 1;
+        grid-row: 2;
+      }
+
+      .settings-section {
+        margin-bottom: 0;
+      }
+
+      .settings-profile-section {
+        grid-column: 1;
+        grid-row: 3;
+      }
+
+      .settings-panel-section {
+        grid-column: 2;
+      }
+
+      .settings-section-title {
+        margin-top: 2px;
+      }
+
+      .settings-card,
+      .danger-zone {
+        border-radius: 20px;
+      }
+
+      .settings-item,
+      .notification-item {
+        min-height: 74px;
+      }
+
+      .settings-icon,
+      .notification-icon {
+        width: 42px;
+        height: 42px;
+        border-radius: 14px;
+      }
+
+      .settings-account-avatar {
+        width: 76px;
+        height: 76px;
+        border-radius: 22px;
+        font-size: 25px;
+      }
+
+      .settings-logout-btn {
+        grid-column: 2;
+        max-width: 260px;
+        justify-self: end;
+        margin-top: 4px;
+        margin-bottom: 0;
+      }
+
+      .settings-modal .modal-content {
+        width: min(560px, calc(100vw - 80px)) !important;
+        max-width: 560px !important;
+      }
+
+      #notificationsModal .modal-content {
+        width: min(680px, calc(100vw - 80px)) !important;
+        max-width: 680px !important;
+      }
+
+      .currency-list,
+      .picker-list {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (min-width: 1200px) {
+      body > .container {
+        grid-template-columns: minmax(340px, 410px) minmax(0, 1fr);
+      }
+    }
+
     .gmail-connect-prompt {
       text-align: center;
       padding: 16px;
@@ -1034,7 +1133,7 @@
     </div>
 
     <!-- Profile Information -->
-    <div class="settings-section">
+    <div class="settings-section settings-profile-section">
       <div class="settings-section-title">Profile Information</div>
       <div class="settings-card">
         <div class="profile-info-grid">
@@ -1055,7 +1154,7 @@
     </div>
 
     <!-- Account Settings -->
-    <div class="settings-section">
+    <div class="settings-section settings-panel-section">
       <div class="settings-section-title">Account Settings</div>
       <div class="settings-card">
         <div class="settings-item" onclick="openModal('editProfileModal')">
@@ -1072,7 +1171,7 @@
     </div>
 
     <!-- Preferences -->
-    <div class="settings-section">
+    <div class="settings-section settings-panel-section">
       <div class="settings-section-title">Preferences</div>
       <div class="settings-card">
         <div class="settings-item">
@@ -1107,7 +1206,7 @@
     </div>
 
     <!-- Email Notifications -->
-    <div class="settings-section">
+    <div class="settings-section settings-panel-section">
       <div class="settings-section-title">Email Notifications</div>
       <div class="settings-card">
         <div class="settings-item" onclick="openModal('notificationsModal')">
@@ -1124,7 +1223,7 @@
     </div>
 
     <!-- Data & Backup -->
-    <div class="settings-section">
+    <div class="settings-section settings-panel-section">
       <div class="settings-section-title">Data & Backup</div>
       <div class="settings-card">
         <div class="settings-item" onclick="openModal('exportModal')">
@@ -1141,7 +1240,7 @@
     </div>
 
     <!-- App Info -->
-    <div class="settings-section">
+    <div class="settings-section settings-panel-section">
       <div class="settings-section-title">About</div>
       <div class="settings-card">
         <div class="settings-item">
@@ -1179,7 +1278,7 @@
     </div>
 
     <!-- Danger Zone -->
-    <div class="settings-section">
+    <div class="settings-section settings-panel-section settings-danger-section">
       <div class="settings-section-title">Danger Zone</div>
       <div class="danger-zone">
         <h4><i data-lucide="alert-triangle" class="icon-inline" style="color:#dc3545"></i> Delete Account</h4>
