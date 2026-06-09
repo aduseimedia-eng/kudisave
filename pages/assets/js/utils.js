@@ -561,6 +561,7 @@ let inAppNotificationsLoading = false;
 function initInAppNotifications() {
   if (document.body.dataset.notificationsReady === 'true') return;
   if (!isAuthenticated() || typeof api === 'undefined') return;
+  if (!shouldShowNotificationLauncher()) return;
 
   document.body.dataset.notificationsReady = 'true';
   ensureInAppNotificationStyles();
@@ -574,6 +575,11 @@ function initInAppNotifications() {
     if (!panel || launcher || event.target.closest('#notificationPanel')) return;
     closeNotificationPanel();
   });
+}
+
+function shouldShowNotificationLauncher() {
+  const page = window.location.pathname.split('/').pop() || 'index.html';
+  return page === 'dashboard.html';
 }
 
 function ensureNotificationLauncher() {
@@ -641,7 +647,7 @@ function ensureNotificationPanel() {
 
   document.body.appendChild(panel);
   panel.querySelector('.notification-close').addEventListener('click', closeNotificationPanel);
-  panel.querySelector('[data-notification-refresh]').addEventListener('click', () => loadInAppNotifications({ force: true }));
+  panel.querySelector('[data-notification-refresh]').addEventListener('click', refreshInAppNotifications);
   panel.querySelector('[data-notification-mark-all]').addEventListener('click', markAllInAppNotificationsRead);
 
   if (typeof lucide !== 'undefined') lucide.createIcons({ node: panel });
@@ -697,6 +703,24 @@ async function loadInAppNotifications(options = {}) {
   }
 }
 
+async function refreshInAppNotifications(event) {
+  if (event) {
+    event.preventDefault();
+    event.stopPropagation();
+  }
+
+  const panel = document.getElementById('notificationPanel');
+  if (panel) {
+    panel.classList.add('active');
+    panel.setAttribute('aria-hidden', 'false');
+  }
+  document.querySelectorAll('[data-notification-launcher]').forEach(btn => {
+    btn.setAttribute('aria-expanded', 'true');
+  });
+
+  await loadInAppNotifications({ force: true });
+}
+
 function renderInAppNotifications() {
   const list = document.querySelector('[data-notification-list]');
   if (!list) return;
@@ -743,11 +767,15 @@ function renderInAppNotifications() {
   });
 
   list.querySelectorAll('.notification-card-link').forEach(link => {
-    link.addEventListener('click', event => {
+    link.addEventListener('click', async event => {
       const card = event.currentTarget.closest('[data-notification-id]');
       const notification = inAppNotifications.find(item => String(item.id) === String(card?.dataset.notificationId));
-      if (notification && !notification.is_read) {
-        markInAppNotificationRead(notification.id, { silent: true });
+      const href = event.currentTarget.getAttribute('href');
+
+      if (notification && !notification.is_read && href) {
+        event.preventDefault();
+        await markInAppNotificationRead(notification.id, { silent: true });
+        window.location.href = href;
       }
     });
   });

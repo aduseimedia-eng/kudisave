@@ -1,4 +1,4 @@
-const CACHE_NAME = 'kudisave-shell-v2';
+const CACHE_NAME = 'kudisave-shell-v4';
 const APP_SHELL = [
   './',
   './index.html',
