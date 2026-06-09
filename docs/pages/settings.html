@@ -1214,7 +1214,7 @@
             <span class="settings-icon"><i data-lucide="mail" class="icon"></i></span>
             <div class="settings-item-info">
               <h4>Email Alerts</h4>
-              <p id="notifStatusText">Manage summaries, bill alerts, and challenge updates</p>
+              <p id="notifStatusText">Email alerts are ready to manage</p>
             </div>
           </div>
           <span class="settings-arrow"><i data-lucide="chevron-right"></i></span>
@@ -1248,7 +1248,7 @@
             <span class="settings-icon"><i data-lucide="smartphone" class="icon"></i></span>
             <div class="settings-item-info">
               <h4>App Version</h4>
-              <p>KudiSave v1.0</p>
+              <p>KudiSave v1.1.2</p>
             </div>
           </div>
         </div>
@@ -2194,6 +2194,10 @@
       if (modalId === 'exportModal') setDefaultExportDates();
       if (modalId === 'currencyModal') renderCurrencyOptions();
       if (modalId === 'exportModal') updateExportPickerLabels();
+      if (modalId === 'notificationsModal') {
+        loadNotificationSettings();
+        checkGmailStatus().catch(() => {});
+      }
     };
 
     // Email Notification Settings
@@ -2331,7 +2335,7 @@
       } else {
         notConnectedEl.style.display = 'block';
         connectedEl.style.display = 'none';
-        statusTextEl.textContent = 'Connect Gmail for notifications';
+        updateNotificationStatusText();
       }
       // Scope icons to gmail section only
       const gmailContainer = notConnectedEl ? notConnectedEl.parentElement : null;

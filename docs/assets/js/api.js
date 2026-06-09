@@ -399,6 +399,26 @@ class APIService {
     return result;
   }
 
+  // BALANCE ENDPOINTS
+
+  async getBalances() {
+    const response = await fetch(`${API_BASE_URL}/balances`, {
+      headers: this.getHeaders()
+    });
+
+    return await this.handleResponse(response);
+  }
+
+  async updateBalances(balances = []) {
+    const response = await fetch(`${API_BASE_URL}/balances`, {
+      method: 'PUT',
+      headers: this.getHeaders(),
+      body: JSON.stringify({ balances })
+    });
+
+    return await this.handleResponse(response);
+  }
+
   // BUDGET ENDPOINTS
 
   async createBudget(budgetData) {
@@ -545,6 +565,51 @@ class APIService {
     const response = await fetch(url, {
       method: 'DELETE',
       headers: this.getHeaders()
+    });
+    return await this.handleResponse(response);
+  }
+
+  // BILLS ENDPOINTS
+
+  async getBills(status = null) {
+    const url = status
+      ? `${API_BASE_URL}/bills?status=${status}`
+      : `${API_BASE_URL}/bills`;
+    const response = await fetch(url, { headers: this.getHeaders() });
+    return await this.handleResponse(response);
+  }
+
+  async createBill(data) {
+    const response = await fetch(`${API_BASE_URL}/bills`, {
+      method: 'POST',
+      headers: this.getHeaders(),
+      body: JSON.stringify(data)
+    });
+    return await this.handleResponse(response);
+  }
+
+  async updateBill(id, data) {
+    const response = await fetch(`${API_BASE_URL}/bills/${id}`, {
+      method: 'PUT',
+      headers: this.getHeaders(),
+      body: JSON.stringify(data)
+    });
+    return await this.handleResponse(response);
+  }
+
+  async deleteBill(id) {
+    const response = await fetch(`${API_BASE_URL}/bills/${id}`, {
+      method: 'DELETE',
+      headers: this.getHeaders()
+    });
+    return await this.handleResponse(response);
+  }
+
+  async payBill(id, data = {}) {
+    const response = await fetch(`${API_BASE_URL}/bills/${id}/pay`, {
+      method: 'POST',
+      headers: this.getHeaders(),
+      body: JSON.stringify(data)
     });
     return await this.handleResponse(response);
   }

@@ -4,6 +4,17 @@ utils.requireAuth();
 
 let userData = null;
 let budgetData = null;
+let accountBalancesData = [];
+let hasSavedAccountBalances = false;
+
+const BALANCE_ACCOUNTS = [
+  { account_type: 'Cash', label: 'Cash', icon: 'banknote', hint: 'Money in hand' },
+  { account_type: 'Bank', label: 'Bank', icon: 'landmark', hint: 'Bank account balance' },
+  { account_type: 'Visa Card', label: 'Visa Card', icon: 'credit-card', hint: 'Card balance available' },
+  { account_type: 'MTN MoMo', label: 'MTN MoMo', icon: 'smartphone', hint: 'Mobile money wallet' },
+  { account_type: 'Telecel Cash', label: 'Telecel Cash', icon: 'smartphone', hint: 'Telecel wallet' },
+  { account_type: 'AirtelTigo Money', label: 'AirtelTigo Money', icon: 'smartphone', hint: 'AirtelTigo wallet' }
+];
 
 // Get time-based greeting
 function getTimeGreeting() {
@@ -136,10 +147,22 @@ async function loadFinancialSummary() {
     const incomeData = Array.isArray(incomeResponse.data) ? incomeResponse.data : [];
     const totalIncome = incomeData.reduce((sum, inc) => sum + parseFloat(inc.amount || 0), 0);
 
-    // Update balance card
-    const balance = totalIncome - totalExpenses;
+    let accountBalanceTotal = totalIncome - totalExpenses;
+    try {
+      const balancesResponse = await api.getBalances();
+      const balanceData = balancesResponse.data || {};
+      accountBalancesData = Array.isArray(balanceData.balances) ? balanceData.balances : [];
+      hasSavedAccountBalances = Boolean(balanceData.has_balances);
+
+      if (hasSavedAccountBalances) {
+        accountBalanceTotal = parseFloat(balanceData.total || 0);
+      }
+    } catch (balanceError) {
+      console.warn('Load balances error:', balanceError);
+    }
+
     const symbol = utils.getCurrencySymbol();
-    document.getElementById('balanceAmount').textContent = utils.formatCurrency(balance);
+    document.getElementById('balanceAmount').textContent = utils.formatCurrency(accountBalanceTotal);
     document.getElementById('totalIncome').textContent = `+${symbol} ${utils.formatCurrencyAmount(totalIncome)}`;
     document.getElementById('totalExpenses').textContent = `-${symbol} ${utils.formatCurrencyAmount(totalExpenses)}`;
 
@@ -419,9 +442,117 @@ function openBudgetModal() {
   document.body.style.overflow = 'hidden';
 }
 
+async function openBalancesModal() {
+  const modal = document.getElementById('balancesModal');
+  if (!modal) return;
+
+  modal.classList.add('active');
+  document.body.style.overflow = 'hidden';
+  renderBalanceInputs(accountBalancesData);
+
+  try {
+    const response = await api.getBalances();
+    const data = response.data || {};
+    accountBalancesData = Array.isArray(data.balances) ? data.balances : [];
+    hasSavedAccountBalances = Boolean(data.has_balances);
+    renderBalanceInputs(accountBalancesData);
+  } catch (error) {
+    console.warn('Could not refresh balances:', error);
+    utils.showAlert('Could not refresh balances right now', 'error');
+  }
+}
+
 function closeModal(modalId) {
   document.getElementById(modalId).classList.remove('active');
   document.body.style.overflow = '';
+}
+
+function getBalanceAmountFor(accountType, balances = []) {
+  const match = balances.find(item => item.account_type === accountType);
+  return match ? Number(match.amount || 0) : 0;
+}
+
+function renderBalanceInputs(balances = []) {
+  const container = document.getElementById('balanceInputs');
+  const totalEl = document.getElementById('balancesTotalPreview');
+  if (!container) return;
+
+  const symbol = utils.getCurrencySymbol();
+  const total = BALANCE_ACCOUNTS.reduce((sum, account) => sum + getBalanceAmountFor(account.account_type, balances), 0);
+
+  container.innerHTML = BALANCE_ACCOUNTS.map(account => {
+    const value = getBalanceAmountFor(account.account_type, balances);
+    return `
+      <label class="balance-account-row">
+        <span class="balance-account-icon"><i data-lucide="${account.icon}"></i></span>
+        <span class="balance-account-copy">
+          <span class="balance-account-name">${account.label}</span>
+          <span class="balance-account-hint">${account.hint}</span>
+        </span>
+        <span class="balance-account-input-wrap">
+          <span>${symbol}</span>
+          <input
+            class="balance-account-input"
+            type="number"
+            min="0"
+            step="0.01"
+            inputmode="decimal"
+            data-account-type="${account.account_type}"
+            value="${value ? value.toFixed(2) : ''}"
+            placeholder="0.00"
+            oninput="updateBalancesPreview()"
+          >
+        </span>
+      </label>
+    `;
+  }).join('');
+
+  if (totalEl) totalEl.textContent = utils.formatCurrency(total);
+  if (typeof lucide !== 'undefined') lucide.createIcons({ node: container });
+}
+
+function collectBalanceInputs() {
+  return Array.from(document.querySelectorAll('.balance-account-input')).map(input => ({
+    account_type: input.dataset.accountType,
+    amount: Number(input.value || 0)
+  }));
+}
+
+function updateBalancesPreview() {
+  const total = collectBalanceInputs().reduce((sum, item) => sum + Number(item.amount || 0), 0);
+  const totalEl = document.getElementById('balancesTotalPreview');
+  if (totalEl) totalEl.textContent = utils.formatCurrency(total);
+}
+
+async function handleSetBalances(event) {
+  event.preventDefault();
+
+  const balances = collectBalanceInputs();
+  const hasInvalidAmount = balances.some(item => !Number.isFinite(item.amount) || item.amount < 0);
+
+  if (hasInvalidAmount) {
+    utils.showAlert('Balance amounts must be zero or more', 'error');
+    return;
+  }
+
+  try {
+    utils.showLoading();
+    const response = await api.updateBalances(balances);
+    const data = response.data || {};
+    accountBalancesData = Array.isArray(data.balances) ? data.balances : balances;
+    hasSavedAccountBalances = true;
+
+    const total = Number(data.total || balances.reduce((sum, item) => sum + Number(item.amount || 0), 0));
+    const balanceEl = document.getElementById('balanceAmount');
+    if (balanceEl) balanceEl.textContent = utils.formatCurrency(total);
+
+    utils.hideLoading();
+    closeModal('balancesModal');
+    showFunToast('Balances updated successfully', '$', 'success');
+  } catch (error) {
+    utils.hideLoading();
+    utils.showAlert(error.message || 'Failed to update balances', 'error');
+  }
 }
 
 // Backdrop click to close modals

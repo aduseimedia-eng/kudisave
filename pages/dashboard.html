@@ -593,7 +593,7 @@
     /* Quick Actions Modern */
     .quick-actions-modern {
       display: grid;
-      grid-template-columns: repeat(4, 1fr);
+      grid-template-columns: repeat(5, 1fr);
       gap: 10px;
       margin-bottom: 18px;
     }
@@ -619,6 +619,7 @@
     .quick-btn:nth-child(2) { animation-delay: 0.5s; }
     .quick-btn:nth-child(3) { animation-delay: 0.6s; }
     .quick-btn:nth-child(4) { animation-delay: 0.7s; }
+    .quick-btn:nth-child(5) { animation-delay: 0.8s; }
 
     .quick-btn::before {
       content: '';
@@ -681,6 +682,12 @@
       background: linear-gradient(135deg, #3b82f6, #2563eb);
       color: white;
       box-shadow: 0 6px 18px rgba(59, 130, 246, 0.3);
+    }
+
+    .quick-btn-icon.balances {
+      background: linear-gradient(135deg, #033036, #0b737d);
+      color: white;
+      box-shadow: 0 6px 18px rgba(3, 48, 54, 0.3);
     }
 
     .quick-btn-label {
@@ -2407,6 +2414,77 @@
     .picker-option-mark { width: 20px; height: 20px; border-radius: 50%; border: 2px solid #d1d5db; flex-shrink: 0; }
     .picker-option.active { border-color: rgba(3,48,54,0.28); background: rgba(3,48,54,0.06); }
     .picker-option.active .picker-option-mark { border-color: #033036; background: radial-gradient(circle at center, #033036 0 42%, transparent 45%); }
+    .balances-sheet { max-height: 92vh; overflow-y: auto; }
+    .balances-summary {
+      background: linear-gradient(135deg, #033036, #0b737d);
+      color: #ffffff;
+      border-radius: 22px;
+      padding: 18px;
+      margin-bottom: 16px;
+      box-shadow: 0 14px 32px rgba(3,48,54,0.22);
+    }
+    .balances-summary-label { font-size: 12px; font-weight: 700; opacity: 0.76; }
+    .balances-summary-total { font-size: 26px; font-weight: 900; margin-top: 4px; letter-spacing: -0.4px; }
+    .balance-account-list { display: grid; gap: 10px; margin-bottom: 16px; }
+    .balance-account-row {
+      display: grid;
+      grid-template-columns: 42px minmax(0, 1fr) 118px;
+      align-items: center;
+      gap: 11px;
+      background: var(--bg-secondary);
+      border: 1.5px solid var(--border-color);
+      border-radius: 18px;
+      padding: 12px;
+    }
+    .balance-account-icon {
+      width: 42px;
+      height: 42px;
+      border-radius: 15px;
+      background: rgba(3,48,54,0.09);
+      color: var(--primary-color);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .balance-account-icon i { width: 20px; height: 20px; }
+    .balance-account-copy { min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+    .balance-account-name { font-size: 14px; font-weight: 850; color: var(--text-primary); }
+    .balance-account-hint { font-size: 11px; color: var(--text-muted); font-weight: 650; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .balance-account-input-wrap {
+      height: 42px;
+      border-radius: 14px;
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 0 10px;
+      color: var(--text-muted);
+      font-size: 12px;
+      font-weight: 800;
+    }
+    .balance-account-input {
+      width: 100%;
+      min-width: 0;
+      border: 0;
+      outline: 0;
+      background: transparent;
+      color: var(--text-primary);
+      font: inherit;
+      text-align: right;
+    }
+    .balance-save-btn {
+      width: 100%;
+      background: var(--primary-gradient, linear-gradient(135deg, #033036, #0b737d)) !important;
+      color: #ffffff !important;
+      border: 0;
+      box-shadow: 0 14px 30px rgba(3,48,54,0.24);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 9px;
+    }
+    .balance-save-btn i { width: 18px; height: 18px; }
 
     /* Card-style dashboard hero */
     body { background: #f5f6fa !important; }
@@ -2792,6 +2870,10 @@
         <div class="quick-btn-icon budget"><i data-lucide="wallet"></i></div>
         <span class="quick-btn-label">Budget</span>
       </button>
+      <button class="quick-btn" onclick="openBalancesModal()">
+        <div class="quick-btn-icon balances"><i data-lucide="credit-card"></i></div>
+        <span class="quick-btn-label">Balances</span>
+      </button>
     </div>
 
     <!-- Feature Widgets -->
@@ -2922,6 +3004,27 @@
           <div class="xp-fill" id="xpProgress" style="width: 0%;"></div>
         </div>
       </a>
+    </div>
+  </div>
+
+  <!-- Set Balances Modal -->
+  <div id="balancesModal" class="modal picker-modal">
+    <div class="picker-sheet balances-sheet">
+      <div class="picker-title-row">
+        <div class="picker-title-icon"><i data-lucide="credit-card"></i></div>
+        <div>
+          <div class="picker-title">Set Balances</div>
+          <div class="picker-subtitle">Add what you have in each account</div>
+        </div>
+      </div>
+      <div class="balances-summary">
+        <div class="balances-summary-label">Dashboard balance</div>
+        <div class="balances-summary-total" id="balancesTotalPreview">GHS 0.00</div>
+      </div>
+      <form id="balancesForm" onsubmit="handleSetBalances(event)">
+        <div class="balance-account-list" id="balanceInputs"></div>
+        <button type="submit" class="btn balance-save-btn"><i data-lucide="check-circle"></i> Save Balances</button>
+      </form>
     </div>
   </div>
 
@@ -3238,9 +3341,9 @@
   </div>
 
   <script src="../assets/js/config.js"></script>
-  <script src="../assets/js/api.js?v=visa2"></script>
+  <script src="../assets/js/api.js?v=balances1"></script>
   <script src="../assets/js/utils.js?v=notify4"></script>
-  <script src="../assets/js/dashboard.js?v=visa2"></script>
+  <script src="../assets/js/dashboard.js?v=balances1"></script>
   <script>
     // Initialize Lucide icons
     lucide.createIcons();

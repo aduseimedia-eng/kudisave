@@ -399,6 +399,26 @@ class APIService {
     return result;
   }
 
+  // BALANCE ENDPOINTS
+
+  async getBalances() {
+    const response = await fetch(`${API_BASE_URL}/balances`, {
+      headers: this.getHeaders()
+    });
+
+    return await this.handleResponse(response);
+  }
+
+  async updateBalances(balances = []) {
+    const response = await fetch(`${API_BASE_URL}/balances`, {
+      method: 'PUT',
+      headers: this.getHeaders(),
+      body: JSON.stringify({ balances })
+    });
+
+    return await this.handleResponse(response);
+  }
+
   // BUDGET ENDPOINTS
 
   async createBudget(budgetData) {

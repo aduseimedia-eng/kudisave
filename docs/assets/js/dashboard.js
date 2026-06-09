@@ -4,6 +4,17 @@ utils.requireAuth();
 
 let userData = null;
 let budgetData = null;
+let accountBalancesData = [];
+let hasSavedAccountBalances = false;
+
+const BALANCE_ACCOUNTS = [
+  { account_type: 'Cash', label: 'Cash', icon: 'banknote', hint: 'Money in hand' },
+  { account_type: 'Bank', label: 'Bank', icon: 'landmark', hint: 'Bank account balance' },
+  { account_type: 'Visa Card', label: 'Visa Card', icon: 'credit-card', hint: 'Card balance available' },
+  { account_type: 'MTN MoMo', label: 'MTN MoMo', icon: 'smartphone', hint: 'Mobile money wallet' },
+  { account_type: 'Telecel Cash', label: 'Telecel Cash', icon: 'smartphone', hint: 'Telecel wallet' },
+  { account_type: 'AirtelTigo Money', label: 'AirtelTigo Money', icon: 'smartphone', hint: 'AirtelTigo wallet' }
+];
 
 // Get time-based greeting
 function getTimeGreeting() {
@@ -22,12 +33,12 @@ function getInitials(name) {
 // Load profile picture from API (via userPreferences)
 function loadProfilePicture() {
   // Get profile picture from user preferences (loaded from API)
-  const savedPicture = (typeof getUserPreference === 'function') 
-    ? getUserPreference('profile_picture') 
+  const savedPicture = (typeof getUserPreference === 'function')
+    ? getUserPreference('profile_picture')
     : null;
   const avatarEl = document.getElementById('userAvatar');
   const initialsEl = document.getElementById('avatarInitials');
-  
+
   if (savedPicture && avatarEl) {
     avatarEl.innerHTML = `<img src="${savedPicture}" alt="Profile">`;
     return true;
@@ -42,11 +53,11 @@ async function initDashboard() {
   try {
     // Set greeting
     document.getElementById('greetingTime').textContent = getTimeGreeting();
-    
+
     // Load user profile (this also syncs preferences)
     const profileResponse = await api.getProfile();
     userData = profileResponse.data;
-    
+
     document.getElementById('userName').textContent = userData.name || 'Welcome!';
 
     // Set motivational message immediately (no delay)
@@ -69,20 +80,20 @@ async function initDashboard() {
     if (menuName) menuName.textContent = userData.name || 'Welcome!';
     if (menuInitials) menuInitials.textContent = getInitials(userData.name);
     if (menuEmail) menuEmail.textContent = userData.email || 'Manage your finances';
-    
+
     // Load profile picture from profile data or localStorage
     const avatarEl = document.getElementById('userAvatar');
     const initialsEl = document.getElementById('avatarInitials');
-    
+
     // Check for profile picture: API first, then localStorage fallback
     let profilePicture = userData.profile_picture || localStorage.getItem('profilePicture');
-    
+
     if (profilePicture && avatarEl) {
       avatarEl.innerHTML = `<img src="${profilePicture}" alt="Profile">`;
     } else if (initialsEl) {
       initialsEl.textContent = getInitials(userData.name);
     }
-    
+
     // Storage listener setup (only once)
     if (!window._dashboardStorageListenerAdded) {
       window._dashboardStorageListenerAdded = true;
@@ -136,10 +147,22 @@ async function loadFinancialSummary() {
     const incomeData = Array.isArray(incomeResponse.data) ? incomeResponse.data : [];
     const totalIncome = incomeData.reduce((sum, inc) => sum + parseFloat(inc.amount || 0), 0);
 
-    // Update balance card
-    const balance = totalIncome - totalExpenses;
+    let accountBalanceTotal = totalIncome - totalExpenses;
+    try {
+      const balancesResponse = await api.getBalances();
+      const balanceData = balancesResponse.data || {};
+      accountBalancesData = Array.isArray(balanceData.balances) ? balanceData.balances : [];
+      hasSavedAccountBalances = Boolean(balanceData.has_balances);
+
+      if (hasSavedAccountBalances) {
+        accountBalanceTotal = parseFloat(balanceData.total || 0);
+      }
+    } catch (balanceError) {
+      console.warn('Load balances error:', balanceError);
+    }
+
     const symbol = utils.getCurrencySymbol();
-    document.getElementById('balanceAmount').textContent = utils.formatCurrency(balance);
+    document.getElementById('balanceAmount').textContent = utils.formatCurrency(accountBalanceTotal);
     document.getElementById('totalIncome').textContent = `+${symbol} ${utils.formatCurrencyAmount(totalIncome)}`;
     document.getElementById('totalExpenses').textContent = `-${symbol} ${utils.formatCurrencyAmount(totalExpenses)}`;
 
@@ -186,7 +209,7 @@ async function loadRecentExpenses() {
     const expenses = response.data.expenses || response.data;
 
     const listContainer = document.getElementById('recentExpensesList');
-    
+
     if (!expenses || expenses.length === 0) {
       listContainer.innerHTML = `
         <div style="text-align: center; padding: 20px; color: var(--text-muted);">
@@ -218,14 +241,14 @@ async function loadRecentExpenses() {
       </div>
     `;
     }).join('');
-    
+
     // Render lucide icons (scoped to list container only)
     const listEl = document.getElementById('recentExpensesList');
     if (listEl) lucide.createIcons({ node: listEl });
 
   } catch (error) {
     console.error('Load expenses error:', error);
-    document.getElementById('recentExpensesList').innerHTML = 
+    document.getElementById('recentExpensesList').innerHTML =
       '<div style="text-align: center; color: var(--text-muted); padding: 20px;">Failed to load</div>';
   }
 }
@@ -240,10 +263,10 @@ async function deleteTransaction(expenseId) {
   try {
     utils.showLoading();
     await api.deleteExpense(expenseId);
-    
+
     utils.hideLoading();
     utils.showAlert('Transaction deleted successfully ✓', 'success');
-    
+
     // Animate deletion
     const element = document.getElementById(`expense-${expenseId}`);
     if (element) {
@@ -253,7 +276,7 @@ async function deleteTransaction(expenseId) {
         loadRecentExpenses(); // Reload to ensure consistency
       }, 300);
     }
-    
+
     // Reload dashboard to update totals
     await loadFinancialSummary();
   } catch (error) {
@@ -286,13 +309,13 @@ async function loadBudget() {
     const total = parseFloat(budgetData.budget_amount || budgetData.amount || budgetData.total_budget || 0);
     const remaining = Math.max(0, total - spent);
     const usage = total > 0 ? (spent / total * 100) : 0;
-    
+
     // Update UI
     budgetPercentage.textContent = `${usage.toFixed(0)}%`;
     budgetFill.style.width = `${Math.min(100, usage)}%`;
     budgetSpent.textContent = `${utils.formatCurrency(spent)} spent`;
     budgetRemaining.textContent = `${utils.formatCurrency(remaining)} left`;
-    
+
     // Update fill color based on usage
     budgetFill.classList.remove('safe', 'warning', 'danger');
     if (usage >= 90) {
@@ -302,7 +325,7 @@ async function loadBudget() {
     } else {
       budgetFill.classList.add('safe');
     }
-    
+
     // Show budget status message
     if (usage >= 100) {
       utils.showAlert('⚠️ Budget exceeded! You\'re over your limit.', 'warning');
@@ -329,7 +352,7 @@ async function loadGamificationData() {
     const headerStreakEl = document.getElementById('headerStreakCount');
     if (headerStreakEl) headerStreakEl.textContent = streak.current_streak || 0;
     localStorage.setItem('kudisave_api_streak', String(streak.current_streak || 0));
-    
+
     // Celebrate streaks (only once per session)
     const streakKey = `streakCelebrated_${streak.current_streak}`;
     if ((streak.current_streak === 7 || streak.current_streak === 30) && !sessionStorage.getItem(streakKey)) {
@@ -340,11 +363,11 @@ async function loadGamificationData() {
     // Load XP with level-up detection
     const xpResponse = await api.getXP();
     const xp = xpResponse.data;
-    
+
     const level = xp.level || Math.floor((xp.total_xp || 0) / 100) + 1;
     const nextLevelXp = xp.next_level_xp || (level * 100);
     const progressPercent = (xp.progress_percentage != null ? xp.progress_percentage : ((xp.total_xp || 0) % 100));
-    
+
     // Check for level up
     const previousLevel = parseInt(localStorage.getItem('userLevel') || '1');
     if (level > previousLevel) {
@@ -353,7 +376,7 @@ async function loadGamificationData() {
     } else {
       localStorage.setItem('userLevel', level.toString());
     }
-    
+
     document.getElementById('userLevel').textContent = `Level ${level}`;
     document.getElementById('levelBadge').textContent = level;
     document.getElementById('xpProgress').style.width = `${Math.min(100, progressPercent)}%`;
@@ -362,7 +385,7 @@ async function loadGamificationData() {
     // Load badges with animation
     const badgesResponse = await api.getBadges();
     const badges = badgesResponse.data || [];
-    
+
     const badgesContainer = document.getElementById('badgesContainer');
     const badgeSlots = [
       { icon: 'coins', title: 'Saver', names: ['Saver', 'Chop Saver'] },
@@ -373,7 +396,7 @@ async function loadGamificationData() {
       { icon: 'gem', title: 'Platinum Member', names: ['Platinum Member', 'Transport Wise'] }
     ];
     const earnedBadgeNames = new Set(badges.map(b => b.badge_name || b.name).filter(Boolean));
-    
+
     if (badges.length === 0) {
       badgesContainer.innerHTML = badgeSlots.map(slot =>
         `<span class="badge-item" title="${slot.title} locked"><i data-lucide="${slot.icon}"></i></span>`
@@ -419,9 +442,117 @@ function openBudgetModal() {
   document.body.style.overflow = 'hidden';
 }
 
+async function openBalancesModal() {
+  const modal = document.getElementById('balancesModal');
+  if (!modal) return;
+
+  modal.classList.add('active');
+  document.body.style.overflow = 'hidden';
+  renderBalanceInputs(accountBalancesData);
+
+  try {
+    const response = await api.getBalances();
+    const data = response.data || {};
+    accountBalancesData = Array.isArray(data.balances) ? data.balances : [];
+    hasSavedAccountBalances = Boolean(data.has_balances);
+    renderBalanceInputs(accountBalancesData);
+  } catch (error) {
+    console.warn('Could not refresh balances:', error);
+    utils.showAlert('Could not refresh balances right now', 'error');
+  }
+}
+
 function closeModal(modalId) {
   document.getElementById(modalId).classList.remove('active');
   document.body.style.overflow = '';
+}
+
+function getBalanceAmountFor(accountType, balances = []) {
+  const match = balances.find(item => item.account_type === accountType);
+  return match ? Number(match.amount || 0) : 0;
+}
+
+function renderBalanceInputs(balances = []) {
+  const container = document.getElementById('balanceInputs');
+  const totalEl = document.getElementById('balancesTotalPreview');
+  if (!container) return;
+
+  const symbol = utils.getCurrencySymbol();
+  const total = BALANCE_ACCOUNTS.reduce((sum, account) => sum + getBalanceAmountFor(account.account_type, balances), 0);
+
+  container.innerHTML = BALANCE_ACCOUNTS.map(account => {
+    const value = getBalanceAmountFor(account.account_type, balances);
+    return `
+      <label class="balance-account-row">
+        <span class="balance-account-icon"><i data-lucide="${account.icon}"></i></span>
+        <span class="balance-account-copy">
+          <span class="balance-account-name">${account.label}</span>
+          <span class="balance-account-hint">${account.hint}</span>
+        </span>
+        <span class="balance-account-input-wrap">
+          <span>${symbol}</span>
+          <input
+            class="balance-account-input"
+            type="number"
+            min="0"
+            step="0.01"
+            inputmode="decimal"
+            data-account-type="${account.account_type}"
+            value="${value ? value.toFixed(2) : ''}"
+            placeholder="0.00"
+            oninput="updateBalancesPreview()"
+          >
+        </span>
+      </label>
+    `;
+  }).join('');
+
+  if (totalEl) totalEl.textContent = utils.formatCurrency(total);
+  if (typeof lucide !== 'undefined') lucide.createIcons({ node: container });
+}
+
+function collectBalanceInputs() {
+  return Array.from(document.querySelectorAll('.balance-account-input')).map(input => ({
+    account_type: input.dataset.accountType,
+    amount: Number(input.value || 0)
+  }));
+}
+
+function updateBalancesPreview() {
+  const total = collectBalanceInputs().reduce((sum, item) => sum + Number(item.amount || 0), 0);
+  const totalEl = document.getElementById('balancesTotalPreview');
+  if (totalEl) totalEl.textContent = utils.formatCurrency(total);
+}
+
+async function handleSetBalances(event) {
+  event.preventDefault();
+
+  const balances = collectBalanceInputs();
+  const hasInvalidAmount = balances.some(item => !Number.isFinite(item.amount) || item.amount < 0);
+
+  if (hasInvalidAmount) {
+    utils.showAlert('Balance amounts must be zero or more', 'error');
+    return;
+  }
+
+  try {
+    utils.showLoading();
+    const response = await api.updateBalances(balances);
+    const data = response.data || {};
+    accountBalancesData = Array.isArray(data.balances) ? data.balances : balances;
+    hasSavedAccountBalances = true;
+
+    const total = Number(data.total || balances.reduce((sum, item) => sum + Number(item.amount || 0), 0));
+    const balanceEl = document.getElementById('balanceAmount');
+    if (balanceEl) balanceEl.textContent = utils.formatCurrency(total);
+
+    utils.hideLoading();
+    closeModal('balancesModal');
+    showFunToast('Balances updated successfully', '$', 'success');
+  } catch (error) {
+    utils.hideLoading();
+    utils.showAlert(error.message || 'Failed to update balances', 'error');
+  }
 }
 
 // Backdrop click to close modals
@@ -650,33 +781,33 @@ function openBudgetPeriodModal() {
 // Handle add expense
 async function handleAddExpense(event) {
   event.preventDefault();
-  
+
   // Validate inputs
   const amount = parseFloat(document.getElementById('expenseAmount').value);
   const category = document.getElementById('expenseCategory').value;
   const paymentMethod = document.getElementById('expensePaymentMethod').value;
   const expenseDate = document.getElementById('expenseDate').value;
-  
+
   if (!amount || amount <= 0) {
     utils.showAlert('Please enter a valid amount', 'error');
     return;
   }
-  
+
   if (!category) {
     utils.showAlert('Please select a category', 'error');
     return;
   }
-  
+
   if (!paymentMethod) {
     utils.showAlert('Please select a payment method', 'error');
     return;
   }
-  
+
   if (!expenseDate) {
     utils.showAlert('Please select a date', 'error');
     return;
   }
-  
+
   const noteValue = document.getElementById('expenseNote').value;
   const expenseData = {
     amount: amount,
@@ -685,7 +816,7 @@ async function handleAddExpense(event) {
     expense_date: expenseDate,
     is_recurring: false
   };
-  
+
   // Only include optional fields if they have values
   if (noteValue) {
     expenseData.note = noteValue;
@@ -697,17 +828,17 @@ async function handleAddExpense(event) {
   try {
     utils.showLoading();
     const response = await api.createExpense(expenseData);
-    
+
     utils.hideLoading();
-    
+
     // Award XP for expense tracking
     celebrateXPGain(10); // Award 10 XP for tracking expense
-    
+
     utils.showAlert('Expense saved. You earned 10 XP for tracking it.', 'success');
-    
+
     closeModal('expenseModal');
     document.getElementById('expenseForm').reset();
-    
+
     // Reload data and check for new achievements
     await initDashboard();
     await checkNewAchievements();
@@ -720,34 +851,34 @@ async function handleAddExpense(event) {
 // Handle add income
 async function handleAddIncome(event) {
   event.preventDefault();
-  
+
   // Validate inputs
   const amount = parseFloat(document.getElementById('incomeAmount').value);
   const source = document.getElementById('incomeSource').value;
   const incomeDate = document.getElementById('incomeDate').value;
-  
+
   if (!amount || amount <= 0) {
     utils.showAlert('Please enter a valid amount', 'error');
     return;
   }
-  
+
   if (!source) {
     utils.showAlert('Please select an income source', 'error');
     return;
   }
-  
+
   if (!incomeDate) {
     utils.showAlert('Please select a date', 'error');
     return;
   }
-  
+
   const noteValue = document.getElementById('incomeNote').value;
   const incomeData = {
     amount: amount,
     source: source,
     income_date: incomeDate
   };
-  
+
   // Only include optional fields if they have values
   if (noteValue) {
     incomeData.note = noteValue;
@@ -756,13 +887,13 @@ async function handleAddIncome(event) {
   try {
     utils.showLoading();
     await api.createIncome(incomeData);
-    
+
     utils.hideLoading();
     showFunToast('Income added successfully! 💰', '💵', 'success');
-    
+
     closeModal('incomeModal');
     document.getElementById('incomeForm').reset();
-    
+
     await loadFinancialSummary();
     await checkNewAchievements();
   } catch (error) {
@@ -774,27 +905,27 @@ async function handleAddIncome(event) {
 // Handle set budget
 async function handleSetBudget(event) {
   event.preventDefault();
-  
+
   // Validate inputs
   const period = document.getElementById('budgetPeriod').value;
   const amount = parseFloat(document.getElementById('budgetAmount').value);
   const startDate = document.getElementById('budgetStartDate').value;
-  
+
   if (!period) {
     utils.showAlert('Please select a budget period', 'error');
     return;
   }
-  
+
   if (!amount || amount <= 0) {
     utils.showAlert('Please enter a valid budget amount', 'error');
     return;
   }
-  
+
   if (!startDate) {
     utils.showAlert('Please select a start date', 'error');
     return;
   }
-  
+
   // Calculate end date based on period
   const start = new Date(startDate);
   const end = new Date(start);
@@ -803,7 +934,7 @@ async function handleSetBudget(event) {
   } else if (period === 'monthly') {
     end.setMonth(end.getMonth() + 1);
   }
-  
+
   const budgetData = {
     period_type: period,
     amount: amount,
@@ -815,13 +946,13 @@ async function handleSetBudget(event) {
   try {
     utils.showLoading();
     await api.createBudget(budgetData);
-    
+
     utils.hideLoading();
     showFunToast('Budget set successfully! 💼', '💰', 'success');
-    
+
     closeModal('budgetModal');
     document.getElementById('budgetForm').reset();
-    
+
     await loadBudget();
   } catch (error) {
     utils.hideLoading();
@@ -952,31 +1083,6 @@ async function loadWidgets() {
         else if (diff <= 3) subsDueSoon++;
       });
 
-      // Show subscriptions alert banner
-      const subsBanner = document.getElementById('subsAlertBanner');
-      if (subsBanner) {
-        if (subsOverdue > 0 || subsDueSoon > 0) {
-          const isRed = subsOverdue > 0;
-          let title, desc;
-          if (subsOverdue > 0 && subsDueSoon > 0) {
-            title = `${subsOverdue} overdue + ${subsDueSoon} renewal${subsDueSoon !== 1 ? 's' : ''} due soon`;
-            desc = 'Tap to manage your subscriptions';
-          } else if (subsOverdue > 0) {
-            title = `${subsOverdue} subscription${subsOverdue !== 1 ? 's' : ''} overdue!`;
-            desc = 'These subscriptions are past their renewal date';
-          } else {
-            title = `${subsDueSoon} subscription${subsDueSoon !== 1 ? 's' : ''} due in the next 3 days`;
-            desc = 'Tap to view and manage renewals';
-          }
-          document.getElementById('subsAlertTitle').textContent = title;
-          document.getElementById('subsAlertDesc').textContent = desc;
-          subsBanner.querySelector('.subs-alert-banner-icon').textContent = isRed ? '🚨' : '🔔';
-          subsBanner.classList.toggle('overdue', isRed);
-          subsBanner.style.display = 'flex';
-        } else {
-          subsBanner.style.display = 'none';
-        }
-      }
     } catch (e) { /* Subscriptions API not available */ }
 
     // Load spending insights
@@ -1094,14 +1200,14 @@ async function loadSpendingInsights() {
       // Check if this is a new user's first visit
       const hasVisitedBefore = localStorage.getItem('kudisave_dashboard_visited');
       const isNewUser = !hasVisitedBefore;
-      
+
       // Fun empty state
       if (greetingEl) greetingEl.textContent = '';
       if (footer) footer.style.display = 'none';
-      
+
       let emptyMsgs;
       let msg;
-      
+
       // Special welcome message for new users
       if (isNewUser) {
         emptyMsgs = [
@@ -1122,7 +1228,7 @@ async function loadSpendingInsights() {
         ];
         msg = emptyMsgs[Math.floor(Math.random() * emptyMsgs.length)];
       }
-      
+
       container.innerHTML = `
         <div class="insights-empty" style="width: 100%;">
           <div class="insights-empty-icon"><i data-lucide="${msg.icon}" style="width:32px;height:32px;"></i></div>
@@ -1276,14 +1382,14 @@ document.addEventListener('DOMContentLoaded', () => {
 function animateCounter(element, target, duration = 1000, prefix = '', suffix = '') {
   const start = 0;
   const startTime = performance.now();
-  
+
   function update(currentTime) {
     const elapsed = currentTime - startTime;
     const progress = Math.min(elapsed / duration, 1);
     const easeProgress = 1 - Math.pow(1 - progress, 3); // Ease out cubic
     const current = Math.floor(start + (target - start) * easeProgress);
     element.textContent = prefix + current.toLocaleString() + suffix;
-    
+
     if (progress < 1) {
       requestAnimationFrame(update);
     } else {
@@ -1293,7 +1399,7 @@ function animateCounter(element, target, duration = 1000, prefix = '', suffix = 
       setTimeout(() => element.classList.remove('animate-pop'), 300);
     }
   }
-  
+
   requestAnimationFrame(update);
 }
 
@@ -1301,7 +1407,7 @@ function animateCounter(element, target, duration = 1000, prefix = '', suffix = 
 function showConfetti() {
   const colors = ['#033036', '#0b737d', '#ffffff', '#34d399'];
   const confettiCount = 50;
-  
+
   for (let i = 0; i < confettiCount; i++) {
     const confetti = document.createElement('div');
     confetti.style.cssText = `
@@ -1317,10 +1423,10 @@ function showConfetti() {
       animation: confetti-fall ${2 + Math.random() * 2}s linear forwards;
     `;
     document.body.appendChild(confetti);
-    
+
     setTimeout(() => confetti.remove(), 4000);
   }
-  
+
   // Add confetti keyframes if not exists
   if (!document.getElementById('confetti-style')) {
     const style = document.createElement('style');
@@ -1339,7 +1445,7 @@ function showConfetti() {
 function showFunToast(message, emoji = '🎉', type = 'success') {
   const existing = document.querySelector('.fun-toast');
   if (existing) existing.remove();
-  
+
   const toast = document.createElement('div');
   toast.className = 'fun-toast';
   toast.innerHTML = `<span style="font-size: 24px;">${emoji}</span> ${message}`;
@@ -1363,9 +1469,9 @@ function showFunToast(message, emoji = '🎉', type = 'success') {
     backdrop-filter: blur(10px);
     border: 1px solid rgba(255,255,255,0.2);
   `;
-  
+
   document.body.appendChild(toast);
-  
+
   // Add animation keyframes if not exists
   if (!document.getElementById('toast-style')) {
     const style = document.createElement('style');
@@ -1382,7 +1488,7 @@ function showFunToast(message, emoji = '🎉', type = 'success') {
     `;
     document.head.appendChild(style);
   }
-  
+
   setTimeout(() => {
     toast.style.animation = 'toast-out 0.3s ease forwards';
     setTimeout(() => toast.remove(), 300);
@@ -1393,12 +1499,12 @@ function showFunToast(message, emoji = '🎉', type = 'success') {
 function celebrateAchievement(title) {
   showConfetti();
   showFunToast(`Achievement Unlocked: ${title}!`, '🏆');
-  
+
   // Add sound effect (web audio)
   try {
     const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
     const notes = [523.25, 659.25, 783.99, 1046.50]; // C5, E5, G5, C6
-    
+
     notes.forEach((freq, i) => {
       const osc = audioCtx.createOscillator();
       const gain = audioCtx.createGain();
@@ -1439,7 +1545,7 @@ function celebrateStreak(days) {
 // XP gain celebration
 function celebrateXPGain(amount) {
   showFunToast(`+${amount} XP earned! 🌟`, '⭐');
-  
+
   // Animate the XP bar
   const xpBar = document.getElementById('xpProgress');
   if (xpBar) {
@@ -1451,7 +1557,7 @@ function celebrateXPGain(amount) {
 function celebrateLevelUp(newLevel) {
   // Show confetti
   showConfetti();
-  
+
   // Create level-up overlay
   const overlay = document.createElement('div');
   overlay.style.cssText = `
@@ -1467,7 +1573,7 @@ function celebrateLevelUp(newLevel) {
     z-index: 10000;
     animation: fadeIn 0.3s;
   `;
-  
+
   overlay.innerHTML = `
     <div style="
       text-align: center;
@@ -1499,9 +1605,9 @@ function celebrateLevelUp(newLevel) {
       ">Continue</button>
     </div>
   `;
-  
+
   document.body.appendChild(overlay);
-  
+
   // Add animation styles if not exists
   if (!document.getElementById('levelup-animations')) {
     const style = document.createElement('style');
@@ -1519,12 +1625,12 @@ function celebrateLevelUp(newLevel) {
     `;
     document.head.appendChild(style);
   }
-  
+
   // Play level-up sound
   try {
     const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
     const notes = [261.63, 329.63, 392.00, 523.25, 659.25]; // C4, E4, G4, C5, E5
-    
+
     notes.forEach((freq, i) => {
       const osc = audioCtx.createOscillator();
       const gain = audioCtx.createGain();
@@ -1538,7 +1644,7 @@ function celebrateLevelUp(newLevel) {
       osc.stop(audioCtx.currentTime + i * 0.1 + 0.4);
     });
   } catch (e) { /* Audio not supported */ }
-  
+
   // Auto-dismiss after 5 seconds
   setTimeout(() => overlay.remove(), 5000);
 }
@@ -1561,7 +1667,7 @@ document.querySelectorAll('.btn').forEach(btn => {
     const size = Math.max(rect.width, rect.height);
     const x = e.clientX - rect.left - size / 2;
     const y = e.clientY - rect.top - size / 2;
-    
+
     ripple.style.cssText = `
       position: absolute;
       width: ${size}px;
@@ -1574,11 +1680,11 @@ document.querySelectorAll('.btn').forEach(btn => {
       animation: ripple-effect 0.6s ease forwards;
       pointer-events: none;
     `;
-    
+
     this.style.position = 'relative';
     this.style.overflow = 'hidden';
     this.appendChild(ripple);
-    
+
     setTimeout(() => ripple.remove(), 600);
   });
 });
@@ -1596,7 +1702,7 @@ function addEmojiReaction(element, emoji) {
   `;
   element.style.position = 'relative';
   element.appendChild(reaction);
-  
+
   if (!document.getElementById('float-up-style')) {
     const style = document.createElement('style');
     style.id = 'float-up-style';
@@ -1608,7 +1714,7 @@ function addEmojiReaction(element, emoji) {
     `;
     document.head.appendChild(style);
   }
-  
+
   setTimeout(() => reaction.remove(), 1000);
 }
 
@@ -1626,7 +1732,7 @@ function getDailyQuote() {
     { text: "Discipline is the bridge to success! 🌉", emoji: "🌉" },
     { text: "Every budget kept is a goal met! 🏆", emoji: "🏆" }
   ];
-  
+
   const dayOfYear = Math.floor((new Date() - new Date(new Date().getFullYear(), 0, 0)) / (1000 * 60 * 60 * 24));
   return quotes[dayOfYear % quotes.length];
 }
@@ -1643,7 +1749,7 @@ async function checkNewAchievements() {
           showAchievementUnlockNotification(achievement);
         }, index * 1000); // Stagger notifications by 1 second each
       });
-      
+
       // Reload gamification data to update badges/XP
       await loadGamificationData();
     }
@@ -1658,7 +1764,7 @@ function showAchievementUnlockNotification(achievement) {
   try {
     const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
     const notes = [523.25, 659.25, 783.99]; // C5, E5, G5 (achievement jingle)
-    
+
     notes.forEach((freq, i) => {
       const osc = audioCtx.createOscillator();
       const gain = audioCtx.createGain();
@@ -1672,7 +1778,7 @@ function showAchievementUnlockNotification(achievement) {
       osc.stop(audioCtx.currentTime + i * 0.1 + 0.3);
     });
   } catch (e) { /* Audio not supported */ }
-  
+
   // Create overlay
   const overlay = document.createElement('div');
   overlay.className = 'achievement-unlock-overlay';
@@ -1689,7 +1795,7 @@ function showAchievementUnlockNotification(achievement) {
     z-index: 10000;
     animation: fadeIn 0.3s;
   `;
-  
+
   overlay.innerHTML = `
     <div style="
       background: linear-gradient(135deg, #033036 0%, #064a52 100%);
@@ -1733,9 +1839,9 @@ function showAchievementUnlockNotification(achievement) {
       </div>
     </div>
   `;
-  
+
   document.body.appendChild(overlay);
-  
+
   // Add animation styles if not exists
   if (!document.getElementById('achievement-animations')) {
     const style = document.createElement('style');
@@ -1748,13 +1854,13 @@ function showAchievementUnlockNotification(achievement) {
     `;
     document.head.appendChild(style);
   }
-  
+
   // Show confetti
   showConfetti();
-  
+
   // Click to dismiss
   overlay.addEventListener('click', () => overlay.remove());
-  
+
   // Auto-dismiss after 5 seconds
   setTimeout(() => overlay.remove(), 5000);
 }
@@ -1767,7 +1873,7 @@ function initCurrencyDisplay() {
   const expenseEl = document.getElementById('totalExpenses');
   const budgetSpentEl = document.getElementById('budgetSpent');
   const budgetRemainingEl = document.getElementById('budgetRemaining');
-  
+
   if (balanceEl) balanceEl.textContent = `${symbol} 0.00`;
   if (incomeEl) incomeEl.textContent = `+${symbol} 0`;
   if (expenseEl) expenseEl.textContent = `-${symbol} 0`;
@@ -1779,6 +1885,191 @@ function initCurrencyDisplay() {
   }
   // Update all form modal currency prefix spans
   document.querySelectorAll('.currency-prefix').forEach(el => { el.textContent = symbol; });
+}
+
+// Load and display due subscriptions & bills
+async function loadDueItems() {
+  try {
+    const section = document.getElementById('dueItemsSection');
+    const list = document.getElementById('dueItemsList');
+
+    console.log('loadDueItems: Section element:', section);
+    console.log('loadDueItems: List element:', list);
+
+    if (!section || !list) {
+      console.error('Due items section or list not found in DOM');
+      return;
+    }
+
+    // Clear any localStorage bills to avoid conflicts
+    localStorage.removeItem('kudisave_bills');
+
+    let dueItems = []; // Array to hold both bills and subscriptions
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    console.log('Today:', today);
+
+    // Fetch bills from API
+    try {
+      console.log('Fetching bills from API...');
+      const billsResponse = await api.getBills();
+      console.log('Bills API Response:', billsResponse);
+
+      if (billsResponse && billsResponse.success && billsResponse.data && Array.isArray(billsResponse.data)) {
+        const bills = billsResponse.data;
+        console.log('Bills fetched:', bills.length, bills);
+
+        bills.forEach(bill => {
+          console.log('Processing bill:', bill);
+
+          // Skip paid bills
+          if (bill.is_paid) {
+            console.log('Skipping paid bill:', bill.title);
+            return;
+          }
+
+          // Calculate days until due
+          let billDueDate = new Date(bill.due_date);
+          billDueDate.setHours(0, 0, 0, 0);
+          const daysUntilDue = Math.ceil((billDueDate - today) / (1000 * 60 * 60 * 24));
+
+          console.log(`Bill: ${bill.title}, Due: ${bill.due_date}, Days until due: ${daysUntilDue}`);
+
+          // Show bills due in next 3 days or overdue
+          if (daysUntilDue <= 3 || daysUntilDue < 0) {
+            const item = {
+              type: 'bill',
+              name: bill.title || 'Unnamed Bill',
+              amount: parseFloat(bill.amount) || 0,
+              dueDate: billDueDate,
+              daysUntilDue: daysUntilDue,
+              isOverdue: daysUntilDue < 0,
+              icon: '🧾'
+            };
+            console.log('Adding bill to due items:', item);
+            dueItems.push(item);
+          }
+        });
+      } else {
+        console.warn('Bills response not valid:', billsResponse);
+      }
+    } catch (error) {
+      console.error('Bills API Error:', error);
+    }
+
+    // Fetch subscriptions from API
+    try {
+      console.log('Fetching subscriptions from API...');
+      const subsResponse = await api.getSubscriptions('active');
+      console.log('Subscriptions API Response:', subsResponse);
+
+      if (subsResponse && subsResponse.success && subsResponse.data && Array.isArray(subsResponse.data)) {
+        const subs = subsResponse.data;
+        console.log('Subscriptions fetched:', subs.length, subs);
+
+        subs.forEach(sub => {
+          console.log('Processing subscription:', sub);
+
+          if (!sub.next_due_date) {
+            console.log('Subscription has no due date:', sub.name);
+            return;
+          }
+
+          const subDueDate = new Date(sub.next_due_date);
+          subDueDate.setHours(0, 0, 0, 0);
+          const daysUntilDue = Math.ceil((subDueDate - today) / (1000 * 60 * 60 * 24));
+
+          console.log(`Subscription: ${sub.name}, Due: ${sub.next_due_date}, Days until due: ${daysUntilDue}`);
+
+          if (daysUntilDue <= 3 || daysUntilDue < 0) {
+            const item = {
+              type: 'subscription',
+              name: sub.name || 'Unnamed Subscription',
+              amount: parseFloat(sub.amount) || 0,
+              dueDate: subDueDate,
+              daysUntilDue: daysUntilDue,
+              isOverdue: daysUntilDue < 0,
+              icon: '🔄'
+            };
+            console.log('Adding subscription to due items:', item);
+            dueItems.push(item);
+          }
+        });
+      } else {
+        console.warn('Subscriptions response not valid:', subsResponse);
+      }
+    } catch (error) {
+      console.error('Subscriptions API Error:', error);
+    }
+
+    console.log('Total due items found:', dueItems.length, dueItems);
+
+    // Sort by days until due (overdue first, then closest due date)
+    dueItems.sort((a, b) => {
+      if (a.isOverdue && !b.isOverdue) return -1;
+      if (!a.isOverdue && b.isOverdue) return 1;
+      return a.daysUntilDue - b.daysUntilDue;
+    });
+
+    // Render the list
+    if (dueItems.length === 0) {
+      console.log('No due items to display');
+      // Show a message instead of hiding completely
+      section.style.display = 'block';
+      list.innerHTML = `
+        <div class="empty-state" style="text-align: center; padding: 20px; color: var(--text-muted);">
+          <i data-lucide="check-circle" style="width: 32px; height: 32px; margin-bottom: 8px; opacity: 0.5;"></i>
+          <p style="margin: 0; font-size: 13px;">No bills or subscriptions due soon</p>
+        </div>
+      `;
+      lucide.createIcons({ node: list });
+      return;
+    }
+
+    section.style.display = 'block';
+    const html = dueItems.map(item => {
+      let dueDateStr;
+
+      // Format the actual due date
+      const options = { month: 'short', day: 'numeric', weekday: 'short' };
+      const dueDateFormatted = item.dueDate.toLocaleDateString('en-US', options);
+
+      if (item.isOverdue) {
+        const daysOverdue = Math.abs(item.daysUntilDue);
+        dueDateStr = `${daysOverdue} day${daysOverdue !== 1 ? 's' : ''} overdue • ${dueDateFormatted}`;
+      } else if (item.daysUntilDue === 0) {
+        dueDateStr = `Due today • ${dueDateFormatted}`;
+      } else if (item.daysUntilDue === 1) {
+        dueDateStr = `Due tomorrow • ${dueDateFormatted}`;
+      } else {
+        dueDateStr = `Due in ${item.daysUntilDue} days • ${dueDateFormatted}`;
+      }
+
+      const amount = item.amount || 0;
+      const symbol = utils.getCurrencySymbol ? utils.getCurrencySymbol() : '₵';
+      const cardClass = item.isOverdue ? `${item.type} overdue` : item.type;
+
+      return `
+        <div class="due-item-card ${cardClass}">
+          <div class="due-item-icon">${item.icon}</div>
+          <div class="due-item-info">
+            <div class="due-item-name">${item.name}</div>
+            <div class="due-item-details">${dueDateStr}</div>
+          </div>
+          <div class="due-item-amount">${symbol}${parseFloat(amount).toFixed(2)}</div>
+        </div>
+      `;
+    }).join('');
+
+    console.log('Rendering due items HTML');
+    list.innerHTML = html;
+    lucide.createIcons({ node: list });
+    console.log('Due items rendered successfully');
+
+  } catch (error) {
+    console.error('Error loading due items:', error);
+  }
 }
 
 function getDashboardSubscriptionIcon(name) {
@@ -1972,14 +2263,19 @@ document.addEventListener('DOMContentLoaded', () => {
   initCurrencyDisplay();
   initDashboard();
   loadWidgets();
-  loadDueItemsV2();
-  
+
+  // Load due items with a slight delay to ensure DOM is fully ready
+  setTimeout(() => {
+    console.log('Loading due items...');
+    loadDueItemsV2(); // Load due subscriptions and bills
+  }, 100);
+
   // Add fun entrance animations
   setTimeout(() => {
     document.querySelector('.mtn-profile-section')?.classList.add('animate-slide-up');
     document.querySelector('.balance-card')?.classList.add('animate-zoom');
   }, 100);
-  
+
   // Make FAB more interactive
   const fab = document.querySelector('.fab');
   if (fab) {

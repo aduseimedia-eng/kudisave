@@ -4,6 +4,17 @@ utils.requireAuth();
 
 let userData = null;
 let budgetData = null;
+let accountBalancesData = [];
+let hasSavedAccountBalances = false;
+
+const BALANCE_ACCOUNTS = [
+  { account_type: 'Cash', label: 'Cash', icon: 'banknote', hint: 'Money in hand' },
+  { account_type: 'Bank', label: 'Bank', icon: 'landmark', hint: 'Bank account balance' },
+  { account_type: 'Visa Card', label: 'Visa Card', icon: 'credit-card', hint: 'Card balance available' },
+  { account_type: 'MTN MoMo', label: 'MTN MoMo', icon: 'smartphone', hint: 'Mobile money wallet' },
+  { account_type: 'Telecel Cash', label: 'Telecel Cash', icon: 'smartphone', hint: 'Telecel wallet' },
+  { account_type: 'AirtelTigo Money', label: 'AirtelTigo Money', icon: 'smartphone', hint: 'AirtelTigo wallet' }
+];
 
 // Get time-based greeting
 function getTimeGreeting() {
@@ -136,10 +147,22 @@ async function loadFinancialSummary() {
     const incomeData = Array.isArray(incomeResponse.data) ? incomeResponse.data : [];
     const totalIncome = incomeData.reduce((sum, inc) => sum + parseFloat(inc.amount || 0), 0);
 
-    // Update balance card
-    const balance = totalIncome - totalExpenses;
+    let accountBalanceTotal = totalIncome - totalExpenses;
+    try {
+      const balancesResponse = await api.getBalances();
+      const balanceData = balancesResponse.data || {};
+      accountBalancesData = Array.isArray(balanceData.balances) ? balanceData.balances : [];
+      hasSavedAccountBalances = Boolean(balanceData.has_balances);
+
+      if (hasSavedAccountBalances) {
+        accountBalanceTotal = parseFloat(balanceData.total || 0);
+      }
+    } catch (balanceError) {
+      console.warn('Load balances error:', balanceError);
+    }
+
     const symbol = utils.getCurrencySymbol();
-    document.getElementById('balanceAmount').textContent = utils.formatCurrency(balance);
+    document.getElementById('balanceAmount').textContent = utils.formatCurrency(accountBalanceTotal);
     document.getElementById('totalIncome').textContent = `+${symbol} ${utils.formatCurrencyAmount(totalIncome)}`;
     document.getElementById('totalExpenses').textContent = `-${symbol} ${utils.formatCurrencyAmount(totalExpenses)}`;
 
@@ -324,14 +347,11 @@ async function loadGamificationData() {
     // Load streak
     const streakResponse = await api.getStreak();
     const streak = streakResponse.data;
-    const streakValue = streak.current_streak || 0;
     const currentStreakEl = document.getElementById('currentStreak');
-    if (currentStreakEl) currentStreakEl.textContent = `${streakValue} days`;
-
-    // Sync streak to menu
-    localStorage.setItem('kudisave_api_streak', streakValue.toString());
-    const menuStreakEl = document.getElementById('menuStreakCount');
-    if (menuStreakEl) menuStreakEl.textContent = streakValue;
+    if (currentStreakEl) currentStreakEl.textContent = `${streak.current_streak || 0} days`;
+    const headerStreakEl = document.getElementById('headerStreakCount');
+    if (headerStreakEl) headerStreakEl.textContent = streak.current_streak || 0;
+    localStorage.setItem('kudisave_api_streak', String(streak.current_streak || 0));
 
     // Celebrate streaks (only once per session)
     const streakKey = `streakCelebrated_${streak.current_streak}`;
@@ -362,20 +382,6 @@ async function loadGamificationData() {
     document.getElementById('xpProgress').style.width = `${Math.min(100, progressPercent)}%`;
     document.getElementById('xpText').textContent = `${xp.total_xp || 0} / ${nextLevelXp} XP`;
 
-    // Sync XP/level to menu
-    localStorage.setItem('kudisave_api_level', level.toString());
-    localStorage.setItem('kudisave_api_xp', (xp.total_xp || 0).toString());
-    localStorage.setItem('kudisave_api_xp_next', nextLevelXp.toString());
-    localStorage.setItem('kudisave_api_xp_pct', Math.min(100, progressPercent).toString());
-    const menuLevelBadge = document.getElementById('menuLevelBadge');
-    const menuXpLevel = document.getElementById('menuXpLevel');
-    const menuXpText = document.getElementById('menuXpText');
-    const menuXpFill = document.getElementById('menuXpFill');
-    if (menuLevelBadge) menuLevelBadge.textContent = level;
-    if (menuXpLevel) menuXpLevel.textContent = level;
-    if (menuXpText) menuXpText.textContent = `${xp.total_xp || 0} / ${nextLevelXp} XP`;
-    if (menuXpFill) menuXpFill.style.width = `${Math.min(100, progressPercent)}%`;
-
     // Load badges with animation
     const badgesResponse = await api.getBadges();
     const badges = badgesResponse.data || [];
@@ -391,8 +397,6 @@ async function loadGamificationData() {
     ];
     const earnedBadgeNames = new Set(badges.map(b => b.badge_name || b.name).filter(Boolean));
 
-    let earnedCount = 0;
-
     if (badges.length === 0) {
       badgesContainer.innerHTML = badgeSlots.map(slot =>
         `<span class="badge-item" title="${slot.title} locked"><i data-lucide="${slot.icon}"></i></span>`
@@ -402,17 +406,10 @@ async function loadGamificationData() {
         const isBadgeEarned = earnedBadgeNames.size
           ? slot.names.some(name => earnedBadgeNames.has(name))
           : badges.length > idx;
-        if (isBadgeEarned) earnedCount++;
         return `<span class="badge-item ${isBadgeEarned ? 'earned' : ''}" title="${slot.title} ${isBadgeEarned ? 'earned' : 'locked'}"><i data-lucide="${slot.icon}"></i></span>`;
       }).join('');
     }
     if (typeof lucide !== 'undefined') lucide.createIcons({ node: badgesContainer });
-
-    // Sync badge count to menu
-    localStorage.setItem('kudisave_api_badges', earnedCount.toString());
-    localStorage.setItem('kudisave_badges_earned', earnedCount.toString());
-    const menuBadgeEl = document.getElementById('menuBadgeCount');
-    if (menuBadgeEl) menuBadgeEl.textContent = earnedCount;
 
   } catch (error) {
     console.error('Load gamification error:', error);
@@ -445,9 +442,117 @@ function openBudgetModal() {
   document.body.style.overflow = 'hidden';
 }
 
+async function openBalancesModal() {
+  const modal = document.getElementById('balancesModal');
+  if (!modal) return;
+
+  modal.classList.add('active');
+  document.body.style.overflow = 'hidden';
+  renderBalanceInputs(accountBalancesData);
+
+  try {
+    const response = await api.getBalances();
+    const data = response.data || {};
+    accountBalancesData = Array.isArray(data.balances) ? data.balances : [];
+    hasSavedAccountBalances = Boolean(data.has_balances);
+    renderBalanceInputs(accountBalancesData);
+  } catch (error) {
+    console.warn('Could not refresh balances:', error);
+    utils.showAlert('Could not refresh balances right now', 'error');
+  }
+}
+
 function closeModal(modalId) {
   document.getElementById(modalId).classList.remove('active');
   document.body.style.overflow = '';
+}
+
+function getBalanceAmountFor(accountType, balances = []) {
+  const match = balances.find(item => item.account_type === accountType);
+  return match ? Number(match.amount || 0) : 0;
+}
+
+function renderBalanceInputs(balances = []) {
+  const container = document.getElementById('balanceInputs');
+  const totalEl = document.getElementById('balancesTotalPreview');
+  if (!container) return;
+
+  const symbol = utils.getCurrencySymbol();
+  const total = BALANCE_ACCOUNTS.reduce((sum, account) => sum + getBalanceAmountFor(account.account_type, balances), 0);
+
+  container.innerHTML = BALANCE_ACCOUNTS.map(account => {
+    const value = getBalanceAmountFor(account.account_type, balances);
+    return `
+      <label class="balance-account-row">
+        <span class="balance-account-icon"><i data-lucide="${account.icon}"></i></span>
+        <span class="balance-account-copy">
+          <span class="balance-account-name">${account.label}</span>
+          <span class="balance-account-hint">${account.hint}</span>
+        </span>
+        <span class="balance-account-input-wrap">
+          <span>${symbol}</span>
+          <input
+            class="balance-account-input"
+            type="number"
+            min="0"
+            step="0.01"
+            inputmode="decimal"
+            data-account-type="${account.account_type}"
+            value="${value ? value.toFixed(2) : ''}"
+            placeholder="0.00"
+            oninput="updateBalancesPreview()"
+          >
+        </span>
+      </label>
+    `;
+  }).join('');
+
+  if (totalEl) totalEl.textContent = utils.formatCurrency(total);
+  if (typeof lucide !== 'undefined') lucide.createIcons({ node: container });
+}
+
+function collectBalanceInputs() {
+  return Array.from(document.querySelectorAll('.balance-account-input')).map(input => ({
+    account_type: input.dataset.accountType,
+    amount: Number(input.value || 0)
+  }));
+}
+
+function updateBalancesPreview() {
+  const total = collectBalanceInputs().reduce((sum, item) => sum + Number(item.amount || 0), 0);
+  const totalEl = document.getElementById('balancesTotalPreview');
+  if (totalEl) totalEl.textContent = utils.formatCurrency(total);
+}
+
+async function handleSetBalances(event) {
+  event.preventDefault();
+
+  const balances = collectBalanceInputs();
+  const hasInvalidAmount = balances.some(item => !Number.isFinite(item.amount) || item.amount < 0);
+
+  if (hasInvalidAmount) {
+    utils.showAlert('Balance amounts must be zero or more', 'error');
+    return;
+  }
+
+  try {
+    utils.showLoading();
+    const response = await api.updateBalances(balances);
+    const data = response.data || {};
+    accountBalancesData = Array.isArray(data.balances) ? data.balances : balances;
+    hasSavedAccountBalances = true;
+
+    const total = Number(data.total || balances.reduce((sum, item) => sum + Number(item.amount || 0), 0));
+    const balanceEl = document.getElementById('balanceAmount');
+    if (balanceEl) balanceEl.textContent = utils.formatCurrency(total);
+
+    utils.hideLoading();
+    closeModal('balancesModal');
+    showFunToast('Balances updated successfully', '$', 'success');
+  } catch (error) {
+    utils.hideLoading();
+    utils.showAlert(error.message || 'Failed to update balances', 'error');
+  }
 }
 
 // Backdrop click to close modals
@@ -1092,16 +1197,38 @@ async function loadSpendingInsights() {
       }
 
     } else {
+      // Check if this is a new user's first visit
+      const hasVisitedBefore = localStorage.getItem('kudisave_dashboard_visited');
+      const isNewUser = !hasVisitedBefore;
+
       // Fun empty state
       if (greetingEl) greetingEl.textContent = '';
       if (footer) footer.style.display = 'none';
-      const emptyMsgs = [
-        { icon: 'search', title: 'Nothing to report... yet!', desc: 'Start logging expenses and I\'ll become your personal money detective!' },
-        { icon: 'sprout', title: 'Plant your first expense!', desc: 'Your insights garden is empty. Add expenses and watch brilliant insights bloom!' },
-        { icon: 'gamepad-2', title: 'Level 0: No Data', desc: 'Log some expenses to unlock 30 smart insights. It\'s like a game — but with real money!' },
-        { icon: 'wand-2', title: '30 Insights Waiting!', desc: 'Add expenses, income, goals & budgets to unlock all 30 money insights! Magic awaits!' }
-      ];
-      const msg = emptyMsgs[Math.floor(Math.random() * emptyMsgs.length)];
+
+      let emptyMsgs;
+      let msg;
+
+      // Special welcome message for new users
+      if (isNewUser) {
+        emptyMsgs = [
+          { icon: 'sparkles', title: '👋 Welcome to KudiSave!', desc: 'You\'re all set! Now let\'s track your first expense and unlock your financial superpowers.' },
+          { icon: 'gift', title: '🎉 Welcome Aboard!', desc: 'Great to see you here! Add your first expense and watch 30 smart insights come to life.' },
+          { icon: 'rocket', title: '🚀 Ready to Start?', desc: 'Your journey to financial freedom starts now. Log your first expense to get going!' }
+        ];
+        msg = emptyMsgs[Math.floor(Math.random() * emptyMsgs.length)];
+        // Mark that user has visited
+        localStorage.setItem('kudisave_dashboard_visited', 'true');
+      } else {
+        // Regular empty state for returning users
+        emptyMsgs = [
+          { icon: 'search', title: 'Nothing to report... yet!', desc: 'Start logging expenses and I\'ll become your personal money detective!' },
+          { icon: 'sprout', title: 'Plant your first expense!', desc: 'Your insights garden is empty. Add expenses and watch brilliant insights bloom!' },
+          { icon: 'gamepad-2', title: 'Level 0: No Data', desc: 'Log some expenses to unlock 30 smart insights. It\'s like a game — but with real money!' },
+          { icon: 'wand-2', title: '30 Insights Waiting!', desc: 'Add expenses, income, goals & budgets to unlock all 30 money insights! Magic awaits!' }
+        ];
+        msg = emptyMsgs[Math.floor(Math.random() * emptyMsgs.length)];
+      }
+
       container.innerHTML = `
         <div class="insights-empty" style="width: 100%;">
           <div class="insights-empty-icon"><i data-lucide="${msg.icon}" style="width:32px;height:32px;"></i></div>
@@ -1760,6 +1887,374 @@ function initCurrencyDisplay() {
   document.querySelectorAll('.currency-prefix').forEach(el => { el.textContent = symbol; });
 }
 
+// Load and display due subscriptions & bills
+async function loadDueItems() {
+  try {
+    const section = document.getElementById('dueItemsSection');
+    const list = document.getElementById('dueItemsList');
+
+    console.log('loadDueItems: Section element:', section);
+    console.log('loadDueItems: List element:', list);
+
+    if (!section || !list) {
+      console.error('Due items section or list not found in DOM');
+      return;
+    }
+
+    // Clear any localStorage bills to avoid conflicts
+    localStorage.removeItem('kudisave_bills');
+
+    let dueItems = []; // Array to hold both bills and subscriptions
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    console.log('Today:', today);
+
+    // Fetch bills from API
+    try {
+      console.log('Fetching bills from API...');
+      const billsResponse = await api.getBills();
+      console.log('Bills API Response:', billsResponse);
+
+      if (billsResponse && billsResponse.success && billsResponse.data && Array.isArray(billsResponse.data)) {
+        const bills = billsResponse.data;
+        console.log('Bills fetched:', bills.length, bills);
+
+        bills.forEach(bill => {
+          console.log('Processing bill:', bill);
+
+          // Skip paid bills
+          if (bill.is_paid) {
+            console.log('Skipping paid bill:', bill.title);
+            return;
+          }
+
+          // Calculate days until due
+          let billDueDate = new Date(bill.due_date);
+          billDueDate.setHours(0, 0, 0, 0);
+          const daysUntilDue = Math.ceil((billDueDate - today) / (1000 * 60 * 60 * 24));
+
+          console.log(`Bill: ${bill.title}, Due: ${bill.due_date}, Days until due: ${daysUntilDue}`);
+
+          // Show bills due in next 3 days or overdue
+          if (daysUntilDue <= 3 || daysUntilDue < 0) {
+            const item = {
+              type: 'bill',
+              name: bill.title || 'Unnamed Bill',
+              amount: parseFloat(bill.amount) || 0,
+              dueDate: billDueDate,
+              daysUntilDue: daysUntilDue,
+              isOverdue: daysUntilDue < 0,
+              icon: '🧾'
+            };
+            console.log('Adding bill to due items:', item);
+            dueItems.push(item);
+          }
+        });
+      } else {
+        console.warn('Bills response not valid:', billsResponse);
+      }
+    } catch (error) {
+      console.error('Bills API Error:', error);
+    }
+
+    // Fetch subscriptions from API
+    try {
+      console.log('Fetching subscriptions from API...');
+      const subsResponse = await api.getSubscriptions('active');
+      console.log('Subscriptions API Response:', subsResponse);
+
+      if (subsResponse && subsResponse.success && subsResponse.data && Array.isArray(subsResponse.data)) {
+        const subs = subsResponse.data;
+        console.log('Subscriptions fetched:', subs.length, subs);
+
+        subs.forEach(sub => {
+          console.log('Processing subscription:', sub);
+
+          if (!sub.next_due_date) {
+            console.log('Subscription has no due date:', sub.name);
+            return;
+          }
+
+          const subDueDate = new Date(sub.next_due_date);
+          subDueDate.setHours(0, 0, 0, 0);
+          const daysUntilDue = Math.ceil((subDueDate - today) / (1000 * 60 * 60 * 24));
+
+          console.log(`Subscription: ${sub.name}, Due: ${sub.next_due_date}, Days until due: ${daysUntilDue}`);
+
+          if (daysUntilDue <= 3 || daysUntilDue < 0) {
+            const item = {
+              type: 'subscription',
+              name: sub.name || 'Unnamed Subscription',
+              amount: parseFloat(sub.amount) || 0,
+              dueDate: subDueDate,
+              daysUntilDue: daysUntilDue,
+              isOverdue: daysUntilDue < 0,
+              icon: '🔄'
+            };
+            console.log('Adding subscription to due items:', item);
+            dueItems.push(item);
+          }
+        });
+      } else {
+        console.warn('Subscriptions response not valid:', subsResponse);
+      }
+    } catch (error) {
+      console.error('Subscriptions API Error:', error);
+    }
+
+    console.log('Total due items found:', dueItems.length, dueItems);
+
+    // Sort by days until due (overdue first, then closest due date)
+    dueItems.sort((a, b) => {
+      if (a.isOverdue && !b.isOverdue) return -1;
+      if (!a.isOverdue && b.isOverdue) return 1;
+      return a.daysUntilDue - b.daysUntilDue;
+    });
+
+    // Render the list
+    if (dueItems.length === 0) {
+      console.log('No due items to display');
+      // Show a message instead of hiding completely
+      section.style.display = 'block';
+      list.innerHTML = `
+        <div class="empty-state" style="text-align: center; padding: 20px; color: var(--text-muted);">
+          <i data-lucide="check-circle" style="width: 32px; height: 32px; margin-bottom: 8px; opacity: 0.5;"></i>
+          <p style="margin: 0; font-size: 13px;">No bills or subscriptions due soon</p>
+        </div>
+      `;
+      lucide.createIcons({ node: list });
+      return;
+    }
+
+    section.style.display = 'block';
+    const html = dueItems.map(item => {
+      let dueDateStr;
+
+      // Format the actual due date
+      const options = { month: 'short', day: 'numeric', weekday: 'short' };
+      const dueDateFormatted = item.dueDate.toLocaleDateString('en-US', options);
+
+      if (item.isOverdue) {
+        const daysOverdue = Math.abs(item.daysUntilDue);
+        dueDateStr = `${daysOverdue} day${daysOverdue !== 1 ? 's' : ''} overdue • ${dueDateFormatted}`;
+      } else if (item.daysUntilDue === 0) {
+        dueDateStr = `Due today • ${dueDateFormatted}`;
+      } else if (item.daysUntilDue === 1) {
+        dueDateStr = `Due tomorrow • ${dueDateFormatted}`;
+      } else {
+        dueDateStr = `Due in ${item.daysUntilDue} days • ${dueDateFormatted}`;
+      }
+
+      const amount = item.amount || 0;
+      const symbol = utils.getCurrencySymbol ? utils.getCurrencySymbol() : '₵';
+      const cardClass = item.isOverdue ? `${item.type} overdue` : item.type;
+
+      return `
+        <div class="due-item-card ${cardClass}">
+          <div class="due-item-icon">${item.icon}</div>
+          <div class="due-item-info">
+            <div class="due-item-name">${item.name}</div>
+            <div class="due-item-details">${dueDateStr}</div>
+          </div>
+          <div class="due-item-amount">${symbol}${parseFloat(amount).toFixed(2)}</div>
+        </div>
+      `;
+    }).join('');
+
+    console.log('Rendering due items HTML');
+    list.innerHTML = html;
+    lucide.createIcons({ node: list });
+    console.log('Due items rendered successfully');
+
+  } catch (error) {
+    console.error('Error loading due items:', error);
+  }
+}
+
+function getDashboardSubscriptionIcon(name) {
+  const servicePresets = {
+    'snapchat': { name: 'Snapchat+', iconUrl: 'https://cdn.simpleicons.org/snapchat/white', iconClass: 'icon-snapchat' },
+    'netflix': { name: 'Netflix', iconUrl: 'https://cdn.simpleicons.org/netflix/white', iconClass: 'icon-netflix' },
+    'spotify': { name: 'Spotify', iconUrl: 'https://cdn.simpleicons.org/spotify/white', iconClass: 'icon-spotify' },
+    'apple-music': { name: 'Apple Music', iconUrl: 'https://cdn.simpleicons.org/applemusic/white', iconClass: 'icon-apple-music' },
+    'github': { name: 'GitHub Pro', iconUrl: 'https://cdn.simpleicons.org/github/white', iconClass: 'icon-github' },
+    'apple-tv': { name: 'Apple TV+', iconUrl: 'https://cdn.simpleicons.org/appletv/white', iconClass: 'icon-apple-tv' },
+    'dstv': { name: 'DStv', iconUrl: 'https://cdn.simpleicons.org/dstv/white', iconClass: 'icon-dstv' },
+    'icloud': { name: 'iCloud Storage', iconUrl: 'https://cdn.simpleicons.org/icloud/white', iconClass: 'icon-icloud' },
+    'google-storage': { name: 'Google One', iconUrl: 'https://cdn.simpleicons.org/googlecloud/white', iconClass: 'icon-google-storage' },
+    'x': { name: 'X Premium', iconUrl: 'https://cdn.simpleicons.org/x/white', iconClass: 'icon-x' },
+    'youtube': { name: 'YouTube Premium', iconUrl: 'https://cdn.simpleicons.org/youtube/white', iconClass: 'icon-youtube' },
+    'chatgpt': { name: 'ChatGPT Plus', iconUrl: 'https://cdn.simpleicons.org/openai/white', iconClass: 'icon-chatgpt' }
+  };
+  const lowName = String(name || '').toLowerCase();
+
+  for (const key in servicePresets) {
+    const service = servicePresets[key];
+    const firstWord = service.name.toLowerCase().split(' ')[0].replace('+', '');
+    if (lowName.includes(key) || lowName.includes(firstWord)) {
+      return service;
+    }
+  }
+
+  return { iconUrl: '', iconClass: '', icon: 'repeat' };
+}
+
+async function loadDueItemsV2() {
+  try {
+    const section = document.getElementById('dueItemsSection');
+    const list = document.getElementById('dueItemsList');
+    const countEl = document.getElementById('dueItemsCount');
+
+    if (!section || !list) return;
+
+    localStorage.removeItem('kudisave_bills');
+
+    const dueItems = [];
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    try {
+      const billsResponse = await api.getBills();
+      const bills = billsResponse && billsResponse.success && Array.isArray(billsResponse.data)
+        ? billsResponse.data
+        : [];
+
+      bills.forEach(bill => {
+        if (bill.is_paid) return;
+        const dueDate = new Date(bill.due_date);
+        dueDate.setHours(0, 0, 0, 0);
+        const daysUntilDue = Math.ceil((dueDate - today) / (1000 * 60 * 60 * 24));
+
+        if (daysUntilDue <= 3) {
+          dueItems.push({
+            type: 'bill',
+            name: bill.title || 'Unnamed Bill',
+            amount: parseFloat(bill.amount) || 0,
+            dueDate,
+            daysUntilDue,
+            isOverdue: daysUntilDue < 0,
+            icon: 'receipt-text',
+            href: 'bills.html'
+          });
+        }
+      });
+    } catch (error) {
+      console.error('Bills API Error:', error);
+    }
+
+    try {
+      const subsResponse = await api.getSubscriptions('active');
+      const subscriptions = subsResponse && subsResponse.success && Array.isArray(subsResponse.data)
+        ? subsResponse.data
+        : [];
+
+      subscriptions.forEach(subscription => {
+        if (!subscription.next_due_date) return;
+        const dueDate = new Date(subscription.next_due_date);
+        dueDate.setHours(0, 0, 0, 0);
+        const daysUntilDue = Math.ceil((dueDate - today) / (1000 * 60 * 60 * 24));
+
+        if (daysUntilDue <= 3) {
+          const serviceIcon = getDashboardSubscriptionIcon(subscription.name);
+          dueItems.push({
+            type: 'subscription',
+            name: subscription.name || 'Unnamed Subscription',
+            amount: parseFloat(subscription.amount) || 0,
+            dueDate,
+            daysUntilDue,
+            isOverdue: daysUntilDue < 0,
+            icon: serviceIcon.icon || 'repeat',
+            iconUrl: serviceIcon.iconUrl,
+            iconClass: serviceIcon.iconClass,
+            href: 'subscriptions.html'
+          });
+        }
+      });
+    } catch (error) {
+      console.error('Subscriptions API Error:', error);
+    }
+
+    dueItems.sort((a, b) => {
+      if (a.isOverdue && !b.isOverdue) return -1;
+      if (!a.isOverdue && b.isOverdue) return 1;
+      return a.daysUntilDue - b.daysUntilDue;
+    });
+
+    section.style.display = 'block';
+
+    if (countEl) {
+      countEl.textContent = dueItems.length;
+      countEl.className = `due-items-count${dueItems.length ? ' active' : ''}${dueItems.some(item => item.isOverdue) ? ' overdue' : ''}`;
+    }
+
+    if (dueItems.length === 0) {
+      list.innerHTML = `
+        <div class="due-items-empty">
+          <i data-lucide="circle-check"></i>
+          <p style="margin: 0;">No bills or subscriptions due soon</p>
+        </div>
+      `;
+      if (typeof lucide !== 'undefined') lucide.createIcons({ node: list });
+      return;
+    }
+
+    const symbol = utils.getCurrencySymbol ? utils.getCurrencySymbol() : 'GHS ';
+    list.innerHTML = dueItems.map(item => {
+      const dueDateFormatted = item.dueDate.toLocaleDateString('en-US', {
+        month: 'short',
+        day: 'numeric',
+        weekday: 'short'
+      });
+
+      let statusLabel;
+      let statusIcon = 'clock-3';
+      let dueDateText;
+
+      if (item.isOverdue) {
+        const daysOverdue = Math.abs(item.daysUntilDue);
+        statusLabel = `${daysOverdue}d late`;
+        statusIcon = 'alert-triangle';
+        dueDateText = `${daysOverdue} day${daysOverdue !== 1 ? 's' : ''} overdue - ${dueDateFormatted}`;
+      } else if (item.daysUntilDue === 0) {
+        statusLabel = 'Today';
+        dueDateText = `Due today - ${dueDateFormatted}`;
+      } else if (item.daysUntilDue === 1) {
+        statusLabel = 'Tomorrow';
+        dueDateText = `Due tomorrow - ${dueDateFormatted}`;
+      } else {
+        statusLabel = `${item.daysUntilDue} days`;
+        dueDateText = `Due in ${item.daysUntilDue} days - ${dueDateFormatted}`;
+      }
+
+      const cardClass = item.isOverdue ? `${item.type} overdue` : item.type;
+      const typeLabel = item.type === 'bill' ? 'Bill' : 'Subscription';
+      const iconHtml = item.iconUrl
+        ? `<img src="${item.iconUrl}" alt="${escapeDashboardHtml(item.name)} logo">`
+        : `<i data-lucide="${item.icon}"></i>`;
+      const iconClass = item.iconClass ? ` ${item.iconClass}` : '';
+
+      return `
+        <a class="due-item-card ${cardClass}" href="${item.href}">
+          <div class="due-item-icon${iconClass}">${iconHtml}</div>
+          <div class="due-item-info">
+            <div class="due-item-name">${escapeDashboardHtml(item.name)}</div>
+            <div class="due-item-details">${typeLabel} - ${dueDateText}</div>
+          </div>
+          <div class="due-item-meta">
+            <div class="due-item-amount">${symbol}${parseFloat(item.amount || 0).toFixed(2)}</div>
+            <div class="due-item-status"><i data-lucide="${statusIcon}"></i>${statusLabel}</div>
+          </div>
+        </a>
+      `;
+    }).join('');
+
+    if (typeof lucide !== 'undefined') lucide.createIcons({ node: list });
+  } catch (error) {
+    console.error('Error loading due items:', error);
+  }
+}
+
 // Initialize on page load
 document.addEventListener('DOMContentLoaded', () => {
   // Always scroll to top on page load/refresh
@@ -1768,6 +2263,12 @@ document.addEventListener('DOMContentLoaded', () => {
   initCurrencyDisplay();
   initDashboard();
   loadWidgets();
+
+  // Load due items with a slight delay to ensure DOM is fully ready
+  setTimeout(() => {
+    console.log('Loading due items...');
+    loadDueItemsV2(); // Load due subscriptions and bills
+  }, 100);
 
   // Add fun entrance animations
   setTimeout(() => {
