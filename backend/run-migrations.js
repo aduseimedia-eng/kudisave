@@ -15,6 +15,7 @@ const SQL_FILES = [
   { name: 'Migration: Missing Tables', path: path.join(__dirname, 'migrations', 'add_missing_tables.sql') },
   { name: 'Migration: User Preferences', path: path.join(__dirname, 'migrations', 'add_user_preferences.sql') },
   { name: 'Migration: Subscriptions & Savings', path: path.join(__dirname, 'migrations', 'add_subscriptions_and_savings.sql') },
+  { name: 'Migration: Expense Payment Methods', path: path.join(__dirname, 'migrations', 'fix_expense_payment_methods.sql') },
 ];
 
 /**

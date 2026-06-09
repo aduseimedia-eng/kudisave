@@ -529,6 +529,7 @@ function openDashboardCategoryModal() {
 }
 
 function setDashboardPaymentMethod(method) {
+  if (/^(visa|card|credit card|debit card)$/i.test(String(method).trim())) method = 'Visa Card';
   const input = document.getElementById('expensePaymentMethod');
   const label = document.getElementById('paymentMethodText');
   const logo = document.getElementById('paymentMethodIconWrap');

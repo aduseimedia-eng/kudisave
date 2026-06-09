@@ -169,7 +169,10 @@ class APIService {
     const data = await response.json();
     
     if (!response.ok) {
-      const error = new Error(data.message || 'API request failed');
+      const validationMessage = Array.isArray(data.errors) && data.errors.length
+        ? data.errors.map(err => err.message).filter(Boolean).join(', ')
+        : '';
+      const error = new Error(validationMessage || data.message || 'API request failed');
       error.status = response.status;
       error.response = { data };
       throw error;

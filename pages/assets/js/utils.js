@@ -878,6 +878,40 @@ function ensureInAppNotificationStyles() {
   style.textContent = `
     .notification-launcher {
       position: relative;
+      z-index: 1250;
+      touch-action: manipulation;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .notification-launcher::before {
+      content: '';
+      position: absolute;
+      inset: -10px;
+      border-radius: 20px;
+    }
+
+    .header-notification-btn {
+      width: 48px !important;
+      height: 48px !important;
+      min-width: 48px !important;
+      min-height: 48px !important;
+      border-radius: 16px !important;
+      box-shadow: 0 12px 26px rgba(3, 48, 54, 0.18) !important;
+    }
+
+    .header-notification-btn i {
+      width: 21px !important;
+      height: 21px !important;
+      stroke-width: 2.5;
+    }
+
+    .notification-launcher:active {
+      transform: scale(0.94);
+    }
+
+    .notification-launcher:focus-visible {
+      outline: 3px solid rgba(252, 209, 22, 0.65);
+      outline-offset: 3px;
     }
 
     .notification-badge {
@@ -900,20 +934,28 @@ function ensureInAppNotificationStyles() {
 
     .notification-fab {
       position: fixed;
-      right: 16px;
-      bottom: calc(var(--bottom-nav-height, 0px) + 86px + env(safe-area-inset-bottom, 0px));
-      z-index: 1090;
-      width: 46px;
-      height: 46px;
+      right: 18px;
+      bottom: calc(var(--bottom-nav-height, 0px) + 104px + env(safe-area-inset-bottom, 0px));
+      z-index: 1250;
+      width: 58px;
+      height: 58px;
+      min-width: 58px;
+      min-height: 58px;
       border: 0;
-      border-radius: 16px;
+      border-radius: 20px;
       background: var(--primary-color, #033036);
       color: #ffffff;
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      box-shadow: 0 18px 34px rgba(3, 48, 54, 0.24);
+      box-shadow: 0 18px 34px rgba(3, 48, 54, 0.28);
       cursor: pointer;
+    }
+
+    .notification-fab i {
+      width: 24px !important;
+      height: 24px !important;
+      stroke-width: 2.5;
     }
 
     .notification-fab i,

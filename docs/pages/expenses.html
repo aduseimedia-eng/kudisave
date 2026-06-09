@@ -39,7 +39,7 @@
     /* ===== Header Balance Section ===== */
     .header-balance { text-align: center; padding: 4px 20px 10px; position: relative; z-index: 1; animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.3s both; }
     .header-balance-label { font-size: 10px; color: rgba(255,255,255,0.5); text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 2px; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 4px; }
-    .header-balance-label::before { content: ''; width: 7px; height: 7px; border-radius: 50%; background: linear-gradient(135deg, #fca5a5, #ef4444); box-shadow: 0 0 8px rgba(239,68,68,0.5); animation: pulse-dot 2s ease-in-out infinite; }
+   /* .header-balance-label::before { content: ''; width: 7px; height: 7px; border-radius: 50%; background: linear-gradient(135deg, #fca5a5, #ef4444); box-shadow: 0 0 8px rgba(239,68,68,0.5); animation: pulse-dot 2s ease-in-out infinite; }*/
     .header-balance-amount { font-size: 26px; font-weight: 800; color: #ffffff; letter-spacing: -1px; line-height: 1.1; margin-bottom: 2px; text-shadow: 0 2px 8px rgba(0,0,0,0.15); animation: balanceGlow 3s ease-in-out infinite; }
     .header-balance-sub { font-size: 11px; color: rgba(255,255,255,0.45); font-weight: 500; margin-bottom: 6px; }
     .header-balance-row { display: flex; justify-content: center; gap: 8px; }
@@ -511,8 +511,8 @@
   </div>
 
   <script src="../assets/js/config.js"></script>
-  <script src="../assets/js/api.js"></script>
-  <script src="../assets/js/utils.js?v=notify3"></script>
+  <script src="../assets/js/api.js?v=visa2"></script>
+  <script src="../assets/js/utils.js?v=notify4"></script>
   <script>
     utils.requireAuth();
 
@@ -755,6 +755,7 @@
     }
 
     function setPaymentMethod(method) {
+      if (/^(visa|card|credit card|debit card)$/i.test(String(method).trim())) method = 'Visa Card';
       document.getElementById('expensePaymentMethod').value = method;
       document.getElementById('paymentMethodText').textContent = method;
       document.getElementById('paymentMethodIconWrap').innerHTML = getPaymentLogoHtml(method);

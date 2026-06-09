@@ -7,6 +7,29 @@ const {
   GHANA_PHONE_REGEX
 } = require('../config/constants');
 
+const normalizePaymentMethod = (value) => {
+  if (typeof value !== 'string') return value;
+  const normalized = value.trim().toLowerCase().replace(/[\s_-]+/g, ' ');
+  const aliases = {
+    cash: 'Cash',
+    'mtn momo': 'MTN MoMo',
+    momo: 'MTN MoMo',
+    'mobile money': 'MTN MoMo',
+    telecel: 'Telecel Cash',
+    'telecel cash': 'Telecel Cash',
+    visa: 'Visa Card',
+    'visa card': 'Visa Card',
+    card: 'Visa Card',
+    'credit card': 'Visa Card',
+    'debit card': 'Visa Card',
+    bank: 'Bank Transfer',
+    'bank transfer': 'Bank Transfer',
+    airteltigo: 'AirtelTigo Money',
+    'airteltigo money': 'AirtelTigo Money'
+  };
+  return aliases[normalized] || value.trim();
+};
+
 /**
  * Validation error handler
  */
@@ -82,6 +105,7 @@ const expenseValidation = [
   
   body('payment_method')
     .notEmpty().withMessage('Payment method is required')
+    .customSanitizer(normalizePaymentMethod)
     .isIn(PAYMENT_METHODS).withMessage('Invalid payment method'),
   
   body('expense_date')
