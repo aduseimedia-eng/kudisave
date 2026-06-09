@@ -901,7 +901,7 @@
         utils.showLoading();
         await api.createExpense(payload);
         utils.hideLoading();
-        utils.showAlert('Expense added! 🎉', 'success');
+        utils.showAlert('Expense saved. Your spending record is up to date.', 'success');
         closeModal('expenseModal');
         document.getElementById('expenseForm').reset();
         await loadExpenses();

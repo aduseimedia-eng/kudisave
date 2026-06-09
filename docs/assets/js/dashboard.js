@@ -702,7 +702,7 @@ async function handleAddExpense(event) {
     // Award XP for expense tracking
     celebrateXPGain(10); // Award 10 XP for tracking expense
     
-    showFunToast('Expense added successfully! +10 XP earned! 🎉', '💸', 'success');
+    utils.showAlert('Expense saved. You earned 10 XP for tracking it.', 'success');
     
     closeModal('expenseModal');
     document.getElementById('expenseForm').reset();

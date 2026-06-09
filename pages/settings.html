@@ -1313,7 +1313,7 @@
             </button>
           </div>
         </div>
-        
+
         <div id="gmailConnected" style="display: none;">
           <div class="gmail-badge">
             <img src="https://ssl.gstatic.com/ui/v1/icons/mail/rfr/gmail.ico" alt="Gmail logo">
@@ -1562,20 +1562,20 @@
       try {
         const response = await api.getProfile();
         userData = response.data;
-        
+
         // Update profile header
         document.getElementById('headerProfileName').textContent = userData.name || 'User';
         document.getElementById('headerProfileEmail').textContent = userData.email || '';
         document.getElementById('contentProfileName').textContent = userData.name || 'User';
         document.getElementById('contentProfileEmail').textContent = userData.email || '';
-        
+
         // Load profile picture from database or show initials
         if (userData.profile_picture) {
           updateAvatarDisplay(userData.profile_picture);
         } else if (!loadProfilePictureFromStorage()) {
           updateAvatarDisplay(null, getInitials(userData.name));
         }
-        
+
         const joinedDate = userData.created_at ? new Date(userData.created_at).toLocaleDateString('en-GB', { year: 'numeric', month: 'long' }) : 'Unknown';
         document.getElementById('profileJoined').textContent = `Member since ${joinedDate}`;
 
@@ -1641,20 +1641,20 @@
       const reader = new FileReader();
       reader.onload = async function(e) {
         const imageDataUrl = e.target.result;
-        
+
         try {
           utils.showLoading();
-          
+
           // Save to database via API
           const response = await api.updateProfile({ profile_picture: imageDataUrl });
-          
+
           if (response.success) {
             // Update display
             updateAvatarDisplay(imageDataUrl);
-            
+
             // Also save to localStorage as backup for offline/cross-tab
             localStorage.setItem('profilePicture', imageDataUrl);
-            
+
             // Trigger storage event for cross-tab sync
             window.dispatchEvent(new StorageEvent('storage', {
               key: 'profilePicture',
@@ -1662,7 +1662,7 @@
               oldValue: localStorage.getItem('profilePicture'),
               storageArea: localStorage
             }));
-            
+
             utils.hideLoading();
             utils.showAlert('Profile picture saved successfully', 'success');
           } else {
@@ -1707,18 +1707,18 @@
       const reader = new FileReader();
       reader.onload = async function(e) {
         const imageDataUrl = e.target.result;
-        
+
         try {
           utils.showLoading();
-          
+
           // Save to database via API
           const response = await api.updateProfile({ profile_picture: imageDataUrl });
-          
+
           if (response.success) {
             localStorage.setItem('profilePicture', imageDataUrl);
             updateAvatarDisplay(imageDataUrl);
             updateEditModalAvatar(imageDataUrl);
-            
+
             // Trigger storage event for cross-tab sync
             window.dispatchEvent(new StorageEvent('storage', {
               key: 'profilePicture',
@@ -1726,7 +1726,7 @@
               oldValue: localStorage.getItem('profilePicture'),
               storageArea: localStorage
             }));
-            
+
             utils.hideLoading();
             utils.showAlert('Profile picture saved successfully', 'success');
           } else {
@@ -1748,15 +1748,15 @@
       if (confirm('Are you sure you want to remove your profile picture?')) {
         try {
           utils.showLoading();
-          
+
           // Remove from database
           const response = await api.updateProfile({ profile_picture: null });
-          
+
           localStorage.removeItem('profilePicture');
           const initials = userData ? getInitials(userData.name) : '';
           updateAvatarDisplay(null, initials);
           updateEditModalAvatar(null, initials);
-          
+
           // Trigger storage event for cross-tab sync
           window.dispatchEvent(new StorageEvent('storage', {
             key: 'profilePicture',
@@ -1764,7 +1764,7 @@
             oldValue: localStorage.getItem('profilePicture'),
             storageArea: localStorage
           }));
-          
+
           utils.hideLoading();
           utils.showAlert('Profile picture removed from database', 'success');
         } catch (error) {
@@ -1782,7 +1782,7 @@
     function updateEditModalAvatar(imageUrl, initials) {
       const preview = document.getElementById('editAvatarPreview');
       if (!preview) return;
-      
+
       if (imageUrl) {
         preview.innerHTML = `<img src="${imageUrl}" alt="Profile">`;
       } else {
@@ -1803,7 +1803,7 @@
 
     function openModal(modalId) {
       document.getElementById(modalId).classList.add('active');
-      
+
       // Update edit modal avatar preview when opening
       if (modalId === 'editProfileModal') {
         const savedPicture = localStorage.getItem('profilePicture');
@@ -1818,7 +1818,7 @@
 
     async function handleEditProfile(event) {
       event.preventDefault();
-      
+
       const name = document.getElementById('editName').value;
       const email = document.getElementById('editEmail').value;
       const phone = document.getElementById('editPhone').value;
@@ -1917,7 +1917,7 @@
       document.querySelectorAll('.currency-prefix').forEach(el => {
         el.textContent = utils.getCurrencySymbol ? utils.getCurrencySymbol(currentCurrency) : currentCurrency;
       });
-      
+
       document.querySelectorAll('.currency-option').forEach(option => {
         option.classList.toggle('active', option.dataset.currency === currentCurrency);
       });
@@ -1949,7 +1949,7 @@
       }
       updateCurrencyDisplay();
       closeModal('currencyModal');
-      utils.showAlert(`Currency changed to ${name}`, 'success');
+      utils.showAlert(`Currency updated to ${name}. Balances will now use ${code}.`, 'success');
       // Persist to server in background
       try { await api.put('/currency/settings', { default_currency: code }); } catch (e) {}
     }
@@ -2031,7 +2031,7 @@
       try {
         const response = await api.get('/backup');
         const container = document.getElementById('backupsList');
-        
+
         if (response.success && response.data.length > 0) {
           container.innerHTML = response.data.map(backup => `
             <div class="settings-item" onclick="restoreBackup(${backup.id})">
@@ -2063,7 +2063,7 @@
 
     async function restoreBackup(id) {
       if (!confirm('Restore from this backup? This will merge with your current data.')) return;
-      
+
       try {
         const response = await api.post(`/backup/${id}/restore`, { mode: 'merge' });
         if (response.success) {
@@ -2082,12 +2082,12 @@
       try {
         const content = await file.text();
         const backupData = JSON.parse(content);
-        
+
         const response = await api.post('/backup/import', {
           backup_data: backupData,
           mode: 'merge'
         });
-        
+
         if (response.success) {
           utils.showAlert('Import successful! Data has been restored.', 'success');
           closeModal('restoreModal');
@@ -2101,7 +2101,7 @@
     // Export Functions
     async function exportData(event) {
       event.preventDefault();
-      
+
       const type = document.getElementById('exportType').value;
       const format = document.getElementById('exportFormat').value;
       const startDate = document.getElementById('exportStartDate').value || null;
@@ -2112,9 +2112,9 @@
         const expenses = JSON.parse(localStorage.getItem('expenses')) || [];
         const goals = JSON.parse(localStorage.getItem('goals')) || [];
         const transactions = JSON.parse(localStorage.getItem('transactions')) || [];
-        
+
         let dataToExport = [];
-        
+
         // Filter based on type and date range
         const filterByDate = (items, dateField) => {
           return items.filter(item => {
@@ -2124,7 +2124,7 @@
             return true;
           });
         };
-        
+
         if (type === 'expenses') {
           dataToExport = filterByDate(expenses, 'date');
         } else if (type === 'goals') {
@@ -2134,9 +2134,9 @@
         } else {
           dataToExport = filterByDate(transactions, 'date');
         }
-        
+
         let content, filename, mimeType;
-        
+
         if (format === 'csv') {
           // Convert to CSV
           const arr = Array.isArray(dataToExport) ? dataToExport : [dataToExport];
@@ -2146,7 +2146,7 @@
           }
           const headers = Object.keys(arr[0]);
           const csvHeader = headers.join(',');
-          const csvRows = arr.map(row => 
+          const csvRows = arr.map(row =>
             headers.map(h => {
               const val = row[h];
               return typeof val === 'string' && val.includes(',') ? `"${val}"` : val;
@@ -2160,7 +2160,7 @@
           filename = `${type}_export_${new Date().toISOString().slice(0,10)}.json`;
           mimeType = 'application/json';
         }
-        
+
         // Download file
         const blob = new Blob([content], { type: mimeType });
         const url = URL.createObjectURL(blob);
@@ -2169,7 +2169,7 @@
         a.download = filename;
         a.click();
         URL.revokeObjectURL(url);
-        
+
         utils.showAlert('Export downloaded successfully!', 'success');
         closeModal('exportModal');
       } catch (error) {
@@ -2182,7 +2182,7 @@
       const today = new Date();
       const monthAgo = new Date();
       monthAgo.setMonth(monthAgo.getMonth() - 1);
-      
+
       document.getElementById('exportEndDate').value = today.toISOString().split('T')[0];
       document.getElementById('exportStartDate').value = monthAgo.toISOString().split('T')[0];
     }
@@ -2229,7 +2229,7 @@
       };
       localStorage.setItem('kudisave_notifications', JSON.stringify(notificationSettings));
       updateNotificationStatusText();
-      
+
       // Debounce the backend save
       clearTimeout(_notifSaveTimer);
       _notifSaveTimer = setTimeout(() => {
@@ -2254,15 +2254,15 @@
     async function testEmailNotification() {
       const user = JSON.parse(localStorage.getItem('user') || '{}');
       const email = user.email || '';
-      
+
       if (!email) {
         utils.showAlert('No email address found. Please update your profile.', 'warning');
         return;
       }
-      
+
       // Check if Gmail is connected first
       const gmailStatus = await checkGmailStatus();
-      
+
       if (gmailStatus.connected) {
         utils.showAlert(`Sending test email via your Gmail...`, 'info');
         try {
@@ -2277,13 +2277,13 @@
         }
       } else {
         utils.showAlert(`Sending test email to ${email}...`, 'info');
-        
+
         try {
           const response = await api.post('/notifications/test-email', {
             email: email,
             type: 'test'
           });
-          
+
           if (response.success) {
             utils.showAlert('Test email sent. Check your inbox.', 'success');
           } else {
@@ -2298,7 +2298,7 @@
     // ============================================
     // GMAIL OAUTH FUNCTIONS
     // ============================================
-    
+
     let gmailConnected = false;
     let gmailEmail = null;
 
@@ -2322,7 +2322,7 @@
       const connectedEl = document.getElementById('gmailConnected');
       const emailDisplayEl = document.getElementById('gmailEmailDisplay');
       const statusTextEl = document.getElementById('notifStatusText');
-      
+
       if (gmailConnected && gmailEmail) {
         notConnectedEl.style.display = 'none';
         connectedEl.style.display = 'block';
@@ -2342,7 +2342,7 @@
       try {
         utils.showAlert('Redirecting to Google...', 'info');
         const response = await api.get('/gmail/connect');
-        
+
         if (response.success && response.authUrl) {
           // Redirect to Google OAuth
           window.location.href = response.authUrl;
@@ -2359,11 +2359,11 @@
       if (!confirm('Are you sure you want to disconnect your Gmail? You will stop receiving email notifications from your Gmail account.')) {
         return;
       }
-      
+
       try {
         utils.showAlert('Disconnecting Gmail...', 'info');
         const response = await api.post('/gmail/disconnect');
-        
+
         if (response.success) {
           gmailConnected = false;
           gmailEmail = null;
@@ -2382,7 +2382,7 @@
       const urlParams = new URLSearchParams(window.location.search);
       const gmailStatus = urlParams.get('gmail');
       const reason = urlParams.get('reason');
-      
+
       if (gmailStatus === 'success') {
         utils.showAlert('Gmail connected successfully!', 'success');
         // Clean URL
@@ -2408,14 +2408,14 @@
       updateThemeDisplay();
       loadNotificationSettings();
       updateExportPickerLabels();
-      
+
       // Load API data in parallel
       Promise.all([
         loadProfile(),
         loadCurrencySettings(),
         checkGmailStatus()
       ]).catch(e => console.warn('Settings init error:', e));
-      
+
       // Gmail OAuth handling
       handleGmailCallback();
     });

@@ -1,4 +1,4 @@
-﻿// KudiSave - Utility Functions
+// KudiSave - Utility Functions
 
 // Theme Management
 const THEME_STORAGE_KEY = 'kudisave_theme';
@@ -36,7 +36,7 @@ async function toggleTheme(theme) {
     ? theme
     : (getStoredTheme() === 'dark' ? 'light' : 'dark');
   applyTheme(nextTheme);
-  
+
   if (typeof setUserPreference === 'function') {
     await setUserPreference('theme', nextTheme);
   }
@@ -1254,26 +1254,31 @@ function showAlert(message, type = 'success') {
     document.body.appendChild(container);
   }
 
-  const icons = {
-    success: 'âœ“',
-    error: 'âœ•',
-    warning: '!',
-    info: 'i'
+  const toastConfig = {
+    success: { icon: 'check', title: 'Done' },
+    error: { icon: 'alert-circle', title: 'Needs attention' },
+    warning: { icon: 'alert-triangle', title: 'Heads up' },
+    info: { icon: 'info', title: 'KudiSave' }
   };
-  const icon = icons[type] || icons.info;
+  const config = toastConfig[type] || toastConfig.info;
 
   const toast = document.createElement('div');
   toast.className = `toast toast-${type}`;
+  toast.setAttribute('role', type === 'error' ? 'alert' : 'status');
+  toast.setAttribute('aria-live', type === 'error' ? 'assertive' : 'polite');
   toast.innerHTML = `
-    <div class="toast-icon">${icon}</div>
+    <div class="toast-accent"></div>
+    <div class="toast-icon"><i data-lucide="${config.icon}"></i></div>
     <div class="toast-body">
-      <div class="toast-message">${message}</div>
+      <div class="toast-title">${config.title}</div>
+      <div class="toast-message">${escapeHtml(message)}</div>
     </div>
-    <button class="toast-dismiss" onclick="this.parentElement.classList.add('toast-exit'); setTimeout(() => this.parentElement.remove(), 300)">&times;</button>
+    <button class="toast-dismiss" type="button" aria-label="Dismiss notification"><i data-lucide="x"></i></button>
     <div class="toast-progress"></div>
   `;
 
   container.appendChild(toast);
+  if (typeof lucide !== 'undefined') lucide.createIcons({ node: toast });
 
   // Auto-dismiss after 4 seconds
   const timer = setTimeout(() => {
@@ -1282,6 +1287,12 @@ function showAlert(message, type = 'success') {
       setTimeout(() => toast.remove(), 300);
     }
   }, 4000);
+
+  toast.querySelector('.toast-dismiss')?.addEventListener('click', () => {
+    clearTimeout(timer);
+    toast.classList.add('toast-exit');
+    setTimeout(() => toast.remove(), 300);
+  });
 
   // Swipe to dismiss
   let startX = 0;
@@ -1354,17 +1365,17 @@ async function saveCurrentPage() {
   const currentPath = window.location.pathname;
   // Extract just the page filename
   const pageName = currentPath.split('/').pop();
-  
+
   // Don't save login, splash, or onboarding pages
-  if (pageName && 
-      pageName !== 'index.html' && 
-      pageName !== 'splash.html' && 
+  if (pageName &&
+      pageName !== 'index.html' &&
+      pageName !== 'splash.html' &&
       pageName !== 'onboarding.html' &&
       pageName.endsWith('.html')) {
     // Save relative path for pages folder
-    const relativePath = currentPath.includes('/pages/') ? 
+    const relativePath = currentPath.includes('/pages/') ?
       'pages/' + pageName : pageName;
-    
+
     // Save to API if available
     if (typeof setUserPreference === 'function') {
       await setUserPreference('last_visited_page', relativePath);
@@ -1383,7 +1394,7 @@ function getLastVisitedPage() {
 // Check if user should be redirected to last page (for index.html)
 function checkReturnToLastPage() {
   const token = localStorage.getItem('token');
-  
+
   if (token) {
     // User is logged in, return to last page from preferences
     const lastPage = getLastVisitedPage();
@@ -1553,7 +1564,7 @@ function getChartColors(count) {
     '#6ee7b7', // Light mint
     '#a7f3d0'  // Pale green
   ];
-  
+
   return colors.slice(0, count);
 }
 
@@ -1574,7 +1585,7 @@ function groupExpensesByDate(expenses) {
 function getDateRange(period) {
   const end = new Date();
   const start = new Date();
-  
+
   switch(period) {
     case 'week':
       start.setDate(start.getDate() - 7);
@@ -1586,7 +1597,7 @@ function getDateRange(period) {
       start.setFullYear(start.getFullYear() - 1);
       break;
   }
-  
+
   return {
     start_date: start.toISOString().split('T')[0],
     end_date: end.toISOString().split('T')[0]
@@ -1600,7 +1611,7 @@ function getDateRange(period) {
 // Confetti celebration
 function showConfetti(particleCount = 50) {
   const colors = ['#033036', '#0b737d', '#ffffff', '#34d399', '#fbbf24'];
-  
+
   // Add keyframes if not exist
   if (!document.getElementById('confetti-keyframes')) {
     const style = document.createElement('style');
@@ -1613,7 +1624,7 @@ function showConfetti(particleCount = 50) {
     `;
     document.head.appendChild(style);
   }
-  
+
   for (let i = 0; i < particleCount; i++) {
     const confetti = document.createElement('div');
     const size = Math.random() * 10 + 5;
@@ -1640,7 +1651,7 @@ function showFunToast(message, emoji = 'ðŸŽ‰', duration = 3000) {
   // Remove existing toasts
   const existing = document.querySelector('.fun-toast');
   if (existing) existing.remove();
-  
+
   // Add keyframes if not exist
   if (!document.getElementById('toast-keyframes')) {
     const style = document.createElement('style');
@@ -1658,7 +1669,7 @@ function showFunToast(message, emoji = 'ðŸŽ‰', duration = 3000) {
     `;
     document.head.appendChild(style);
   }
-  
+
   const toast = document.createElement('div');
   toast.className = 'fun-toast';
   toast.innerHTML = `<span style="font-size: 24px; animation: bounce 1s ease infinite;">${emoji}</span> ${message}`;
@@ -1682,9 +1693,9 @@ function showFunToast(message, emoji = 'ðŸŽ‰', duration = 3000) {
     backdrop-filter: blur(10px);
     border: 1px solid rgba(255,255,255,0.2);
   `;
-  
+
   document.body.appendChild(toast);
-  
+
   setTimeout(() => {
     toast.style.animation = 'toast-bounce-out 0.3s ease forwards';
     setTimeout(() => toast.remove(), 300);
@@ -1695,12 +1706,12 @@ function showFunToast(message, emoji = 'ðŸŽ‰', duration = 3000) {
 function celebrate(title = 'Great Job!', type = 'success') {
   showConfetti(60);
   showFunToast(title, type === 'success' ? 'ðŸŽ‰' : 'ðŸ†', 4000);
-  
+
   // Play celebration sound
   try {
     const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
     const notes = [523.25, 659.25, 783.99, 1046.50]; // C5, E5, G5, C6
-    
+
     notes.forEach((freq, i) => {
       const osc = audioCtx.createOscillator();
       const gain = audioCtx.createGain();
@@ -1720,14 +1731,14 @@ function celebrate(title = 'Great Job!', type = 'success') {
 function animateNumber(element, target, duration = 1000, prefix = '', suffix = '') {
   const start = parseFloat(element.textContent.replace(/[^0-9.-]+/g, '')) || 0;
   const startTime = performance.now();
-  
+
   function update(currentTime) {
     const elapsed = currentTime - startTime;
     const progress = Math.min(elapsed / duration, 1);
     const easeProgress = 1 - Math.pow(1 - progress, 3);
     const current = start + (target - start) * easeProgress;
     element.textContent = prefix + current.toFixed(2) + suffix;
-    
+
     if (progress < 1) {
       requestAnimationFrame(update);
     } else {
@@ -1736,7 +1747,7 @@ function animateNumber(element, target, duration = 1000, prefix = '', suffix = '
       setTimeout(() => element.style.animation = '', 300);
     }
   }
-  
+
   requestAnimationFrame(update);
 }
 
@@ -1754,7 +1765,7 @@ function floatEmoji(element, emoji) {
     pointer-events: none;
     z-index: 100;
   `;
-  
+
   if (!document.getElementById('float-emoji-keyframes')) {
     const style = document.createElement('style');
     style.id = 'float-emoji-keyframes';
@@ -1766,7 +1777,7 @@ function floatEmoji(element, emoji) {
     `;
     document.head.appendChild(style);
   }
-  
+
   element.style.position = 'relative';
   element.appendChild(float);
   setTimeout(() => float.remove(), 1500);
@@ -1782,7 +1793,7 @@ function vibrate(pattern = [10]) {
 // Success pulse effect
 function pulseSuccess(element) {
   element.style.animation = 'pulse-success 0.5s ease';
-  
+
   if (!document.getElementById('pulse-success-keyframes')) {
     const style = document.createElement('style');
     style.id = 'pulse-success-keyframes';
@@ -1795,7 +1806,7 @@ function pulseSuccess(element) {
     `;
     document.head.appendChild(style);
   }
-  
+
   setTimeout(() => element.style.animation = '', 500);
 }
 
