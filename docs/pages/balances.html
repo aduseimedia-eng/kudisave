@@ -30,7 +30,7 @@
     }
 
     .balances-shell {
-      width: min(100%, 1120px);
+      width: min(100%, 1180px);
       margin: 0 auto;
       padding: calc(18px + env(safe-area-inset-top, 0px)) 16px calc(92px + env(safe-area-inset-bottom, 0px));
     }
@@ -89,7 +89,7 @@
     }
 
     .balance-total {
-      font-size: clamp(30px, 8vw, 54px);
+      font-size: clamp(30px, 4rem, 54px);
       line-height: 1;
       font-weight: 900;
       letter-spacing: -1px;
@@ -112,7 +112,7 @@
     .section-title {
       margin: 0;
       color: #ffffff;
-      font-size: clamp(28px, 7vw, 46px);
+      font-size: clamp(28px, 3.25rem, 46px);
       line-height: 1;
       font-weight: 900;
       letter-spacing: -1px;
@@ -317,7 +317,7 @@
 
     .wallet-amount {
       margin: 12px 0 5px;
-      font-size: clamp(31px, 8vw, 42px);
+      font-size: clamp(31px, 3rem, 42px);
       line-height: 1.05;
       font-weight: 900;
       letter-spacing: -0.7px;
@@ -644,6 +644,158 @@
         top: 24px;
       }
     }
+
+    @media (min-width: 1100px) {
+      body {
+        overflow-x: hidden;
+      }
+
+      .balances-shell {
+        width: min(100%, 1380px);
+        padding: calc(28px + env(safe-area-inset-top, 0px)) 34px 54px;
+      }
+
+      .balances-topbar {
+        margin-bottom: 22px;
+      }
+
+      .balances-grid {
+        grid-template-columns: minmax(0, 820px) minmax(390px, 460px);
+        gap: 54px;
+      }
+
+      .balance-kicker {
+        font-size: 14px;
+      }
+
+      .balance-total {
+        font-size: 58px;
+        margin-bottom: 34px;
+      }
+
+      .section-row {
+        margin-bottom: 18px;
+      }
+
+      .section-title {
+        font-size: 44px;
+      }
+
+      .card-actions {
+        gap: 12px;
+      }
+
+      .add-account-button {
+        min-height: 42px;
+        padding-inline: 15px;
+      }
+
+      .balance-cards {
+        grid-auto-columns: minmax(540px, 600px);
+        gap: 22px;
+        padding: 10px 160px 34px 6px;
+        scrollbar-width: thin;
+        scrollbar-color: rgba(148,163,184,0.45) transparent;
+      }
+
+      .balance-cards::-webkit-scrollbar {
+        display: block;
+        height: 8px;
+      }
+
+      .balance-cards::-webkit-scrollbar-track {
+        background: transparent;
+      }
+
+      .balance-cards::-webkit-scrollbar-thumb {
+        background: rgba(148,163,184,0.45);
+        border-radius: 999px;
+      }
+
+      .wallet-card {
+        min-height: min(58vh, 560px);
+        padding: 34px 34px 30px;
+        border-radius: 24px;
+      }
+
+      .wallet-card.active {
+        outline-offset: 4px;
+      }
+
+      .wallet-brand {
+        min-height: 250px;
+      }
+
+      .wallet-brand img {
+        width: min(340px, 88%);
+        max-height: 232px;
+      }
+
+      .wallet-card.cash .wallet-brand img,
+      .wallet-card.bank .wallet-brand img,
+      .wallet-card.telecel .wallet-brand img,
+      .wallet-card.mastercard .wallet-brand img,
+      .wallet-card.mtn .wallet-brand img {
+        width: min(320px, 86%);
+        max-height: 220px;
+      }
+
+      .wallet-chip {
+        width: 54px;
+        height: 42px;
+      }
+
+      .wallet-amount {
+        font-size: 44px;
+        margin-top: 16px;
+      }
+
+      .wallet-name {
+        font-size: 16px;
+      }
+
+      .wallet-edit {
+        margin-top: 18px;
+        padding: 10px 12px;
+      }
+
+      .balances-save {
+        width: min(100%, 420px);
+        margin-left: auto;
+        margin-bottom: 0;
+      }
+
+      .transactions-panel {
+        top: 32px;
+        min-height: calc(100vh - 64px);
+        padding-left: 26px;
+        border-left: 1px solid rgba(255,255,255,0.08);
+      }
+
+      [data-theme="light"] .transactions-panel {
+        border-left-color: rgba(17,24,39,0.08);
+      }
+
+      .transactions-panel .section-title {
+        font-size: 34px !important;
+      }
+
+      .transactions-list {
+        max-height: calc(100vh - 170px);
+        overflow-y: auto;
+        padding-right: 8px;
+        scrollbar-width: thin;
+        scrollbar-color: rgba(148,163,184,0.45) transparent;
+      }
+
+      .transaction-row {
+        min-height: 84px;
+      }
+
+      .account-modal {
+        place-items: center;
+      }
+    }
   </style>
 </head>
 <body>
@@ -653,7 +805,7 @@
     </div>
 
     <div class="balances-grid">
-      <section>
+      <section class="balances-primary">
         <div class="balance-kicker">Total Balance</div>
         <div class="balance-total" id="balancesPageTotal">GHS 0.00</div>
 
@@ -675,7 +827,7 @@
 
       <section class="transactions-panel">
         <div class="section-row">
-          <h2 class="section-title" style="font-size:clamp(26px,6vw,38px)">Last Transactions</h2>
+          <h2 class="section-title" style="font-size:clamp(26px,2.6rem,38px)">Last Transactions</h2>
           <button class="history-link" type="button" onclick="selectAccount('all')"><span id="historyFilterLabel">All</span><i data-lucide="chevron-right"></i></button>
         </div>
         <div class="transactions-list" id="transactionsList">
