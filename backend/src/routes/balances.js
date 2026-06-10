@@ -4,6 +4,15 @@ const { query, transaction } = require('../config/database');
 const { authenticateToken } = require('../middleware/auth');
 
 const BALANCE_ACCOUNTS = ['Cash', 'Bank', 'Visa Card', 'Mastercard', 'MTN MoMo', 'Telecel Cash', 'AirtelTigo Money'];
+const ACCOUNT_PAYMENT_METHODS = {
+  Cash: 'Cash',
+  Bank: 'Bank Transfer',
+  'Visa Card': 'Visa Card',
+  Mastercard: 'Mastercard',
+  'MTN MoMo': 'MTN MoMo',
+  'Telecel Cash': 'Telecel Cash',
+  'AirtelTigo Money': 'AirtelTigo Money'
+};
 
 function normalizeAccountType(value) {
   const raw = String(value || '').trim();
@@ -20,16 +29,65 @@ function normalizeAccountType(value) {
   return BALANCE_ACCOUNTS.includes(raw) ? raw : null;
 }
 
-function normalizeRows(rows) {
-  const saved = new Map(rows.map(row => [row.account_type, row]));
+function getPaymentMethod(accountType, value) {
+  const normalized = normalizeAccountType(value);
+  if (normalized) return ACCOUNT_PAYMENT_METHODS[normalized];
+  return ACCOUNT_PAYMENT_METHODS[accountType] || accountType;
+}
 
-  return BALANCE_ACCOUNTS.map(accountType => {
-    const row = saved.get(accountType);
-    return {
+function slugifyAccountKey(value) {
+  return String(value || '')
+    .trim()
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '')
+    .slice(0, 96);
+}
+
+function normalizeMask(value) {
+  return String(value || '')
+    .replace(/\D/g, '')
+    .slice(-4);
+}
+
+function normalizeRow(row) {
+  const accountType = normalizeAccountType(row.account_type) || 'Cash';
+  const accountName = String(row.account_name || accountType).trim().slice(0, 80);
+  const paymentMethod = getPaymentMethod(accountType, row.payment_method || accountType);
+  const accountKey = slugifyAccountKey(row.account_key || `${accountType}-${accountName}`) || slugifyAccountKey(accountType);
+
+  return {
+    account_key: accountKey,
+    account_type: accountType,
+    account_name: accountName || accountType,
+    payment_method: paymentMethod,
+    account_mask: normalizeMask(row.account_mask),
+    amount: Number(row.amount || 0),
+    updated_at: row.updated_at || null
+  };
+}
+
+function normalizeRows(rows) {
+  const normalizedRows = rows.map(normalizeRow);
+  const savedKeys = new Set(normalizedRows.map(row => row.account_key));
+
+  const defaultRows = BALANCE_ACCOUNTS.map(accountType => {
+    const accountKey = `default-${slugifyAccountKey(accountType)}`;
+    return savedKeys.has(accountKey) ? null : {
+      account_key: accountKey,
       account_type: accountType,
-      amount: row ? Number(row.amount) : 0,
-      updated_at: row ? row.updated_at : null
+      account_name: accountType,
+      payment_method: ACCOUNT_PAYMENT_METHODS[accountType],
+      account_mask: '',
+      amount: 0,
+      updated_at: null
     };
+  }).filter(Boolean);
+
+  return [...normalizedRows, ...defaultRows].sort((a, b) => {
+    const defaultOrder = BALANCE_ACCOUNTS.indexOf(a.account_type) - BALANCE_ACCOUNTS.indexOf(b.account_type);
+    if (defaultOrder !== 0) return defaultOrder;
+    return a.account_name.localeCompare(b.account_name);
   });
 }
 
@@ -47,7 +105,10 @@ function buildResponse(rows, hasBalances) {
 router.get('/', authenticateToken, async (req, res) => {
   try {
     const result = await query(
-      'SELECT account_type, amount, updated_at FROM account_balances WHERE user_id = $1 ORDER BY account_type',
+      `SELECT account_key, account_type, account_name, payment_method, account_mask, amount, updated_at
+       FROM account_balances
+       WHERE user_id = $1
+       ORDER BY account_type, account_name, created_at`,
       [req.user.id]
     );
 
@@ -69,9 +130,9 @@ router.put('/', authenticateToken, async (req, res) => {
       return res.status(400).json({ success: false, message: 'Add at least one balance to save' });
     }
 
-    const balancesByType = new Map();
+    const balancesByKey = new Map();
     for (const item of incomingBalances) {
-      const accountType = normalizeAccountType(item.account_type || item.accountType || item.name);
+      const accountType = normalizeAccountType(item.account_type || item.accountType || item.payment_method || item.paymentMethod || item.name);
       const amount = Number(item.amount);
 
       if (!accountType) {
@@ -82,22 +143,57 @@ router.put('/', authenticateToken, async (req, res) => {
         return res.status(400).json({ success: false, message: 'Balance amounts must be zero or more' });
       }
 
-      balancesByType.set(accountType, Math.round(amount * 100) / 100);
+      const paymentMethod = getPaymentMethod(accountType, item.payment_method || item.paymentMethod || accountType);
+      const accountName = String(item.account_name || item.accountName || item.name || accountType).trim().slice(0, 80) || accountType;
+      const accountMask = normalizeMask(item.account_mask || item.accountMask || item.mask);
+      const preferredKey = item.account_key || item.accountKey || `${accountType}-${accountName}-${accountMask}`;
+      let accountKey = slugifyAccountKey(preferredKey) || `account-${balancesByKey.size + 1}`;
+      let suffix = 2;
+      while (balancesByKey.has(accountKey)) {
+        accountKey = `${slugifyAccountKey(preferredKey) || 'account'}-${suffix}`;
+        suffix += 1;
+      }
+
+      balancesByKey.set(accountKey, {
+        accountKey,
+        accountType,
+        accountName,
+        paymentMethod,
+        accountMask,
+        amount: Math.round(amount * 100) / 100
+      });
     }
 
     const rows = await transaction(async (client) => {
-      for (const [accountType, amount] of balancesByType.entries()) {
+      for (const balance of balancesByKey.values()) {
         await client.query(
-          `INSERT INTO account_balances (user_id, account_type, amount, updated_at)
-           VALUES ($1, $2, $3, NOW())
-           ON CONFLICT (user_id, account_type)
-           DO UPDATE SET amount = EXCLUDED.amount, updated_at = NOW()`,
-          [req.user.id, accountType, amount]
+          `INSERT INTO account_balances (user_id, account_key, account_type, account_name, payment_method, account_mask, amount, updated_at)
+           VALUES ($1, $2, $3, $4, $5, $6, $7, NOW())
+           ON CONFLICT (user_id, account_key)
+           DO UPDATE SET
+             account_type = EXCLUDED.account_type,
+             account_name = EXCLUDED.account_name,
+             payment_method = EXCLUDED.payment_method,
+             account_mask = EXCLUDED.account_mask,
+             amount = EXCLUDED.amount,
+             updated_at = NOW()`,
+          [
+            req.user.id,
+            balance.accountKey,
+            balance.accountType,
+            balance.accountName,
+            balance.paymentMethod,
+            balance.accountMask,
+            balance.amount
+          ]
         );
       }
 
       const result = await client.query(
-        'SELECT account_type, amount, updated_at FROM account_balances WHERE user_id = $1 ORDER BY account_type',
+        `SELECT account_key, account_type, account_name, payment_method, account_mask, amount, updated_at
+         FROM account_balances
+         WHERE user_id = $1
+         ORDER BY account_type, account_name, created_at`,
         [req.user.id]
       );
 

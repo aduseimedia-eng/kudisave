@@ -30,6 +30,8 @@ const CACHE_CONFIG = {
   summary: { key: 'kudisave_cache_summary', ttl: 5 * 60 * 1000 }
 };
 
+const BALANCES_STORAGE_KEY = 'kudisave_account_balances';
+
 // Check if low data mode is enabled (from user preferences)
 function isLowDataMode() {
   return userPreferences.low_data_mode;
@@ -107,6 +109,56 @@ function clearOldCache() {
 // Check if offline
 function isOffline() {
   return !navigator.onLine;
+}
+
+function isBalanceRouteUnavailable(error) {
+  const message = String(error?.message || '').toLowerCase();
+  return error?.status === 404 || error?.status >= 500 || message.includes('route not found') || message.includes('failed to fetch') || isOffline();
+}
+
+function buildLocalBalancesResponse(balances = []) {
+  const normalizedBalances = Array.isArray(balances) ? balances.map((item, index) => {
+    const accountType = item.account_type || item.accountType || item.payment_method || item.paymentMethod || 'Cash';
+    const paymentMethod = item.payment_method || item.paymentMethod || (accountType === 'Bank' ? 'Bank Transfer' : accountType);
+    const accountName = item.account_name || item.accountName || item.name || accountType;
+    const accountKey = item.account_key || item.accountKey || `${String(accountType).toLowerCase().replace(/[^a-z0-9]+/g, '-')}-${index + 1}`;
+    const amount = Number(item.amount || 0);
+
+    return {
+      account_key: accountKey,
+      account_type: accountType,
+      account_name: accountName,
+      payment_method: paymentMethod,
+      account_mask: item.account_mask || item.accountMask || item.mask || '',
+      amount: Number.isFinite(amount) && amount >= 0 ? Math.round(amount * 100) / 100 : 0,
+      updated_at: item.updated_at || new Date().toISOString()
+    };
+  }) : [];
+  const total = normalizedBalances.reduce((sum, item) => sum + Number(item.amount || 0), 0);
+
+  return {
+    success: true,
+    data: {
+      balances: normalizedBalances,
+      total,
+      has_balances: normalizedBalances.length > 0,
+      source: 'local'
+    }
+  };
+}
+
+function getLocalBalancesResponse() {
+  try {
+    return buildLocalBalancesResponse(JSON.parse(localStorage.getItem(BALANCES_STORAGE_KEY) || '[]'));
+  } catch (e) {
+    return buildLocalBalancesResponse([]);
+  }
+}
+
+function setLocalBalancesResponse(balances = []) {
+  const response = buildLocalBalancesResponse(balances);
+  localStorage.setItem(BALANCES_STORAGE_KEY, JSON.stringify(response.data.balances));
+  return response;
 }
 
 class APIService {
@@ -402,21 +454,43 @@ class APIService {
   // BALANCE ENDPOINTS
 
   async getBalances() {
-    const response = await fetch(`${API_BASE_URL}/balances`, {
-      headers: this.getHeaders()
-    });
+    try {
+      const response = await fetch(`${API_BASE_URL}/balances`, {
+        headers: this.getHeaders()
+      });
 
-    return await this.handleResponse(response);
+      const result = await this.handleResponse(response);
+      if (result?.data?.has_balances) {
+        setLocalBalancesResponse(result.data.balances || []);
+      }
+      return result;
+    } catch (error) {
+      if (isBalanceRouteUnavailable(error)) {
+        console.warn('Using local balances because the balances route is unavailable:', error);
+        return getLocalBalancesResponse();
+      }
+      throw error;
+    }
   }
 
   async updateBalances(balances = []) {
-    const response = await fetch(`${API_BASE_URL}/balances`, {
-      method: 'PUT',
-      headers: this.getHeaders(),
-      body: JSON.stringify({ balances })
-    });
+    try {
+      const response = await fetch(`${API_BASE_URL}/balances`, {
+        method: 'PUT',
+        headers: this.getHeaders(),
+        body: JSON.stringify({ balances })
+      });
 
-    return await this.handleResponse(response);
+      const result = await this.handleResponse(response);
+      setLocalBalancesResponse(result?.data?.balances || balances);
+      return result;
+    } catch (error) {
+      if (isBalanceRouteUnavailable(error)) {
+        console.warn('Saving balances locally because the balances route is unavailable:', error);
+        return setLocalBalancesResponse(balances);
+      }
+      throw error;
+    }
   }
 
   // BUDGET ENDPOINTS

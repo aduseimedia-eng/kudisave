@@ -14,5 +14,5 @@ COPY backend/ .
 # Expose port
 EXPOSE ${PORT:-5000}
 
-# Start server
-CMD ["node", "server.js"]
+# Run migrations, then start server
+CMD ["npm", "run", "railway:start"]

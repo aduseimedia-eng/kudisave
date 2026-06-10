@@ -123,7 +123,11 @@
     }
 
     .card-count,
-    .history-link {
+    .history-link,
+    .add-account-button,
+    .account-modal-close,
+    .account-modal-cancel,
+    .account-modal-save {
       color: #8b8f9b;
       font-size: 14px;
       font-weight: 800;
@@ -136,6 +140,33 @@
       cursor: pointer;
       font-family: inherit;
       white-space: nowrap;
+    }
+
+    .card-actions {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .add-account-button {
+      min-height: 38px;
+      padding: 0 12px;
+      border-radius: 12px;
+      color: #f8fafc;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.08);
+      gap: 6px;
+    }
+
+    [data-theme="light"] .add-account-button {
+      color: #033036;
+      background: #ffffff;
+      border-color: rgba(17,24,39,0.08);
+    }
+
+    .add-account-button i {
+      width: 17px;
+      height: 17px;
     }
 
     .balance-cards {
@@ -462,6 +493,136 @@
       box-shadow: 0 10px 24px rgba(17,24,39,0.05);
     }
 
+    .account-modal {
+      position: fixed;
+      inset: 0;
+      z-index: 2400;
+      display: grid;
+      place-items: end center;
+      padding: 16px;
+      background: rgba(5,10,18,0.62);
+      backdrop-filter: blur(12px);
+    }
+
+    .account-modal[hidden] {
+      display: none;
+    }
+
+    .account-modal-panel {
+      width: min(100%, 460px);
+      border-radius: 22px;
+      padding: 20px;
+      background: #171a22;
+      color: #f8fafc;
+      box-shadow: 0 28px 80px rgba(0,0,0,0.36);
+    }
+
+    [data-theme="light"] .account-modal-panel {
+      background: #ffffff;
+      color: #111827;
+    }
+
+    .account-modal-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+
+    .account-modal-title {
+      margin: 0;
+      font-size: 22px;
+      line-height: 1.1;
+      font-weight: 900;
+      color: inherit;
+    }
+
+    .account-modal-close {
+      width: 40px;
+      height: 40px;
+      border-radius: 12px;
+      justify-content: center;
+      color: inherit;
+      background: rgba(255,255,255,0.08);
+    }
+
+    [data-theme="light"] .account-modal-close {
+      background: #f3f4f6;
+    }
+
+    .account-modal-close i {
+      width: 18px;
+      height: 18px;
+    }
+
+    .account-form {
+      display: grid;
+      gap: 14px;
+    }
+
+    .account-field {
+      display: grid;
+      gap: 7px;
+    }
+
+    .account-field label {
+      color: #8b8f9b;
+      font-size: 12px;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+    }
+
+    .account-field input,
+    .account-field select {
+      width: 100%;
+      min-height: 48px;
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 14px;
+      padding: 0 14px;
+      color: inherit;
+      background: rgba(255,255,255,0.06);
+      font: inherit;
+      font-weight: 800;
+      outline: 0;
+    }
+
+    [data-theme="light"] .account-field input,
+    [data-theme="light"] .account-field select {
+      border-color: rgba(17,24,39,0.08);
+      background: #f9fafb;
+    }
+
+    .account-modal-actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 4px;
+    }
+
+    .account-modal-cancel,
+    .account-modal-save {
+      min-height: 50px;
+      justify-content: center;
+      border-radius: 14px;
+      gap: 8px;
+    }
+
+    .account-modal-cancel {
+      color: inherit;
+      background: rgba(255,255,255,0.08);
+    }
+
+    [data-theme="light"] .account-modal-cancel {
+      background: #f3f4f6;
+    }
+
+    .account-modal-save {
+      color: #ffffff;
+      background: #033036;
+    }
+
     @media (min-width: 760px) {
       .balances-shell {
         padding-inline: 28px;
@@ -498,7 +659,10 @@
 
         <div class="section-row">
           <h1 class="section-title">Cards</h1>
-          <button class="card-count" type="button" onclick="selectMethod('all')"><span id="methodCount">0</span><i data-lucide="chevron-right"></i></button>
+          <div class="card-actions">
+            <button class="add-account-button" type="button" onclick="openAddAccountModal()"><i data-lucide="plus"></i> Add</button>
+            <button class="card-count" type="button" onclick="selectAccount('all')"><span id="methodCount">0</span><i data-lucide="chevron-right"></i></button>
+          </div>
         </div>
 
         <form id="balancesPageForm" onsubmit="saveBalancesPage(event)">
@@ -512,7 +676,7 @@
       <section class="transactions-panel">
         <div class="section-row">
           <h2 class="section-title" style="font-size:clamp(26px,6vw,38px)">Last Transactions</h2>
-          <button class="history-link" type="button" onclick="selectMethod('all')"><span id="historyFilterLabel">All</span><i data-lucide="chevron-right"></i></button>
+          <button class="history-link" type="button" onclick="selectAccount('all')"><span id="historyFilterLabel">All</span><i data-lucide="chevron-right"></i></button>
         </div>
         <div class="transactions-list" id="transactionsList">
           <div class="empty-history">Loading transactions...</div>
@@ -521,8 +685,39 @@
     </div>
   </main>
 
+  <div class="account-modal" id="accountModal" hidden>
+    <form class="account-modal-panel" id="accountForm" onsubmit="addBalanceAccount(event)">
+      <div class="account-modal-head">
+        <h2 class="account-modal-title">Add payment method</h2>
+        <button class="account-modal-close" type="button" onclick="closeAddAccountModal()" aria-label="Close"><i data-lucide="x"></i></button>
+      </div>
+      <div class="account-form">
+        <div class="account-field">
+          <label for="accountPaymentMethod">Payment method</label>
+          <select id="accountPaymentMethod" required></select>
+        </div>
+        <div class="account-field">
+          <label for="accountName">Account name</label>
+          <input id="accountName" type="text" maxlength="80" placeholder="Freelance Visa" required>
+        </div>
+        <div class="account-field">
+          <label for="accountMask">Last four</label>
+          <input id="accountMask" type="text" inputmode="numeric" maxlength="4" placeholder="6754">
+        </div>
+        <div class="account-field">
+          <label for="accountStartingBalance">Balance</label>
+          <input id="accountStartingBalance" type="number" min="0" step="0.01" inputmode="decimal" placeholder="0.00">
+        </div>
+        <div class="account-modal-actions">
+          <button class="account-modal-cancel" type="button" onclick="closeAddAccountModal()">Cancel</button>
+          <button class="account-modal-save" type="submit"><i data-lucide="plus"></i> Add account</button>
+        </div>
+      </div>
+    </form>
+  </div>
+
   <script src="../assets/js/config.js"></script>
-  <script src="../assets/js/api.js?v=balances2"></script>
+  <script src="../assets/js/api.js?v=balances3"></script>
   <script src="../assets/js/utils.js?v=loading2"></script>
   <script>
     utils.requireAuth();
@@ -539,7 +734,7 @@
 
     let balancesState = [];
     let expensesState = [];
-    let selectedMethod = 'all';
+    let selectedAccountKey = 'all';
 
     function escapeText(value) {
       return String(value || '').replace(/[&<>"']/g, char => ({
@@ -564,9 +759,89 @@
       return value || 'Cash';
     }
 
-    function getBalanceAmount(accountType) {
-      const match = balancesState.find(item => item.account_type === accountType);
-      return Number(match?.amount || 0);
+    function getAccountTypeFromPayment(paymentMethod) {
+      const normalized = normalizePaymentMethod(paymentMethod);
+      return normalized === 'Bank Transfer' ? 'Bank' : normalized;
+    }
+
+    function slugifyAccountKey(value) {
+      return String(value || '')
+        .trim()
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/^-+|-+$/g, '')
+        .slice(0, 96);
+    }
+
+    function normalizeMask(value) {
+      return String(value || '').replace(/\D/g, '').slice(-4);
+    }
+
+    function getTemplateByPayment(paymentMethod) {
+      const normalized = normalizePaymentMethod(paymentMethod);
+      return BALANCE_METHODS.find(method => method.payment_method === normalized)
+        || BALANCE_METHODS.find(method => method.account_type === normalized)
+        || BALANCE_METHODS[BALANCE_METHODS.length - 1];
+    }
+
+    function getDefaultAccount(method) {
+      return {
+        account_key: `default-${slugifyAccountKey(method.account_type)}`,
+        account_type: method.account_type,
+        account_name: method.name,
+        payment_method: method.payment_method,
+        account_mask: method.mask,
+        amount: 0,
+        updated_at: null
+      };
+    }
+
+    function normalizeBalanceItem(item, index = 0) {
+      const paymentMethod = normalizePaymentMethod(item.payment_method || item.paymentMethod || item.account_type || item.accountType);
+      const accountType = getAccountTypeFromPayment(paymentMethod);
+      const accountName = String(item.account_name || item.accountName || item.name || paymentMethod).trim() || paymentMethod;
+      const fallbackKey = item.account_type || item.accountType
+        ? `default-${slugifyAccountKey(accountType)}`
+        : `${slugifyAccountKey(paymentMethod)}-${slugifyAccountKey(accountName)}-${index + 1}`;
+      const amount = Number(item.amount || 0);
+
+      return {
+        account_key: slugifyAccountKey(item.account_key || item.accountKey || fallbackKey),
+        account_type: accountType,
+        account_name: accountName,
+        payment_method: paymentMethod,
+        account_mask: normalizeMask(item.account_mask || item.accountMask || item.mask),
+        amount: Number.isFinite(amount) && amount >= 0 ? amount : 0,
+        updated_at: item.updated_at || null
+      };
+    }
+
+    function getBalanceAccounts() {
+      const byKey = new Map();
+
+      balancesState.forEach((item, index) => {
+        const normalized = normalizeBalanceItem(item, index);
+        if (normalized.account_key) byKey.set(normalized.account_key, normalized);
+      });
+
+      BALANCE_METHODS.forEach(method => {
+        const account = getDefaultAccount(method);
+        if (!byKey.has(account.account_key)) byKey.set(account.account_key, account);
+      });
+
+      return Array.from(byKey.values()).sort((a, b) => {
+        const aOrder = BALANCE_METHODS.findIndex(method => method.payment_method === a.payment_method);
+        const bOrder = BALANCE_METHODS.findIndex(method => method.payment_method === b.payment_method);
+        if (aOrder !== bOrder) return aOrder - bOrder;
+        if (a.account_key.startsWith('default-') !== b.account_key.startsWith('default-')) {
+          return a.account_key.startsWith('default-') ? -1 : 1;
+        }
+        return a.account_name.localeCompare(b.account_name);
+      });
+    }
+
+    function getSelectedAccount() {
+      return getBalanceAccounts().find(account => account.account_key === selectedAccountKey) || null;
     }
 
     function getMethodHistory(method) {
@@ -588,31 +863,34 @@
 
     function renderCards() {
       const container = document.getElementById('balanceCards');
-      document.getElementById('methodCount').textContent = BALANCE_METHODS.length;
+      const accounts = getBalanceAccounts();
+      document.getElementById('methodCount').textContent = accounts.length;
 
-      container.innerHTML = BALANCE_METHODS.map(method => {
-        const amount = getBalanceAmount(method.account_type);
-        const historyCount = getMethodHistory(method.payment_method).length;
-        const activeClass = selectedMethod === method.payment_method ? ' active' : '';
+      container.innerHTML = accounts.map(account => {
+        const method = getTemplateByPayment(account.payment_method);
+        const amount = Number(account.amount || 0);
+        const historyCount = getMethodHistory(account.payment_method).length;
+        const activeClass = selectedAccountKey === account.account_key ? ' active' : '';
+        const mask = normalizeMask(account.account_mask) || method.mask;
         const imageHtml = method.image
           ? `<img src="${method.image}" alt="${escapeText(method.name)}">`
           : `<span style="font-size:24px;font-weight:900;">AT</span>`;
 
         return `
-          <article class="wallet-card ${method.tone}${activeClass}" tabindex="0" role="button" onclick="selectMethod('${method.payment_method}')" onkeydown="if(event.key === 'Enter' || event.key === ' ') { event.preventDefault(); selectMethod('${method.payment_method}'); }">
+          <article class="wallet-card ${method.tone}${activeClass}" tabindex="0" role="button" onclick="selectAccount('${account.account_key}')" onkeydown="if(event.key === 'Enter' || event.key === ' ') { event.preventDefault(); selectAccount('${account.account_key}'); }">
             <span>
               <span class="wallet-card-top">
                 <span class="wallet-brand">${imageHtml}</span>
                 <span class="wallet-chip"><i data-lucide="${method.chip}"></i></span>
               </span>
               <span class="wallet-amount">${utils.formatCurrency(amount)}</span>
-              <span class="wallet-name">${escapeText(method.name)}</span>
+              <span class="wallet-name">${escapeText(account.account_name)}</span>
             </span>
             <span>
               <span class="wallet-card-bottom">
                 <span>
                   <span class="wallet-meta-label">Account</span>
-                  <span class="wallet-meta-value">**** ${method.mask}</span>
+                  <span class="wallet-meta-value">${mask ? `**** ${mask}` : escapeText(method.label)}</span>
                 </span>
                 <span>
                   <span class="wallet-meta-label">History</span>
@@ -621,7 +899,7 @@
               </span>
               <span class="wallet-edit" onclick="event.stopPropagation()">
                 <span>${utils.getCurrencySymbol()}</span>
-                <input class="wallet-balance-input" data-account-type="${method.account_type}" type="number" min="0" step="0.01" inputmode="decimal" value="${amount ? amount.toFixed(2) : ''}" placeholder="0.00" oninput="updateTotalFromInputs()">
+                <input class="wallet-balance-input" data-account-key="${account.account_key}" data-account-type="${account.account_type}" data-account-name="${escapeText(account.account_name)}" data-payment-method="${account.payment_method}" data-account-mask="${mask}" type="number" min="0" step="0.01" inputmode="decimal" value="${amount ? amount.toFixed(2) : ''}" placeholder="0.00" oninput="updateTotalFromInputs()">
               </span>
             </span>
           </article>
@@ -650,12 +928,13 @@
 
     function renderTransactions() {
       const container = document.getElementById('transactionsList');
-      const selectedLabel = selectedMethod === 'all'
+      const selectedAccount = getSelectedAccount();
+      const selectedLabel = selectedAccountKey === 'all'
         ? 'All'
-        : (BALANCE_METHODS.find(method => method.payment_method === selectedMethod)?.name || selectedMethod);
+        : (selectedAccount?.account_name || selectedAccount?.payment_method || 'Account');
       document.getElementById('historyFilterLabel').textContent = selectedLabel;
 
-      const rows = selectedMethod === 'all' ? getAllHistory() : getMethodHistory(selectedMethod);
+      const rows = selectedAccountKey === 'all' ? getAllHistory() : getMethodHistory(selectedAccount?.payment_method);
       const visibleRows = rows.slice(0, 8);
 
       if (!visibleRows.length) {
@@ -682,17 +961,96 @@
       if (typeof lucide !== 'undefined') lucide.createIcons({ node: container });
     }
 
-    function selectMethod(method) {
-      selectedMethod = method;
+    function selectAccount(accountKey) {
+      selectedAccountKey = accountKey;
       renderCards();
       renderTransactions();
     }
 
     function collectBalances() {
       return Array.from(document.querySelectorAll('.wallet-balance-input')).map(input => ({
+        account_key: input.dataset.accountKey,
         account_type: input.dataset.accountType,
+        account_name: input.dataset.accountName,
+        payment_method: input.dataset.paymentMethod,
+        account_mask: input.dataset.accountMask,
         amount: Number(input.value || 0)
       }));
+    }
+
+    function populatePaymentOptions() {
+      const select = document.getElementById('accountPaymentMethod');
+      if (!select || select.options.length) return;
+      select.innerHTML = BALANCE_METHODS.map(method => (
+        `<option value="${method.payment_method}">${escapeText(method.name)}</option>`
+      )).join('');
+    }
+
+    function openAddAccountModal() {
+      populatePaymentOptions();
+      const modal = document.getElementById('accountModal');
+      const form = document.getElementById('accountForm');
+      if (form) form.reset();
+      if (modal) modal.hidden = false;
+      setTimeout(() => document.getElementById('accountName')?.focus(), 40);
+      if (typeof lucide !== 'undefined') lucide.createIcons({ node: modal });
+    }
+
+    function closeAddAccountModal() {
+      const modal = document.getElementById('accountModal');
+      if (modal) modal.hidden = true;
+    }
+
+    function addBalanceAccount(event) {
+      event.preventDefault();
+      const paymentMethod = normalizePaymentMethod(document.getElementById('accountPaymentMethod').value);
+      const template = getTemplateByPayment(paymentMethod);
+      const accountName = document.getElementById('accountName').value.trim();
+      const accountMask = normalizeMask(document.getElementById('accountMask').value);
+      const amount = Number(document.getElementById('accountStartingBalance').value || 0);
+
+      if (!accountName) {
+        utils.showAlert('Add an account name first', 'error');
+        return;
+      }
+
+      if (!Number.isFinite(amount) || amount < 0) {
+        utils.showAlert('Balance amounts must be zero or more', 'error');
+        return;
+      }
+
+      balancesState = collectBalances();
+      const existingKeys = new Set(balancesState.map(item => item.account_key));
+      const baseKey = slugifyAccountKey(`${paymentMethod}-${accountName}-${accountMask || Date.now()}`);
+      let accountKey = baseKey;
+      let suffix = 2;
+      while (existingKeys.has(accountKey)) {
+        accountKey = `${baseKey}-${suffix}`;
+        suffix += 1;
+      }
+
+      balancesState.push({
+        account_key: accountKey,
+        account_type: template.account_type,
+        account_name: accountName,
+        payment_method: paymentMethod,
+        account_mask: accountMask,
+        amount
+      });
+
+      selectedAccountKey = accountKey;
+      closeAddAccountModal();
+      renderCards();
+      renderTransactions();
+      setTimeout(() => {
+        const rail = document.getElementById('balanceCards');
+        if (rail) rail.scrollTo({ left: rail.scrollWidth, behavior: 'smooth' });
+      }, 60);
+      utils.showAlert({
+        title: 'Account added',
+        message: 'Save balances to update the dashboard total.',
+        type: 'success'
+      });
     }
 
     async function saveBalancesPage(event) {
@@ -722,25 +1080,28 @@
     }
 
     async function loadBalancesPage() {
-      try {
-        const profilePromise = api.getProfile().catch(() => null);
-        const balancesPromise = api.getBalances();
-        const expensesPromise = api.getExpenses({ limit: 500 }).catch(() => ({ data: [] }));
+      renderCards();
+      renderTransactions();
 
-        const [profileResponse, balancesResponse, expensesResponse] = await Promise.all([profilePromise, balancesPromise, expensesPromise]);
+      try {
+        const balancesResponse = await api.getBalances();
         const balanceData = balancesResponse.data || {};
         balancesState = Array.isArray(balanceData.balances) ? balanceData.balances : [];
+        renderCards();
+      } catch (error) {
+        console.error('Balances page error:', error);
+        utils.showAlert(error.message || 'Failed to load balances', 'error');
+      }
 
+      try {
+        const expensesResponse = await api.getExpenses({ limit: 500 });
         const expenseData = expensesResponse.data || {};
         expensesState = Array.isArray(expenseData.expenses) ? expenseData.expenses : (Array.isArray(expenseData) ? expenseData : []);
-
         renderCards();
         renderTransactions();
       } catch (error) {
-        console.error('Balances page error:', error);
-        document.getElementById('balanceCards').innerHTML = '<div class="empty-history">Could not load balances right now.</div>';
+        console.warn('Could not load balance history:', error);
         document.getElementById('transactionsList').innerHTML = '<div class="empty-history">Could not load purchase history.</div>';
-        utils.showAlert(error.message || 'Failed to load balances', 'error');
       }
     }
 

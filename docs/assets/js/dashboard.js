@@ -470,8 +470,14 @@ function closeModal(modalId) {
   document.body.style.overflow = '';
 }
 
+function getDefaultBalanceKey(accountType) {
+  return `default-${String(accountType || '').trim().toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '')}`;
+}
+
 function getBalanceAmountFor(accountType, balances = []) {
-  const match = balances.find(item => item.account_type === accountType);
+  const defaultKey = getDefaultBalanceKey(accountType);
+  const match = balances.find(item => item.account_key === defaultKey)
+    || balances.find(item => !item.account_key && item.account_type === accountType);
   return match ? Number(match.amount || 0) : 0;
 }
 
@@ -516,6 +522,7 @@ function renderBalanceInputs(balances = []) {
 
 function collectBalanceInputs() {
   return Array.from(document.querySelectorAll('.balance-account-input')).map(input => ({
+    account_key: getDefaultBalanceKey(input.dataset.accountType),
     account_type: input.dataset.accountType,
     amount: Number(input.value || 0)
   }));
