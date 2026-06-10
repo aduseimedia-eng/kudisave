@@ -174,7 +174,7 @@
     .balance-cards {
       display: grid;
       grid-auto-flow: column;
-      grid-auto-columns: minmax(260px, 306px);
+      grid-auto-columns: minmax(284px, 334px);
       gap: 12px;
       overflow-x: auto;
       padding: 8px 2px 30px;
@@ -187,10 +187,10 @@
     }
 
     .wallet-card {
-      min-height: 220px;
+      min-height: 260px;
       border: 0;
       border-radius: 12px;
-      padding: 22px 24px;
+      padding: 24px 24px 22px;
       scroll-snap-align: start;
       color: #ffffff;
       display: grid;
@@ -243,25 +243,40 @@
       display: flex;
       align-items: flex-start;
       justify-content: space-between;
-      gap: 12px;
+      gap: 14px;
     }
 
     .wallet-brand {
-      min-height: 42px;
+      min-height: 78px;
       display: flex;
       align-items: center;
+      flex: 1;
+      min-width: 0;
     }
 
     .wallet-brand img {
-      max-width: 118px;
-      max-height: 42px;
+      width: min(190px, 72%);
+      max-height: 78px;
       object-fit: contain;
       filter: drop-shadow(0 8px 16px rgba(0,0,0,0.16));
     }
 
+    .wallet-card.cash .wallet-brand img,
+    .wallet-card.bank .wallet-brand img,
+    .wallet-card.telecel .wallet-brand img,
+    .wallet-card.mastercard .wallet-brand img {
+      width: min(172px, 68%);
+      max-height: 74px;
+    }
+
+    .wallet-card.mtn .wallet-brand img {
+      width: min(178px, 70%);
+      max-height: 76px;
+    }
+
     .wallet-chip {
-      width: 46px;
-      height: 36px;
+      width: 48px;
+      height: 38px;
       border-radius: 9px;
       background: rgba(255,255,255,0.18);
       display: grid;
@@ -275,7 +290,7 @@
     }
 
     .wallet-amount {
-      margin: 26px 0 4px;
+      margin: 18px 0 4px;
       font-size: 30px;
       line-height: 1.05;
       font-weight: 900;
@@ -465,7 +480,7 @@
       }
 
       .balance-cards {
-        grid-auto-columns: minmax(280px, 320px);
+        grid-auto-columns: minmax(318px, 360px);
       }
 
       .transactions-panel {
