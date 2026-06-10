@@ -19,6 +19,8 @@ const normalizePaymentMethod = (value) => {
     'telecel cash': 'Telecel Cash',
     visa: 'Visa Card',
     'visa card': 'Visa Card',
+    mastercard: 'Mastercard',
+    'master card': 'Mastercard',
     card: 'Visa Card',
     'credit card': 'Visa Card',
     'debit card': 'Visa Card',

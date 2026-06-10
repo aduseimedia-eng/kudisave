@@ -11,6 +11,7 @@ const BALANCE_ACCOUNTS = [
   { account_type: 'Cash', label: 'Cash', icon: 'banknote', hint: 'Money in hand' },
   { account_type: 'Bank', label: 'Bank', icon: 'landmark', hint: 'Bank account balance' },
   { account_type: 'Visa Card', label: 'Visa Card', icon: 'credit-card', hint: 'Card balance available' },
+  { account_type: 'Mastercard', label: 'Mastercard', icon: 'credit-card', hint: 'Card balance available' },
   { account_type: 'MTN MoMo', label: 'MTN MoMo', icon: 'smartphone', hint: 'Mobile money wallet' },
   { account_type: 'Telecel Cash', label: 'Telecel Cash', icon: 'smartphone', hint: 'Telecel wallet' },
   { account_type: 'AirtelTigo Money', label: 'AirtelTigo Money', icon: 'smartphone', hint: 'AirtelTigo wallet' }
@@ -188,13 +189,15 @@ function escapeDashboardHtml(value) {
 }
 
 function getDashboardPaymentMethods() {
-  const fallback = ['Cash', 'MTN MoMo', 'Telecel Cash', 'Visa Card', 'Bank Transfer', 'AirtelTigo Money'];
+  const fallback = ['Cash', 'MTN MoMo', 'Telecel Cash', 'Visa Card', 'Mastercard', 'Bank Transfer', 'AirtelTigo Money'];
   const methods = ((typeof utils !== 'undefined' && utils.PAYMENT_METHODS) || fallback).slice();
   if (!methods.includes('Visa Card')) methods.splice(Math.min(3, methods.length), 0, 'Visa Card');
+  if (!methods.includes('Mastercard')) methods.splice(Math.min(4, methods.length), 0, 'Mastercard');
   return methods;
 }
 
 function getDashboardPaymentLogoHtml(method) {
+  if (/mastercard|master card/i.test(method)) return '<span class="payment-logo mastercard">MC</span>';
   if (/visa|card/i.test(method)) return '<span class="payment-logo visa">VISA</span>';
   if (/mtn|momo/i.test(method)) return '<span class="payment-logo mtn">MTN</span>';
   if (/telecel/i.test(method)) return '<span class="payment-logo telecel">T</span>';
@@ -661,6 +664,7 @@ function openDashboardCategoryModal() {
 
 function setDashboardPaymentMethod(method) {
   if (/^(visa|card|credit card|debit card)$/i.test(String(method).trim())) method = 'Visa Card';
+  if (/^(mastercard|master card)$/i.test(String(method).trim())) method = 'Mastercard';
   const input = document.getElementById('expensePaymentMethod');
   const label = document.getElementById('paymentMethodText');
   const logo = document.getElementById('paymentMethodIconWrap');

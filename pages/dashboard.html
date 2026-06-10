@@ -2355,6 +2355,7 @@
     .picker-field-chevron { width: 16px; height: 16px; color: var(--text-muted); flex-shrink: 0; }
     .payment-logo { width: 38px; height: 26px; border-radius: 9px; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 10px; font-weight: 900; letter-spacing: 0; box-shadow: 0 8px 16px rgba(17,24,39,0.08); overflow: hidden; line-height: 1; }
     .payment-logo.visa { background: #ffffff; color: #1434cb; border: 1px solid #e5e7eb; font-style: italic; font-size: 12px; }
+    .payment-logo.mastercard { background: #111827; color: #ffffff; border: 1px solid rgba(255,255,255,0.14); font-size: 9px; }
     .payment-logo.mtn { background: #ffcb05; color: #111827; border-radius: 50%; width: 40px; height: 26px; border: 1px solid rgba(17,24,39,0.1); }
     .payment-logo.telecel { background: #e30613; color: #ffffff; font-size: 15px; }
     .payment-logo.airtel { background: linear-gradient(135deg, #e4002b 0 50%, #005baa 50% 100%); color: #ffffff; font-size: 11px; }
@@ -2870,7 +2871,7 @@
         <div class="quick-btn-icon budget"><i data-lucide="wallet"></i></div>
         <span class="quick-btn-label">Budget</span>
       </button>
-      <button class="quick-btn" onclick="openBalancesModal()">
+      <button class="quick-btn" onclick="window.location.href='balances.html'">
         <div class="quick-btn-icon balances"><i data-lucide="credit-card"></i></div>
         <span class="quick-btn-label">Balances</span>
       </button>
@@ -3341,9 +3342,9 @@
   </div>
 
   <script src="../assets/js/config.js"></script>
-  <script src="../assets/js/api.js?v=balances1"></script>
+  <script src="../assets/js/api.js?v=balances2"></script>
   <script src="../assets/js/utils.js?v=loading2"></script>
-  <script src="../assets/js/dashboard.js?v=balances1"></script>
+  <script src="../assets/js/dashboard.js?v=balances2"></script>
   <script>
     // Initialize Lucide icons
     lucide.createIcons();

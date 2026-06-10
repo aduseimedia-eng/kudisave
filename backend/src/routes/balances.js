@@ -3,7 +3,7 @@ const router = express.Router();
 const { query, transaction } = require('../config/database');
 const { authenticateToken } = require('../middleware/auth');
 
-const BALANCE_ACCOUNTS = ['Cash', 'Bank', 'Visa Card', 'MTN MoMo', 'Telecel Cash', 'AirtelTigo Money'];
+const BALANCE_ACCOUNTS = ['Cash', 'Bank', 'Visa Card', 'Mastercard', 'MTN MoMo', 'Telecel Cash', 'AirtelTigo Money'];
 
 function normalizeAccountType(value) {
   const raw = String(value || '').trim();
@@ -12,6 +12,7 @@ function normalizeAccountType(value) {
   if (normalized === 'cash') return 'Cash';
   if (normalized === 'bank' || normalized === 'bank transfer') return 'Bank';
   if (normalized.includes('visa') || normalized === 'card' || normalized === 'debit card') return 'Visa Card';
+  if (normalized.includes('mastercard') || normalized.includes('master card')) return 'Mastercard';
   if (normalized.includes('mtn') || normalized.includes('momo')) return 'MTN MoMo';
   if (normalized.includes('telecel') || normalized.includes('vodafone')) return 'Telecel Cash';
   if (normalized.includes('airteltigo') || normalized.includes('airtel tigo')) return 'AirtelTigo Money';

@@ -17,6 +17,7 @@ const SQL_FILES = [
   { name: 'Migration: Subscriptions & Savings', path: path.join(__dirname, 'migrations', 'add_subscriptions_and_savings.sql') },
   { name: 'Migration: Expense Payment Methods', path: path.join(__dirname, 'migrations', 'fix_expense_payment_methods.sql') },
   { name: 'Migration: Account Balances', path: path.join(__dirname, 'migrations', 'add_account_balances.sql') },
+  { name: 'Migration: Mastercard Payment Method', path: path.join(__dirname, 'migrations', 'add_mastercard_payment_method.sql') },
 ];
 
 /**

@@ -153,6 +153,7 @@
     .picker-field-icon.other { background: #f8fafc; color: #475569; }
     .payment-logo { width: 38px; height: 26px; border-radius: 9px; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 10px; font-weight: 900; letter-spacing: 0; box-shadow: 0 8px 16px rgba(17,24,39,0.08); overflow: hidden; }
     .payment-logo.visa { background: #ffffff; color: #1434cb; border: 1px solid #e5e7eb; font-style: italic; font-size: 12px; }
+    .payment-logo.mastercard { background: #111827; color: #ffffff; border: 1px solid rgba(255,255,255,0.14); font-size: 9px; }
     .payment-logo.mtn { background: #ffcb05; color: #111827; border-radius: 50%; width: 40px; height: 26px; border: 1px solid rgba(17,24,39,0.1); }
     .payment-logo.telecel { background: #e30613; color: #ffffff; font-size: 15px; }
     .payment-logo.airtel { background: linear-gradient(135deg, #e4002b 0 50%, #005baa 50% 100%); color: #ffffff; font-size: 11px; }
@@ -809,8 +810,9 @@
     }
 
     function getPaymentMethods() {
-      var methods = (utils.PAYMENT_METHODS || ['Cash', 'MTN MoMo', 'Telecel Cash', 'Visa Card', 'Bank Transfer', 'AirtelTigo Money']).slice();
+      var methods = (utils.PAYMENT_METHODS || ['Cash', 'MTN MoMo', 'Telecel Cash', 'Visa Card', 'Mastercard', 'Bank Transfer', 'AirtelTigo Money']).slice();
       if (!methods.includes('Visa Card')) methods.splice(Math.min(3, methods.length), 0, 'Visa Card');
+      if (!methods.includes('Mastercard')) methods.splice(Math.min(4, methods.length), 0, 'Mastercard');
       return methods;
     }
 
@@ -822,6 +824,7 @@
     }
 
     function getPaymentLogoHtml(method) {
+      if (/mastercard|master card/i.test(method)) return '<span class="payment-logo mastercard">MC</span>';
       if (/visa|card/i.test(method)) return '<span class="payment-logo visa">VISA</span>';
       if (/mtn|momo/i.test(method)) return '<span class="payment-logo mtn">MTN</span>';
       if (/telecel/i.test(method)) return '<span class="payment-logo telecel">T</span>';
@@ -832,6 +835,7 @@
 
     function setPaymentMethod(method) {
       if (/^(visa|card|credit card|debit card)$/i.test(String(method).trim())) method = 'Visa Card';
+      if (/^(mastercard|master card)$/i.test(String(method).trim())) method = 'Mastercard';
       document.getElementById('expensePaymentMethod').value = method;
       document.getElementById('paymentMethodText').textContent = method;
       document.getElementById('paymentMethodIconWrap').innerHTML = getPaymentLogoHtml(method);

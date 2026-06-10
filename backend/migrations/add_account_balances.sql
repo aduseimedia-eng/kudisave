@@ -10,6 +10,7 @@ CREATE TABLE IF NOT EXISTS account_balances (
     'Cash',
     'Bank',
     'Visa Card',
+    'Mastercard',
     'MTN MoMo',
     'Telecel Cash',
     'AirtelTigo Money'

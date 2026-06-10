@@ -1,0 +1,761 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="theme-color" content="#033036">
+  <link rel="icon" type="image/png" sizes="32x32" href="../favicon.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="../apple-touch-icon.png">
+  <link rel="manifest" href="../manifest.json">
+  <title>Balances - KudiSave</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/css/style.css?v=loading2">
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    body {
+      min-height: 100vh;
+      padding-top: 0 !important;
+      background: #111318 !important;
+      color: #f8fafc;
+    }
+
+    [data-theme="light"] body {
+      background: #f5f6fa !important;
+      color: #111827;
+    }
+
+    .balances-shell {
+      width: min(100%, 1120px);
+      margin: 0 auto;
+      padding: calc(18px + env(safe-area-inset-top, 0px)) 16px calc(92px + env(safe-area-inset-bottom, 0px));
+    }
+
+    .balances-topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 26px;
+    }
+
+    .balances-back,
+    .balances-save {
+      border: 0;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-family: inherit;
+    }
+
+    .balances-back {
+      width: 44px;
+      height: 44px;
+      border-radius: 16px;
+      color: #f8fafc;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.08);
+      text-decoration: none;
+    }
+
+    [data-theme="light"] .balances-back {
+      color: #033036;
+      background: #ffffff;
+      border-color: rgba(17,24,39,0.06);
+      box-shadow: 0 10px 24px rgba(17,24,39,0.06);
+    }
+
+    .balances-back i,
+    .balances-save i,
+    .history-link i {
+      width: 19px;
+      height: 19px;
+    }
+
+    .balances-avatar {
+      width: 46px;
+      height: 46px;
+      border-radius: 50%;
+      overflow: hidden;
+      background: linear-gradient(135deg, #033036, #0b737d);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #ffffff;
+      font-weight: 900;
+      border: 2px solid rgba(255,255,255,0.14);
+      position: relative;
+    }
+
+    .balances-avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .balances-avatar::after {
+      content: '';
+      position: absolute;
+      right: 1px;
+      top: 2px;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: #ef4444;
+      border: 2px solid #111318;
+    }
+
+    .balance-kicker {
+      color: #8b8f9b;
+      font-size: 15px;
+      font-weight: 800;
+      margin-bottom: 6px;
+    }
+
+    [data-theme="light"] .balance-kicker {
+      color: #6b7280;
+    }
+
+    .balance-total {
+      font-size: clamp(30px, 8vw, 54px);
+      line-height: 1;
+      font-weight: 900;
+      letter-spacing: -1px;
+      color: #ffffff;
+      margin-bottom: 30px;
+    }
+
+    [data-theme="light"] .balance-total {
+      color: #111827;
+    }
+
+    .section-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin: 0 0 14px;
+    }
+
+    .section-title {
+      margin: 0;
+      color: #ffffff;
+      font-size: clamp(28px, 7vw, 46px);
+      line-height: 1;
+      font-weight: 900;
+      letter-spacing: -1px;
+    }
+
+    [data-theme="light"] .section-title {
+      color: #111827;
+    }
+
+    .card-count,
+    .history-link {
+      color: #8b8f9b;
+      font-size: 14px;
+      font-weight: 800;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      text-decoration: none;
+      border: 0;
+      background: transparent;
+      cursor: pointer;
+      font-family: inherit;
+      white-space: nowrap;
+    }
+
+    .balance-cards {
+      display: grid;
+      grid-auto-flow: column;
+      grid-auto-columns: minmax(260px, 306px);
+      gap: 12px;
+      overflow-x: auto;
+      padding: 8px 2px 30px;
+      scroll-snap-type: x mandatory;
+      scrollbar-width: none;
+    }
+
+    .balance-cards::-webkit-scrollbar {
+      display: none;
+    }
+
+    .wallet-card {
+      min-height: 220px;
+      border: 0;
+      border-radius: 12px;
+      padding: 22px 24px;
+      scroll-snap-align: start;
+      color: #ffffff;
+      display: grid;
+      align-content: space-between;
+      text-align: left;
+      cursor: pointer;
+      font-family: inherit;
+      position: relative;
+      overflow: hidden;
+      background: #292b37;
+      box-shadow: none;
+    }
+
+    .wallet-card.active {
+      outline: 2px solid rgba(255,255,255,0.72);
+      outline-offset: 3px;
+    }
+
+    .wallet-card.visa {
+      background: #2d70f6;
+    }
+
+    .wallet-card.mastercard {
+      background: #292b37;
+    }
+
+    .wallet-card.cash {
+      background: #0f766e;
+    }
+
+    .wallet-card.bank {
+      background: #334155;
+    }
+
+    .wallet-card.mtn {
+      background: #f4c430;
+      color: #111827;
+    }
+
+    .wallet-card.telecel {
+      background: #d71920;
+    }
+
+    .wallet-card.airtel {
+      background: linear-gradient(135deg, #e4002b, #005baa);
+    }
+
+    .wallet-card-top,
+    .wallet-card-bottom {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .wallet-brand {
+      min-height: 42px;
+      display: flex;
+      align-items: center;
+    }
+
+    .wallet-brand img {
+      max-width: 118px;
+      max-height: 42px;
+      object-fit: contain;
+      filter: drop-shadow(0 8px 16px rgba(0,0,0,0.16));
+    }
+
+    .wallet-chip {
+      width: 46px;
+      height: 36px;
+      border-radius: 9px;
+      background: rgba(255,255,255,0.18);
+      display: grid;
+      place-items: center;
+      color: currentColor;
+    }
+
+    .wallet-chip i {
+      width: 20px;
+      height: 20px;
+    }
+
+    .wallet-amount {
+      margin: 26px 0 4px;
+      font-size: 30px;
+      line-height: 1.05;
+      font-weight: 900;
+      letter-spacing: -0.7px;
+    }
+
+    .wallet-name {
+      font-size: 15px;
+      font-weight: 800;
+      color: rgba(255,255,255,0.72);
+    }
+
+    .wallet-card.mtn .wallet-name {
+      color: rgba(17,24,39,0.62);
+    }
+
+    .wallet-meta-label {
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.7px;
+      font-weight: 800;
+      color: rgba(255,255,255,0.42);
+      margin-bottom: 4px;
+    }
+
+    .wallet-card.mtn .wallet-meta-label {
+      color: rgba(17,24,39,0.44);
+    }
+
+    .wallet-meta-value,
+    .wallet-history-count {
+      font-size: 14px;
+      font-weight: 850;
+      color: rgba(255,255,255,0.76);
+    }
+
+    .wallet-card.mtn .wallet-meta-value,
+    .wallet-card.mtn .wallet-history-count {
+      color: rgba(17,24,39,0.68);
+    }
+
+    .wallet-edit {
+      margin-top: 14px;
+      display: grid;
+      grid-template-columns: auto 1fr;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 10px;
+      border-radius: 12px;
+      background: rgba(255,255,255,0.12);
+      color: currentColor;
+    }
+
+    .wallet-edit span {
+      font-size: 12px;
+      font-weight: 900;
+    }
+
+    .wallet-edit input {
+      width: 100%;
+      border: 0;
+      outline: 0;
+      background: transparent;
+      color: currentColor;
+      font: inherit;
+      font-size: 14px;
+      font-weight: 900;
+      text-align: right;
+      min-width: 0;
+    }
+
+    .wallet-edit input::placeholder {
+      color: currentColor;
+      opacity: 0.52;
+    }
+
+    .balances-save {
+      width: 100%;
+      min-height: 56px;
+      border-radius: 18px;
+      color: #ffffff;
+      background: linear-gradient(135deg, #033036, #0b737d);
+      font-size: 15px;
+      font-weight: 900;
+      gap: 8px;
+      box-shadow: 0 16px 34px rgba(3,48,54,0.28);
+      margin: 0 0 26px;
+    }
+
+    .transactions-panel {
+      margin-top: 4px;
+    }
+
+    .transactions-list {
+      display: grid;
+      gap: 0;
+      background: transparent;
+    }
+
+    .transaction-row {
+      display: grid;
+      grid-template-columns: 54px 1fr auto;
+      gap: 14px;
+      align-items: center;
+      min-height: 76px;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+
+    [data-theme="light"] .transaction-row {
+      border-bottom-color: rgba(17,24,39,0.08);
+    }
+
+    .transaction-icon {
+      width: 46px;
+      height: 46px;
+      border-radius: 50%;
+      background: #303342;
+      color: #f8fafc;
+      display: grid;
+      place-items: center;
+    }
+
+    [data-theme="light"] .transaction-icon {
+      background: #e5e7eb;
+      color: #033036;
+    }
+
+    .transaction-icon i {
+      width: 20px;
+      height: 20px;
+    }
+
+    .transaction-title {
+      color: #f8fafc;
+      font-size: 15px;
+      font-weight: 850;
+      margin-bottom: 3px;
+    }
+
+    [data-theme="light"] .transaction-title {
+      color: #111827;
+    }
+
+    .transaction-meta {
+      color: #8b8f9b;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .transaction-amount {
+      color: #f8fafc;
+      font-size: 17px;
+      font-weight: 900;
+      white-space: nowrap;
+    }
+
+    [data-theme="light"] .transaction-amount {
+      color: #111827;
+    }
+
+    .empty-history {
+      padding: 36px 18px;
+      border-radius: 18px;
+      text-align: center;
+      color: #8b8f9b;
+      background: rgba(255,255,255,0.04);
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    [data-theme="light"] .empty-history {
+      background: #ffffff;
+      color: #6b7280;
+      box-shadow: 0 10px 24px rgba(17,24,39,0.05);
+    }
+
+    @media (min-width: 760px) {
+      .balances-shell {
+        padding-inline: 28px;
+      }
+
+      .balances-grid {
+        display: grid;
+        grid-template-columns: minmax(0, 1.08fr) minmax(340px, 0.92fr);
+        gap: 34px;
+        align-items: start;
+      }
+
+      .balance-cards {
+        grid-auto-columns: minmax(280px, 320px);
+      }
+
+      .transactions-panel {
+        position: sticky;
+        top: 24px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="balances-shell">
+    <div class="balances-topbar">
+      <a class="balances-back" href="dashboard.html" aria-label="Back to dashboard"><i data-lucide="arrow-left"></i></a>
+      <div class="balances-avatar" id="balancesAvatar"><span id="balancesInitials">U</span></div>
+    </div>
+
+    <div class="balances-grid">
+      <section>
+        <div class="balance-kicker">Total Balance</div>
+        <div class="balance-total" id="balancesPageTotal">GHS 0.00</div>
+
+        <div class="section-row">
+          <h1 class="section-title">Cards</h1>
+          <button class="card-count" type="button" onclick="selectMethod('all')"><span id="methodCount">0</span><i data-lucide="chevron-right"></i></button>
+        </div>
+
+        <form id="balancesPageForm" onsubmit="saveBalancesPage(event)">
+          <div class="balance-cards" id="balanceCards">
+            <div class="empty-history">Loading balances...</div>
+          </div>
+          <button class="balances-save" type="submit"><i data-lucide="check-circle"></i> Save Balances</button>
+        </form>
+      </section>
+
+      <section class="transactions-panel">
+        <div class="section-row">
+          <h2 class="section-title" style="font-size:clamp(26px,6vw,38px)">Last Transactions</h2>
+          <button class="history-link" type="button" onclick="selectMethod('all')"><span id="historyFilterLabel">All</span><i data-lucide="chevron-right"></i></button>
+        </div>
+        <div class="transactions-list" id="transactionsList">
+          <div class="empty-history">Loading transactions...</div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <script src="../assets/js/config.js"></script>
+  <script src="../assets/js/api.js?v=balances2"></script>
+  <script src="../assets/js/utils.js?v=loading2"></script>
+  <script>
+    utils.requireAuth();
+
+    const BALANCE_METHODS = [
+      { account_type: 'Visa Card', payment_method: 'Visa Card', label: 'Visa', name: 'Visa Card', mask: '6754', image: '../assets/Images/Visa%20Card.png', tone: 'visa', chip: 'credit-card' },
+      { account_type: 'Mastercard', payment_method: 'Mastercard', label: 'Mastercard', name: 'Mastercard', mask: '3521', image: '../assets/Images/mastercard.png', tone: 'mastercard', chip: 'credit-card' },
+      { account_type: 'MTN MoMo', payment_method: 'MTN MoMo', label: 'MTN MoMo', name: 'MTN MoMo', mask: '2409', image: '../assets/Images/mtnmomo.png', tone: 'mtn', chip: 'smartphone' },
+      { account_type: 'Telecel Cash', payment_method: 'Telecel Cash', label: 'Telecel', name: 'Telecel Cash', mask: '1842', image: '../assets/Images/TelecelCash.png', tone: 'telecel', chip: 'smartphone' },
+      { account_type: 'Bank', payment_method: 'Bank Transfer', label: 'Bank', name: 'Bank Transfer', mask: '4217', image: '../assets/Images/Bank%20Transfer.png', tone: 'bank', chip: 'landmark' },
+      { account_type: 'Cash', payment_method: 'Cash', label: 'Cash', name: 'Cash', mask: '0000', image: '../assets/Images/cash.png', tone: 'cash', chip: 'banknote' },
+      { account_type: 'AirtelTigo Money', payment_method: 'AirtelTigo Money', label: 'AT Money', name: 'AirtelTigo Money', mask: '2026', image: '', tone: 'airtel', chip: 'smartphone' }
+    ];
+
+    let balancesState = [];
+    let expensesState = [];
+    let selectedMethod = 'all';
+
+    function escapeText(value) {
+      return String(value || '').replace(/[&<>"']/g, char => ({
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#39;'
+      }[char]));
+    }
+
+    function getInitials(name) {
+      if (!name) return 'U';
+      return name.split(' ').map(part => part.charAt(0)).join('').slice(0, 2).toUpperCase();
+    }
+
+    function setAvatar(profile) {
+      const avatar = document.getElementById('balancesAvatar');
+      const name = profile?.name || 'User';
+      if (profile?.profile_picture) {
+        avatar.innerHTML = `<img src="${profile.profile_picture}" alt="Profile">`;
+      } else {
+        avatar.innerHTML = `<span>${getInitials(name)}</span>`;
+      }
+    }
+
+    function normalizePaymentMethod(value) {
+      const raw = String(value || '').trim().toLowerCase();
+      if (!raw) return 'Cash';
+      if (raw.includes('mastercard') || raw.includes('master card')) return 'Mastercard';
+      if (raw.includes('visa') || raw === 'card' || raw.includes('credit card') || raw.includes('debit card')) return 'Visa Card';
+      if (raw.includes('mtn') || raw.includes('momo')) return 'MTN MoMo';
+      if (raw.includes('telecel') || raw.includes('vodafone')) return 'Telecel Cash';
+      if (raw.includes('bank')) return 'Bank Transfer';
+      if (raw.includes('airteltigo') || raw.includes('airtel tigo')) return 'AirtelTigo Money';
+      if (raw.includes('cash')) return 'Cash';
+      return value || 'Cash';
+    }
+
+    function getBalanceAmount(accountType) {
+      const match = balancesState.find(item => item.account_type === accountType);
+      return Number(match?.amount || 0);
+    }
+
+    function getMethodHistory(method) {
+      const normalized = normalizePaymentMethod(method);
+      return expensesState.filter(expense => normalizePaymentMethod(expense.payment_method) === normalized);
+    }
+
+    function getAllHistory() {
+      return expensesState.slice().sort((a, b) => new Date(b.expense_date || b.date || b.created_at) - new Date(a.expense_date || a.date || a.created_at));
+    }
+
+    function updateTotalFromInputs() {
+      const total = Array.from(document.querySelectorAll('.wallet-balance-input')).reduce((sum, input) => {
+        const value = Number(input.value || 0);
+        return sum + (Number.isFinite(value) ? value : 0);
+      }, 0);
+      document.getElementById('balancesPageTotal').textContent = utils.formatCurrency(total);
+    }
+
+    function renderCards() {
+      const container = document.getElementById('balanceCards');
+      document.getElementById('methodCount').textContent = BALANCE_METHODS.length;
+
+      container.innerHTML = BALANCE_METHODS.map(method => {
+        const amount = getBalanceAmount(method.account_type);
+        const historyCount = getMethodHistory(method.payment_method).length;
+        const activeClass = selectedMethod === method.payment_method ? ' active' : '';
+        const imageHtml = method.image
+          ? `<img src="${method.image}" alt="${escapeText(method.name)}">`
+          : `<span style="font-size:24px;font-weight:900;">AT</span>`;
+
+        return `
+          <article class="wallet-card ${method.tone}${activeClass}" tabindex="0" role="button" onclick="selectMethod('${method.payment_method}')" onkeydown="if(event.key === 'Enter' || event.key === ' ') { event.preventDefault(); selectMethod('${method.payment_method}'); }">
+            <span>
+              <span class="wallet-card-top">
+                <span class="wallet-brand">${imageHtml}</span>
+                <span class="wallet-chip"><i data-lucide="${method.chip}"></i></span>
+              </span>
+              <span class="wallet-amount">${utils.formatCurrency(amount)}</span>
+              <span class="wallet-name">${escapeText(method.name)}</span>
+            </span>
+            <span>
+              <span class="wallet-card-bottom">
+                <span>
+                  <span class="wallet-meta-label">Account</span>
+                  <span class="wallet-meta-value">**** ${method.mask}</span>
+                </span>
+                <span>
+                  <span class="wallet-meta-label">History</span>
+                  <span class="wallet-history-count">${historyCount}</span>
+                </span>
+              </span>
+              <span class="wallet-edit" onclick="event.stopPropagation()">
+                <span>${utils.getCurrencySymbol()}</span>
+                <input class="wallet-balance-input" data-account-type="${method.account_type}" type="number" min="0" step="0.01" inputmode="decimal" value="${amount ? amount.toFixed(2) : ''}" placeholder="0.00" oninput="updateTotalFromInputs()">
+              </span>
+            </span>
+          </article>
+        `;
+      }).join('');
+
+      updateTotalFromInputs();
+      if (typeof lucide !== 'undefined') lucide.createIcons({ node: container });
+    }
+
+    function formatDate(value) {
+      const date = new Date(value);
+      if (Number.isNaN(date.getTime())) return 'Recently';
+      return date.toLocaleDateString('en-GB', { day: '2-digit', month: 'short' }) + ', ' + date.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
+    }
+
+    function getTransactionIcon(expense) {
+      const category = String(expense.category || '').toLowerCase();
+      if (category.includes('food') || category.includes('restaurant') || category.includes('cafe')) return 'utensils';
+      if (category.includes('transport')) return 'car';
+      if (category.includes('shopping') || category.includes('product')) return 'shopping-cart';
+      if (category.includes('utility') || category.includes('bill')) return 'receipt-text';
+      if (category.includes('data') || category.includes('airtime')) return 'smartphone';
+      return 'arrow-down';
+    }
+
+    function renderTransactions() {
+      const container = document.getElementById('transactionsList');
+      const selectedLabel = selectedMethod === 'all'
+        ? 'All'
+        : (BALANCE_METHODS.find(method => method.payment_method === selectedMethod)?.name || selectedMethod);
+      document.getElementById('historyFilterLabel').textContent = selectedLabel;
+
+      const rows = selectedMethod === 'all' ? getAllHistory() : getMethodHistory(selectedMethod);
+      const visibleRows = rows.slice(0, 8);
+
+      if (!visibleRows.length) {
+        container.innerHTML = `<div class="empty-history">No purchase history yet for ${escapeText(selectedLabel)}.</div>`;
+        return;
+      }
+
+      container.innerHTML = visibleRows.map(expense => {
+        const title = expense.category || expense.note || 'Purchase';
+        const dateValue = expense.expense_date || expense.date || expense.created_at;
+        const method = normalizePaymentMethod(expense.payment_method);
+        return `
+          <article class="transaction-row">
+            <span class="transaction-icon"><i data-lucide="${getTransactionIcon(expense)}"></i></span>
+            <span>
+              <span class="transaction-title">${escapeText(title)}</span>
+              <span class="transaction-meta">${escapeText(method)} &bull; ${formatDate(dateValue)}</span>
+            </span>
+            <span class="transaction-amount">-${utils.formatCurrency(expense.amount || 0)}</span>
+          </article>
+        `;
+      }).join('');
+
+      if (typeof lucide !== 'undefined') lucide.createIcons({ node: container });
+    }
+
+    function selectMethod(method) {
+      selectedMethod = method;
+      renderCards();
+      renderTransactions();
+    }
+
+    function collectBalances() {
+      return Array.from(document.querySelectorAll('.wallet-balance-input')).map(input => ({
+        account_type: input.dataset.accountType,
+        amount: Number(input.value || 0)
+      }));
+    }
+
+    async function saveBalancesPage(event) {
+      event.preventDefault();
+      const balances = collectBalances();
+      if (balances.some(item => !Number.isFinite(item.amount) || item.amount < 0)) {
+        utils.showAlert('Balance amounts must be zero or more', 'error');
+        return;
+      }
+
+      try {
+        utils.showLoading('Saving balances', 'Updating your dashboard total');
+        const response = await api.updateBalances(balances);
+        const data = response.data || {};
+        balancesState = Array.isArray(data.balances) ? data.balances : balances;
+        renderCards();
+        utils.showAlert({
+          title: 'Balances updated',
+          message: `Dashboard total is now ${utils.formatCurrency(data.total || balances.reduce((sum, item) => sum + item.amount, 0))}.`,
+          type: 'success'
+        });
+      } catch (error) {
+        utils.showAlert(error.message || 'Failed to update balances', 'error');
+      } finally {
+        utils.hideLoading();
+      }
+    }
+
+    async function loadBalancesPage() {
+      try {
+        const profilePromise = api.getProfile().catch(() => null);
+        const balancesPromise = api.getBalances();
+        const expensesPromise = api.getExpenses({ limit: 500 }).catch(() => ({ data: [] }));
+
+        const [profileResponse, balancesResponse, expensesResponse] = await Promise.all([profilePromise, balancesPromise, expensesPromise]);
+        if (profileResponse?.data) setAvatar(profileResponse.data);
+
+        const balanceData = balancesResponse.data || {};
+        balancesState = Array.isArray(balanceData.balances) ? balanceData.balances : [];
+
+        const expenseData = expensesResponse.data || {};
+        expensesState = Array.isArray(expenseData.expenses) ? expenseData.expenses : (Array.isArray(expenseData) ? expenseData : []);
+
+        renderCards();
+        renderTransactions();
+      } catch (error) {
+        console.error('Balances page error:', error);
+        document.getElementById('balanceCards').innerHTML = '<div class="empty-history">Could not load balances right now.</div>';
+        document.getElementById('transactionsList').innerHTML = '<div class="empty-history">Could not load purchase history.</div>';
+        utils.showAlert(error.message || 'Failed to load balances', 'error');
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      if (typeof lucide !== 'undefined') lucide.createIcons();
+      loadBalancesPage();
+    });
+  </script>
+</body>
+</html>
