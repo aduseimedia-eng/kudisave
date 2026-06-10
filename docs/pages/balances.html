@@ -173,14 +173,15 @@
 
     .balance-cards {
       display: grid;
-      grid-template-columns: 1fr;
+      grid-auto-flow: column;
+      grid-auto-columns: minmax(82vw, 420px);
       gap: 18px;
-      max-height: min(56vh, 520px);
-      overflow-y: auto;
-      overflow-x: hidden;
-      padding: 8px 5px 30px;
+      overflow-x: auto;
+      overflow-y: hidden;
+      padding: 8px 7px 30px;
       scroll-behavior: smooth;
-      scroll-snap-type: y mandatory;
+      scroll-snap-type: x mandatory;
+      overscroll-behavior-x: contain;
       scrollbar-width: none;
     }
 
@@ -507,7 +508,7 @@
       }
 
       .balance-cards {
-        max-height: min(68vh, 680px);
+        grid-auto-columns: minmax(380px, 460px);
       }
 
       .transactions-panel {
