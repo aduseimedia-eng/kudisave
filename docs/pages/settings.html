@@ -1552,7 +1552,7 @@
 
   <script src="../assets/js/config.js"></script>
   <script src="../assets/js/api.js?v=visa2"></script>
-  <script src="../assets/js/utils.js?v=loading1"></script>
+  <script src="../assets/js/utils.js?v=loading2"></script>
   <script>
     utils.requireAuth();
 
@@ -1951,7 +1951,11 @@
         }
         updateCurrencyDisplay();
         closeModal('currencyModal');
-        utils.showAlert(`Currency updated to ${name}. Balances will now use ${code}.`, 'success');
+        utils.showAlert({
+          title: 'Currency updated',
+          message: `${name} is now active across balances and forms.`,
+          type: 'success'
+        });
         // Persist to server in background
         try { await api.put('/currency/settings', { default_currency: code }); } catch (e) {}
       } catch (error) {

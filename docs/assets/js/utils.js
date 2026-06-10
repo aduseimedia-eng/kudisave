@@ -1315,6 +1315,12 @@ function getTodayDate() {
 
 // Show toast notification (mobile-friendly)
 function showAlert(message, type = 'success') {
+  const alertOptions = typeof message === 'object' && message !== null ? message : { message };
+  const alertType = alertOptions.type || type || 'success';
+  const messageText = alertOptions.message || alertOptions.detail || '';
+  const titleOverride = alertOptions.title;
+  const duration = Number(alertOptions.duration) > 0 ? Number(alertOptions.duration) : 4000;
+
   // Ensure toast container exists
   let container = document.getElementById('toast-container');
   if (!container) {
@@ -1325,23 +1331,24 @@ function showAlert(message, type = 'success') {
   }
 
   const toastConfig = {
-    success: { icon: 'check', title: 'Done' },
+    success: { icon: 'check', title: 'Saved successfully' },
     error: { icon: 'alert-circle', title: 'Needs attention' },
     warning: { icon: 'alert-triangle', title: 'Heads up' },
     info: { icon: 'info', title: 'KudiSave' }
   };
-  const config = toastConfig[type] || toastConfig.info;
+  const config = toastConfig[alertType] || toastConfig.info;
+  const title = titleOverride || config.title;
 
   const toast = document.createElement('div');
-  toast.className = `toast toast-${type}`;
-  toast.setAttribute('role', type === 'error' ? 'alert' : 'status');
-  toast.setAttribute('aria-live', type === 'error' ? 'assertive' : 'polite');
+  toast.className = `toast toast-${alertType}`;
+  toast.setAttribute('role', alertType === 'error' ? 'alert' : 'status');
+  toast.setAttribute('aria-live', alertType === 'error' ? 'assertive' : 'polite');
   toast.innerHTML = `
     <div class="toast-accent"></div>
     <div class="toast-icon"><i data-lucide="${config.icon}"></i></div>
     <div class="toast-body">
-      <div class="toast-title">${config.title}</div>
-      <div class="toast-message">${escapeHtml(message)}</div>
+      <div class="toast-title">${escapeHtml(title)}</div>
+      <div class="toast-message">${escapeHtml(messageText)}</div>
     </div>
     <button class="toast-dismiss" type="button" aria-label="Dismiss notification"><i data-lucide="x"></i></button>
     <div class="toast-progress"></div>
@@ -1356,7 +1363,7 @@ function showAlert(message, type = 'success') {
       toast.classList.add('toast-exit');
       setTimeout(() => toast.remove(), 300);
     }
-  }, 4000);
+  }, duration);
 
   toast.querySelector('.toast-dismiss')?.addEventListener('click', () => {
     clearTimeout(timer);
