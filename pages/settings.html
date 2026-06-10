@@ -1552,7 +1552,7 @@
 
   <script src="../assets/js/config.js"></script>
   <script src="../assets/js/api.js?v=visa2"></script>
-  <script src="../assets/js/utils.js?v=notify4"></script>
+  <script src="../assets/js/utils.js?v=loading1"></script>
   <script>
     utils.requireAuth();
 
@@ -1941,17 +1941,24 @@
     }
 
     async function setCurrency(code, name) {
-      currentCurrency = code;
-      if (utils.setCurrency) await utils.setCurrency(code);
-      else localStorage.setItem('currency', code);
-      if (typeof setUserPreference === 'function') {
-        await setUserPreference('currency', code);
+      utils.showLoading('Updating currency', `Switching your app to ${code}`);
+      try {
+        currentCurrency = code;
+        if (utils.setCurrency) await utils.setCurrency(code);
+        else localStorage.setItem('currency', code);
+        if (typeof setUserPreference === 'function') {
+          await setUserPreference('currency', code);
+        }
+        updateCurrencyDisplay();
+        closeModal('currencyModal');
+        utils.showAlert(`Currency updated to ${name}. Balances will now use ${code}.`, 'success');
+        // Persist to server in background
+        try { await api.put('/currency/settings', { default_currency: code }); } catch (e) {}
+      } catch (error) {
+        utils.showAlert(error.message || 'Could not update currency', 'error');
+      } finally {
+        utils.hideLoading();
       }
-      updateCurrencyDisplay();
-      closeModal('currencyModal');
-      utils.showAlert(`Currency updated to ${name}. Balances will now use ${code}.`, 'success');
-      // Persist to server in background
-      try { await api.put('/currency/settings', { default_currency: code }); } catch (e) {}
     }
 
     const exportPickers = {

@@ -1398,23 +1398,52 @@ function getAlertIcon(type) {
 }
 
 // Show loading overlay
-function showLoading() {
-  if (document.getElementById('loading-overlay')) return;
+function showLoading(message = 'Working on it...', detail = 'This should only take a moment') {
+  const options = typeof message === 'object' && message !== null ? message : { message, detail };
+  const title = options.message || options.title || 'Working on it...';
+  const subtitle = options.detail || options.subtitle || 'This should only take a moment';
+  const existingOverlay = document.getElementById('loading-overlay');
+  if (existingOverlay) {
+    const currentCount = parseInt(existingOverlay.dataset.loadingCount || '1', 10);
+    existingOverlay.dataset.loadingCount = String(currentCount + 1);
+    existingOverlay.querySelector('[data-loading-title]').textContent = title;
+    existingOverlay.querySelector('[data-loading-detail]').textContent = subtitle;
+    existingOverlay.classList.remove('loading-overlay-exit');
+    return;
+  }
+
   const overlay = document.createElement('div');
   overlay.id = 'loading-overlay';
   overlay.className = 'loading-overlay';
+  overlay.setAttribute('role', 'status');
+  overlay.setAttribute('aria-live', 'polite');
+  overlay.dataset.loadingCount = '1';
   overlay.innerHTML = `
-    <div class="loading-spinner"></div>
-    <div class="loading-text">Please wait...</div>
+    <div class="loading-card">
+      <div class="loading-orbit" aria-hidden="true">
+        <span class="loading-spinner"></span>
+      </div>
+      <div class="loading-copy">
+        <div class="loading-text" data-loading-title>${escapeHtml(title)}</div>
+        <div class="loading-detail" data-loading-detail>${escapeHtml(subtitle)}</div>
+      </div>
+      <div class="loading-progress" aria-hidden="true"></div>
+    </div>
   `;
   document.body.appendChild(overlay);
 }
 
-function hideLoading() {
+function hideLoading(force = false) {
   const overlay = document.getElementById('loading-overlay');
   if (overlay) {
-    overlay.style.opacity = '0';
-    setTimeout(() => overlay.remove(), 200);
+    const currentCount = parseInt(overlay.dataset.loadingCount || '1', 10);
+    if (!force && currentCount > 1) {
+      overlay.dataset.loadingCount = String(currentCount - 1);
+      return;
+    }
+    overlay.dataset.loadingCount = '0';
+    overlay.classList.add('loading-overlay-exit');
+    setTimeout(() => overlay.remove(), 180);
   }
 }
 
