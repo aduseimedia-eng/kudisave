@@ -623,6 +623,176 @@
       background: #033036;
     }
 
+    .account-picker-field {
+      width: 100%;
+      min-height: 54px;
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 16px;
+      padding: 9px 12px;
+      color: inherit;
+      background: rgba(255,255,255,0.06);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      cursor: pointer;
+      font: inherit;
+      font-weight: 850;
+      text-align: left;
+    }
+
+    [data-theme="light"] .account-picker-field {
+      border-color: rgba(17,24,39,0.08);
+      background: #f9fafb;
+    }
+
+    .account-picker-main,
+    .account-picker-option-main {
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      min-width: 0;
+    }
+
+    .account-picker-field i {
+      width: 18px;
+      height: 18px;
+      color: #8b8f9b;
+      flex-shrink: 0;
+    }
+
+    .method-logo {
+      width: 42px;
+      height: 34px;
+      border-radius: 10px;
+      background: rgba(255,255,255,0.08);
+      display: grid;
+      place-items: center;
+      color: currentColor;
+      flex-shrink: 0;
+      overflow: hidden;
+    }
+
+    [data-theme="light"] .method-logo {
+      background: #eef2f7;
+    }
+
+    .method-logo img {
+      width: 92%;
+      height: 82%;
+      object-fit: contain;
+    }
+
+    .method-logo span {
+      font-size: 11px;
+      font-weight: 950;
+      letter-spacing: 0;
+    }
+
+    .method-picker-modal {
+      position: fixed;
+      inset: 0;
+      z-index: 2500;
+      display: grid;
+      place-items: end center;
+      padding: 16px;
+      background: rgba(5,10,18,0.58);
+      backdrop-filter: blur(10px);
+    }
+
+    .method-picker-modal[hidden] {
+      display: none;
+    }
+
+    .method-picker-panel {
+      width: min(100%, 460px);
+      border-radius: 22px;
+      padding: 18px;
+      background: #171a22;
+      color: #f8fafc;
+      box-shadow: 0 28px 80px rgba(0,0,0,0.36);
+    }
+
+    [data-theme="light"] .method-picker-panel {
+      background: #ffffff;
+      color: #111827;
+    }
+
+    .method-picker-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+
+    .method-picker-title {
+      font-size: 18px;
+      font-weight: 900;
+      color: inherit;
+    }
+
+    .method-picker-options {
+      display: grid;
+      gap: 10px;
+      max-height: min(58vh, 480px);
+      overflow-y: auto;
+      padding-right: 2px;
+    }
+
+    .account-picker-option {
+      min-height: 60px;
+      border: 1.5px solid rgba(255,255,255,0.08);
+      background: rgba(255,255,255,0.06);
+      border-radius: 18px;
+      padding: 12px 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      cursor: pointer;
+      font: inherit;
+      color: inherit;
+      text-align: left;
+    }
+
+    [data-theme="light"] .account-picker-option {
+      border-color: #eef2f7;
+      background: #f8fafc;
+    }
+
+    .account-picker-option-name {
+      display: block;
+      font-size: 14px;
+      font-weight: 900;
+    }
+
+    .account-picker-option-hint {
+      display: block;
+      margin-top: 2px;
+      color: #8b8f9b;
+      font-size: 11px;
+      font-weight: 750;
+    }
+
+    .account-picker-option-mark {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      border: 2px solid #8b8f9b;
+      flex-shrink: 0;
+    }
+
+    .account-picker-option.active {
+      border-color: rgba(3,48,54,0.44);
+      background: rgba(3,48,54,0.12);
+    }
+
+    .account-picker-option.active .account-picker-option-mark {
+      border-color: #0b737d;
+      background: radial-gradient(circle at center, #0b737d 0 42%, transparent 45%);
+    }
+
     @media (min-width: 760px) {
       .balances-shell {
         padding-inline: 28px;
@@ -795,6 +965,10 @@
       .account-modal {
         place-items: center;
       }
+
+      .method-picker-modal {
+        place-items: center;
+      }
     }
   </style>
 </head>
@@ -846,7 +1020,14 @@
       <div class="account-form">
         <div class="account-field">
           <label for="accountPaymentMethod">Payment method</label>
-          <select id="accountPaymentMethod" required></select>
+          <input id="accountPaymentMethod" type="hidden" value="Visa Card">
+          <button class="account-picker-field" type="button" onclick="openAccountPaymentPicker()" aria-labelledby="accountPaymentLabel">
+            <span class="account-picker-main">
+              <span class="method-logo" id="accountPaymentIcon"></span>
+              <span id="accountPaymentLabel">Visa Card</span>
+            </span>
+            <i data-lucide="chevron-down"></i>
+          </button>
         </div>
         <div class="account-field">
           <label for="accountName">Account name</label>
@@ -866,6 +1047,16 @@
         </div>
       </div>
     </form>
+  </div>
+
+  <div class="method-picker-modal" id="accountPaymentPicker" hidden>
+    <div class="method-picker-panel" role="dialog" aria-modal="true" aria-labelledby="accountPaymentPickerTitle">
+      <div class="method-picker-head">
+        <div class="method-picker-title" id="accountPaymentPickerTitle">Select payment method</div>
+        <button class="account-modal-close" type="button" onclick="closeAccountPaymentPicker()" aria-label="Close"><i data-lucide="x"></i></button>
+      </div>
+      <div class="method-picker-options" id="accountPaymentOptions"></div>
+    </div>
   </div>
 
   <script src="../assets/js/config.js"></script>
@@ -1130,19 +1321,81 @@
       }));
     }
 
+    function getAccountPaymentLogoHtml(paymentMethod) {
+      const method = getTemplateByPayment(paymentMethod);
+      if (method.image) {
+        return `<span class="method-logo"><img src="${method.image}" alt="${escapeText(method.name)}"></span>`;
+      }
+      return `<span class="method-logo"><span>${escapeText(method.label || method.name.slice(0, 2))}</span></span>`;
+    }
+
+    function setAccountPaymentMethod(paymentMethod) {
+      const normalized = normalizePaymentMethod(paymentMethod);
+      const method = getTemplateByPayment(normalized);
+      const input = document.getElementById('accountPaymentMethod');
+      const label = document.getElementById('accountPaymentLabel');
+      const icon = document.getElementById('accountPaymentIcon');
+
+      if (input) input.value = normalized;
+      if (label) label.textContent = method.name;
+      if (icon) {
+        icon.outerHTML = getAccountPaymentLogoHtml(normalized).replace('class="method-logo"', 'class="method-logo" id="accountPaymentIcon"');
+      }
+
+      const nameInput = document.getElementById('accountName');
+      if (nameInput && !nameInput.value.trim()) {
+        nameInput.placeholder = method.payment_method === 'Visa Card' ? 'Freelance Visa' : `${method.name} account`;
+      }
+    }
+
     function populatePaymentOptions() {
-      const select = document.getElementById('accountPaymentMethod');
-      if (!select || select.options.length) return;
-      select.innerHTML = BALANCE_METHODS.map(method => (
-        `<option value="${method.payment_method}">${escapeText(method.name)}</option>`
-      )).join('');
+      const container = document.getElementById('accountPaymentOptions');
+      if (!container) return;
+      const selected = normalizePaymentMethod(document.getElementById('accountPaymentMethod')?.value || BALANCE_METHODS[0].payment_method);
+
+      container.innerHTML = BALANCE_METHODS.map(method => {
+        const active = method.payment_method === selected ? ' active' : '';
+        return `
+          <button type="button" class="account-picker-option${active}" data-method="${escapeText(method.payment_method)}">
+            <span class="account-picker-option-main">
+              ${getAccountPaymentLogoHtml(method.payment_method)}
+              <span>
+                <span class="account-picker-option-name">${escapeText(method.name)}</span>
+                <span class="account-picker-option-hint">${escapeText(method.label)} payment account</span>
+              </span>
+            </span>
+            <span class="account-picker-option-mark"></span>
+          </button>
+        `;
+      }).join('');
+
+      container.querySelectorAll('.account-picker-option').forEach(button => {
+        button.addEventListener('click', function() {
+          setAccountPaymentMethod(this.dataset.method);
+          closeAccountPaymentPicker();
+        });
+      });
+
+      if (typeof lucide !== 'undefined') lucide.createIcons({ node: container });
+    }
+
+    function openAccountPaymentPicker() {
+      populatePaymentOptions();
+      const modal = document.getElementById('accountPaymentPicker');
+      if (modal) modal.hidden = false;
+      if (typeof lucide !== 'undefined') lucide.createIcons({ node: modal });
+    }
+
+    function closeAccountPaymentPicker() {
+      const modal = document.getElementById('accountPaymentPicker');
+      if (modal) modal.hidden = true;
     }
 
     function openAddAccountModal() {
-      populatePaymentOptions();
       const modal = document.getElementById('accountModal');
       const form = document.getElementById('accountForm');
       if (form) form.reset();
+      setAccountPaymentMethod(BALANCE_METHODS[0].payment_method);
       if (modal) modal.hidden = false;
       setTimeout(() => document.getElementById('accountName')?.focus(), 40);
       if (typeof lucide !== 'undefined') lucide.createIcons({ node: modal });
@@ -1151,6 +1404,7 @@
     function closeAddAccountModal() {
       const modal = document.getElementById('accountModal');
       if (modal) modal.hidden = true;
+      closeAccountPaymentPicker();
     }
 
     function addBalanceAccount(event) {
@@ -1259,6 +1513,13 @@
 
     document.addEventListener('DOMContentLoaded', () => {
       if (typeof lucide !== 'undefined') lucide.createIcons();
+      setAccountPaymentMethod(BALANCE_METHODS[0].payment_method);
+      document.getElementById('accountModal')?.addEventListener('click', function(event) {
+        if (event.target === this) closeAddAccountModal();
+      });
+      document.getElementById('accountPaymentPicker')?.addEventListener('click', function(event) {
+        if (event.target === this) closeAccountPaymentPicker();
+      });
       loadBalancesPage();
     });
   </script>
