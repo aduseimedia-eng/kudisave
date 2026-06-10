@@ -38,7 +38,7 @@
     .balances-topbar {
       display: flex;
       align-items: center;
-      justify-content: space-between;
+      justify-content: flex-start;
       gap: 12px;
       margin-bottom: 26px;
     }
@@ -75,39 +75,6 @@
     .history-link i {
       width: 19px;
       height: 19px;
-    }
-
-    .balances-avatar {
-      width: 46px;
-      height: 46px;
-      border-radius: 50%;
-      overflow: hidden;
-      background: linear-gradient(135deg, #033036, #0b737d);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: #ffffff;
-      font-weight: 900;
-      border: 2px solid rgba(255,255,255,0.14);
-      position: relative;
-    }
-
-    .balances-avatar img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-
-    .balances-avatar::after {
-      content: '';
-      position: absolute;
-      right: 1px;
-      top: 2px;
-      width: 10px;
-      height: 10px;
-      border-radius: 50%;
-      background: #ef4444;
-      border: 2px solid #111318;
     }
 
     .balance-kicker {
@@ -522,7 +489,6 @@
   <main class="balances-shell">
     <div class="balances-topbar">
       <a class="balances-back" href="dashboard.html" aria-label="Back to dashboard"><i data-lucide="arrow-left"></i></a>
-      <div class="balances-avatar" id="balancesAvatar"><span id="balancesInitials">U</span></div>
     </div>
 
     <div class="balances-grid">
@@ -583,21 +549,6 @@
         '"': '&quot;',
         "'": '&#39;'
       }[char]));
-    }
-
-    function getInitials(name) {
-      if (!name) return 'U';
-      return name.split(' ').map(part => part.charAt(0)).join('').slice(0, 2).toUpperCase();
-    }
-
-    function setAvatar(profile) {
-      const avatar = document.getElementById('balancesAvatar');
-      const name = profile?.name || 'User';
-      if (profile?.profile_picture) {
-        avatar.innerHTML = `<img src="${profile.profile_picture}" alt="Profile">`;
-      } else {
-        avatar.innerHTML = `<span>${getInitials(name)}</span>`;
-      }
     }
 
     function normalizePaymentMethod(value) {
@@ -777,8 +728,6 @@
         const expensesPromise = api.getExpenses({ limit: 500 }).catch(() => ({ data: [] }));
 
         const [profileResponse, balancesResponse, expensesResponse] = await Promise.all([profilePromise, balancesPromise, expensesPromise]);
-        if (profileResponse?.data) setAvatar(profileResponse.data);
-
         const balanceData = balancesResponse.data || {};
         balancesState = Array.isArray(balanceData.balances) ? balanceData.balances : [];
 
