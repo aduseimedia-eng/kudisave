@@ -310,7 +310,7 @@
       letter-spacing: -0.3px;
     }
 
-    .header-balance-item-value.income {
+    .header-balance-item-value.balances {
       color: #6ee7b7;
     }
 
@@ -593,7 +593,7 @@
     /* Quick Actions Modern */
     .quick-actions-modern {
       display: grid;
-      grid-template-columns: repeat(5, 1fr);
+      grid-template-columns: repeat(4, 1fr);
       gap: 10px;
       margin-bottom: 18px;
     }
@@ -619,8 +619,6 @@
     .quick-btn:nth-child(2) { animation-delay: 0.5s; }
     .quick-btn:nth-child(3) { animation-delay: 0.6s; }
     .quick-btn:nth-child(4) { animation-delay: 0.7s; }
-    .quick-btn:nth-child(5) { animation-delay: 0.8s; }
-
     .quick-btn::before {
       content: '';
       position: absolute;
@@ -664,12 +662,6 @@
       background: linear-gradient(135deg, #ef4444, #dc2626);
       color: white;
       box-shadow: 0 6px 18px rgba(239, 68, 68, 0.3);
-    }
-
-    .quick-btn-icon.income {
-      background: linear-gradient(135deg, #10b981, #059669);
-      color: white;
-      box-shadow: 0 6px 18px rgba(16, 185, 129, 0.3);
     }
 
     .quick-btn-icon.goal {
@@ -2837,8 +2829,8 @@
     <div class="card-bottomline">
       <div class="header-balance-row">
         <div class="header-balance-item">
-          <div class="header-balance-item-label">Income</div>
-          <div class="header-balance-item-value income" id="totalIncome">+GHS 0</div>
+          <div class="header-balance-item-label">Balances</div>
+          <div class="header-balance-item-value balances" id="totalIncome">GHS 0</div>
         </div>
         <div class="header-balance-item">
           <div class="header-balance-item-label">Expenses</div>
@@ -2859,9 +2851,9 @@
         <div class="quick-btn-icon expense"><i data-lucide="minus-circle"></i></div>
         <span class="quick-btn-label">Expense</span>
       </button>
-      <button class="quick-btn" onclick="openIncomeModal()">
-        <div class="quick-btn-icon income"><i data-lucide="plus-circle"></i></div>
-        <span class="quick-btn-label">Income</span>
+      <button class="quick-btn" onclick="window.location.href='balances.html'">
+        <div class="quick-btn-icon balances"><i data-lucide="credit-card"></i></div>
+        <span class="quick-btn-label">Balances</span>
       </button>
       <button class="quick-btn" onclick="window.location.href='goals.html'">
         <div class="quick-btn-icon goal"><i data-lucide="target"></i></div>
@@ -2870,10 +2862,6 @@
       <button class="quick-btn" onclick="openBudgetModal()">
         <div class="quick-btn-icon budget"><i data-lucide="wallet"></i></div>
         <span class="quick-btn-label">Budget</span>
-      </button>
-      <button class="quick-btn" onclick="window.location.href='balances.html'">
-        <div class="quick-btn-icon balances"><i data-lucide="credit-card"></i></div>
-        <span class="quick-btn-label">Balances</span>
       </button>
     </div>
 

@@ -164,7 +164,7 @@ async function loadFinancialSummary() {
 
     const symbol = utils.getCurrencySymbol();
     document.getElementById('balanceAmount').textContent = utils.formatCurrency(accountBalanceTotal);
-    document.getElementById('totalIncome').textContent = `+${symbol} ${utils.formatCurrencyAmount(totalIncome)}`;
+    document.getElementById('totalIncome').textContent = `${symbol} ${utils.formatCurrencyAmount(accountBalanceTotal)}`;
     document.getElementById('totalExpenses').textContent = `-${symbol} ${utils.formatCurrencyAmount(totalExpenses)}`;
 
     // Calculate savings rate
@@ -1886,7 +1886,7 @@ function initCurrencyDisplay() {
   const budgetRemainingEl = document.getElementById('budgetRemaining');
 
   if (balanceEl) balanceEl.textContent = `${symbol} 0.00`;
-  if (incomeEl) incomeEl.textContent = `+${symbol} 0`;
+  if (incomeEl) incomeEl.textContent = `${symbol} 0`;
   if (expenseEl) expenseEl.textContent = `-${symbol} 0`;
   if (budgetSpentEl && budgetSpentEl.textContent.includes('spent')) {
     budgetSpentEl.textContent = `${symbol} 0 spent`;
